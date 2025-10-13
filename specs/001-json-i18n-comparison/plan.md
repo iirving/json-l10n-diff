@@ -97,6 +97,9 @@ src/
 │   ├── KeyDiffItem.vue        # Individual key comparison row (red/yellow/neutral)
 │   ├── EditControls.vue       # Inline edit, add key, save buttons
 │   └── TierGate.vue           # Enforces key limits, shows upgrade prompts
+├── pages/
+│   ├── Index.vue              # Main application page (comparison tool)
+│   └── About.vue              # About page (feature info, documentation)
 ├── composables/
 │   ├── useJsonParser.js       # Parse, validate JSON
 │   ├── useJsonDiff.js         # Compare two JSON objects, return diff
@@ -107,7 +110,7 @@ src/
 │   ├── jsonValidator.js       # JSON validation with error line numbers
 │   ├── keyPathUtils.js        # Utilities for nested key paths
 │   └── prettifyJson.js        # Format JSON with 2-space indentation
-├── App.vue                    # Main app component
+├── App.vue                    # Root component with navigation/routing
 ├── main.js                    # Vue app initialization
 └── style.css                  # Global styles
 
@@ -123,7 +126,7 @@ tests/                         # Created only if tests explicitly requested
 public/                        # Static assets
 ```
 
-**Structure Decision**: Single-page web application structure chosen based on Vue 3 + Vite stack. All logic is client-side with no backend. Components use Composition API for clear separation of concerns. Composables encapsulate business logic (diff, validation, counting) for reusability and testability. Utils contain pure functions for data transformations.
+**Structure Decision**: Single-page web application structure chosen based on Vue 3 + Vite stack. Pages directory added to organize main application view (Index.vue) and supporting pages (About.vue). Simple client-side navigation between pages. All logic is client-side with no backend. Components use Composition API for clear separation of concerns. Composables encapsulate business logic (diff, validation, counting) for reusability and testability. Utils contain pure functions for data transformations.
 
 ## Complexity Tracking
 

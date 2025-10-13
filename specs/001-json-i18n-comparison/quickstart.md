@@ -62,6 +62,9 @@ src/
 │   ├── KeyDiffItem.vue
 │   ├── EditControls.vue
 │   └── TierGate.vue
+├── pages/               # Page components
+│   ├── Index.vue        # Main application page
+│   └── About.vue        # About/documentation page
 ├── composables/         # Reusable business logic
 │   ├── useJsonParser.js
 │   ├── useJsonDiff.js
@@ -72,7 +75,7 @@ src/
 │   ├── jsonValidator.js
 │   ├── keyPathUtils.js
 │   └── prettifyJson.js
-├── App.vue              # Root component
+├── App.vue              # Root component with navigation
 ├── main.js              # App initialization
 └── style.css            # Global styles
 ```
@@ -84,6 +87,7 @@ src/
 3. **Props Down, Events Up**: Parent components pass data via props, children emit events
 4. **Pure Functions**: Utils contain pure functions with no side effects
 5. **Client-Side Only**: No backend, all processing in browser
+6. **Simple Navigation**: Pages organized in src/pages/ with client-side routing in App.vue
 
 ---
 
@@ -164,15 +168,81 @@ Follow this order based on prioritized user stories:
 
 ## Step-by-Step Implementation
 
-### Step 1: Set Up Basic App Structure
+### Step 1: Set Up Basic App Structure with Pages
 
 **File**: `src/App.vue`
 
 ```vue
 <script setup>
 import { ref } from 'vue';
-import FileUploader from './components/FileUploader.vue';
-import ComparisonView from './components/ComparisonView.vue';
+import Index from './pages/Index.vue';
+import About from './pages/About.vue';
+
+// Simple client-side navigation
+const currentPage = ref('index');
+
+function navigateTo(page) {
+  currentPage.value = page;
+}
+</script>
+
+<template>
+  <div class="app">
+    <header>
+      <h1>JSON i18n Diff Tool</h1>
+      <nav>
+        <button
+          @click="navigateTo('index')"
+          :class="{ active: currentPage === 'index' }"
+        >
+          Home
+        </button>
+        <button
+          @click="navigateTo('about')"
+          :class="{ active: currentPage === 'about' }"
+        >
+          About
+        </button>
+      </nav>
+    </header>
+
+    <main>
+      <Index v-if="currentPage === 'index'" />
+      <About v-if="currentPage === 'about'" />
+    </main>
+  </div>
+</template>
+
+<style scoped>
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #ddd;
+}
+
+nav button {
+  margin-left: 1rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+nav button.active {
+  font-weight: bold;
+  background-color: #007bff;
+  color: white;
+}
+</style>
+```
+
+**File**: `src/pages/Index.vue`
+
+```vue
+<script setup>
+import { ref } from 'vue';
+import FileUploader from '../components/FileUploader.vue';
+import ComparisonView from '../components/ComparisonView.vue';
 
 // State
 const file1 = ref(null);
@@ -201,29 +271,147 @@ function runComparison() {
 </script>
 
 <template>
-  <div class="app">
-    <header>
-      <h1>JSON i18n Diff Tool</h1>
-    </header>
-
-    <main>
-      <div class="upload-section">
-        <FileUploader
-          file-id="file1"
-          @file-loaded="handleFile1Loaded"
-        />
-        <FileUploader
-          file-id="file2"
-          @file-loaded="handleFile2Loaded"
-        />
-      </div>
-
-      <ComparisonView
-        v-if="file1 && file2"
-        :file1="file1"
-        :file2="file2"
-        :diff-results="diffResults"
+  <div class="index-page">
+    <div class="upload-section">
+      <FileUploader
+        file-id="file1"
+        @file-loaded="handleFile1Loaded"
       />
+      <FileUploader
+        file-id="file2"
+        @file-loaded="handleFile2Loaded"
+      />
+    </div>
+
+    <ComparisonView
+      v-if="file1 && file2"
+      :file1="file1"
+      :file2="file2"
+      :diff-results="diffResults"
+    />
+  </div>
+</template>
+
+<style scoped>
+.upload-section {
+  display: flex;
+  gap: 2rem;
+  margin: 2rem;
+}
+</style>
+```
+
+**File**: `src/pages/About.vue`
+
+```vue
+<script setup>
+// No state needed for static about page
+</script>
+
+<template>
+  <div class="about-page">
+    <h2>About JSON i18n Diff Tool</h2>
+
+    <section>
+      <h3>Features</h3>
+      <ul>
+        <li>Upload and compare two JSON i18n files</li>
+        <li>Visual tree structure with nested keys</li>
+        <li>Color-coded differences:
+          <ul>
+            <li><strong style="color: red;">Red</strong>: Missing keys</li>
+            <li><strong style="color: #ffa500;">Yellow</strong>: Identical values</li>
+            <li>Neutral: Different values</li>
+          </ul>
+        </li>
+        <li>Inline editing and adding missing keys</li>
+        <li>Save modified files with prettify option</li>
+      </ul>
+    </section>
+
+    <section>
+      <h3>Pricing Tiers</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Tier</th>
+            <th>Price</th>
+            <th>Key Limit</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Free</td>
+            <td>$0</td>
+            <td>20 keys</td>
+          </tr>
+          <tr>
+            <td>Medium</td>
+            <td>$5/month</td>
+            <td>100 keys</td>
+          </tr>
+          <tr>
+            <td>Enterprise</td>
+            <td>$99/month</td>
+            <td>1000 keys</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h3>How It Works</h3>
+      <ol>
+        <li>Upload your first JSON i18n file (e.g., en.json)</li>
+        <li>Upload your second JSON i18n file (e.g., fr.json)</li>
+        <li>View the comparison with color-coded highlights</li>
+        <li>Edit values or add missing keys directly in the interface</li>
+        <li>Download your modified files</li>
+      </ol>
+    </section>
+
+    <section>
+      <h3>Technical Details</h3>
+      <p>
+        This tool is built with Vue 3 and processes all files client-side
+        for privacy. No data is sent to any server. Maximum file size is 10 MB.
+      </p>
+    </section>
+  </div>
+</template>
+
+<style scoped>
+.about-page {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 2rem;
+}
+
+section {
+  margin: 2rem 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 0.75rem;
+  text-align: left;
+}
+
+th {
+  background-color: #f5f5f5;
+  font-weight: bold;
+}
+</style>
+```
+
+### Step 2: Implement File Upload
+
     </main>
   </div>
 </template>
@@ -231,6 +419,7 @@ function runComparison() {
 <style>
 /* TODO: Add styles */
 </style>
+
 ```
 
 ### Step 2: Implement FileUploader Component

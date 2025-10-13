@@ -10,7 +10,55 @@ Since this is a client-side-only application, there are no REST/GraphQL APIs. In
 
 ---
 
-## 1. FileUploader Component
+## Page Components
+
+### Index.vue (Main Application Page)
+
+**Purpose**: Main page that hosts the JSON comparison tool functionality
+
+**Location**: `src/pages/Index.vue`
+
+**Props**: None (root page)
+
+**State**:
+
+- `file1`: Ref<JsonFile | null> - First uploaded file
+- `file2`: Ref<JsonFile | null> - Second uploaded file
+- `diffResults`: Ref<KeyComparisonResult[]> - Comparison results
+
+**Child Components Used**:
+
+- FileUploader (x2)
+- ComparisonView
+- EditControls
+- TierGate
+
+**Note**: This page contains the core application logic previously in App.vue
+
+---
+
+### About.vue (About/Documentation Page)
+
+**Purpose**: Static informational page about the tool, features, and pricing
+
+**Location**: `src/pages/About.vue`
+
+**Props**: None (root page)
+
+**Content Sections**:
+
+- Features list (color-coded highlights explanation)
+- Pricing tiers table (Free/Medium/Enterprise)
+- How It Works guide
+- Technical details (client-side processing, file size limits)
+
+**Note**: This is a static content page with no interactive functionality
+
+---
+
+## Core Components
+
+### 1. FileUploader Component
 
 ### Purpose
 
