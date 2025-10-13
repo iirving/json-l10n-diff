@@ -1,4 +1,4 @@
-# JSON i18n Diff Tool
+# JSON l10n Diff Tool
 
 A client-side web application for comparing and editing JSON localization (l10n) files with visual diff highlighting and inline editing capabilities.
 

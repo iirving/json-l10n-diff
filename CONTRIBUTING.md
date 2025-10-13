@@ -1,4 +1,4 @@
-# Contributing to JSON i18n Diff Tool
+# Contributing to JSON l10n Diff Tool
 
 Thank you for your interest in contributing! This tool helps developers compare and edit JSON localization (l10n) files. The project is currently in the **planning phase** with implementation about to begin.
 

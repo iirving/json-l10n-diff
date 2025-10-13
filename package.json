@@ -4,6 +4,21 @@
   "version": "0.0.0",
   "type": "module",
   "description": "Client-side JSON localization (l10n) comparison and diff tool with visual tree display and inline editing",
+  "author": "iirving",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iirving/json-l10n-diff.git"
+  },
+  "keywords": [
+    "json",
+    "localization",
+    "l10n",
+    "i18n",
+    "diff",
+    "compare",
+    "translation"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",
