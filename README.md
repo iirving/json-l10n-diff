@@ -30,7 +30,7 @@ A client-side web application for comparing and editing JSON localization (l10n/
 
 ## 📁 Project Structure
 
-```
+```text
 json-l10n-diff/
 ├── src/
 │   ├── components/       # Vue components (planned)
@@ -61,12 +61,12 @@ json-l10n-diff/
 └── README.md           # This file
 ```
 
-## Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 
-- Node.js 18+
-- npm 9+
+- **Node.js 18+** and **npm 9+**
+- A modern web browser (Chrome, Firefox, Safari, Edge)
 
 ### Installation
 
@@ -82,7 +82,7 @@ npm install
 ### Development
 
 ```bash
-# Start development server
+# Start development server (http://localhost:5173)
 npm run dev
 
 # Build for production
@@ -92,95 +92,122 @@ npm run build
 npm run preview
 ```
 
-## Current Status
+## 📊 Current Status
 
-**⚠️ Project Status: Planning Complete, Implementation Pending**
+### ✅ Completed
 
-The project has completed the specification and planning phase:
+- Project setup with Vite + Vue 3 + Pinia
+- Comprehensive feature specifications (5 user stories, P1-P3 prioritized)
+- Technical architecture and design patterns documented
+- Data model with 5 entities defined
+- Component contracts for 6 Vue components + 3 Pinia stores
+- Detailed task breakdown (52 tasks across 8 implementation phases)
 
-- ✅ Feature specification with 5 user stories (P1, P2, P3 prioritized)
-- ✅ Technical architecture and design patterns
-- ✅ Data model with 5 entities
-- ✅ Component contracts for 6 Vue components + 3 Pinia stores
-- ✅ Detailed task breakdown (52 tasks across 8 phases)
-- ⏳ Implementation: Ready to begin
+### 🔄 In Progress
 
-### Implementation Roadmap
+Implementation is following a phased approach:
 
-**MVP (2 weeks)**:
+**Phase 1-5: MVP (2 weeks)** - Core functionality
 
-1. Phase 1: Setup (T001-T007) - Project structure and Pinia
-2. Phase 2: Foundational (T008-T014) - Core utilities and stores
-3. Phase 3: User Story 1 (T015-T021) - View and compare files
-4. Phase 4: User Story 2 (T022-T026) - Edit and add keys
-5. Phase 5: User Story 3 (T027-T032) - Save modified files
+- ⏳ Phase 1: Setup (T001-T007) - Project structure and Pinia stores
+- ⏳ Phase 2: Foundational (T008-T014) - Utilities and base stores
+- ⏳ Phase 3: User Story 1 (T015-T021) - File upload and comparison UI
+- ⏳ Phase 4: User Story 2 (T022-T026) - Inline editing and add keys
+- ⏳ Phase 5: User Story 3 (T027-T032) - Save and export files
 
-**Full Feature Set (3-4 weeks)**:
-6. Phase 6: User Story 4 (T033-T037) - Tier limits
-7. Phase 7: User Story 5 (T038-T041) - Tier selection
-8. Phase 8: Polish (T042-T052) - Quality improvements
+**Phase 6-8: Full Feature Set (1-2 weeks)** - Enhanced features
 
-See `specs/001-json-i18n-comparison/tasks.md` for detailed task breakdown.
+- ⏳ Phase 6: User Story 4 (T033-T037) - Tier limits and validation
+- ⏳ Phase 7: User Story 5 (T038-T041) - Tier selection UI
+- ⏳ Phase 8: Polish (T042-T052) - Testing, optimization, and refinements
 
-## Documentation
+See [`specs/001-json-i18n-comparison/tasks.md`](specs/001-json-i18n-comparison/tasks.md) for the complete task breakdown.
 
-Comprehensive documentation is available in the `specs/001-json-i18n-comparison/` directory:
+## 📚 Documentation
 
-- **[spec.md](specs/001-json-i18n-comparison/spec.md)** - Feature requirements and user stories
-- **[plan.md](specs/001-json-i18n-comparison/plan.md)** - Technical implementation plan
-- **[tasks.md](specs/001-json-i18n-comparison/tasks.md)** - Granular task breakdown (52 tasks)
-- **[quickstart.md](specs/001-json-i18n-comparison/quickstart.md)** - Developer onboarding guide
-- **[data-model.md](specs/001-json-i18n-comparison/data-model.md)** - Entity definitions
-- **[contracts/component-contracts.md](specs/001-json-i18n-comparison/contracts/component-contracts.md)** - Component and store interfaces
+Comprehensive project documentation:
 
-## Architecture
+### Specifications (`specs/001-json-i18n-comparison/`)
+
+- **[spec.md](specs/001-json-i18n-comparison/spec.md)** - User stories, acceptance criteria, and requirements
+- **[plan.md](specs/001-json-i18n-comparison/plan.md)** - Technical implementation plan and architecture decisions
+- **[tasks.md](specs/001-json-i18n-comparison/tasks.md)** - Granular task breakdown (52 tasks with phases)
+- **[quickstart.md](specs/001-json-i18n-comparison/quickstart.md)** - Developer onboarding and setup guide
+- **[data-model.md](specs/001-json-i18n-comparison/data-model.md)** - Entity definitions and state structure
+- **[research.md](specs/001-json-i18n-comparison/research.md)** - Technical research and decision rationale
+- **[contracts/component-contracts.md](specs/001-json-i18n-comparison/contracts/component-contracts.md)** - Component APIs and Pinia store interfaces
+
+### Architecture (`docs/`)
+
+- **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** - System design, patterns, and technical decisions
+- **[README.md](docs/README.md)** - Documentation index and navigation
+
+## 🏗️ Architecture Overview
 
 ### State Management (Pinia Stores)
 
-- **useFileStore** - Manages uploaded files and comparison results
-- **useTierStore** - Handles tier selection and key limits
-- **useEditStore** - Tracks edit operations and modified state
+Three core stores manage application state:
 
-### Core Components (To Be Implemented)
+- **`useFileStore`** - File uploads, parsing, and comparison results
+- **`useTierStore`** - User tier selection and key limit enforcement  
+- **`useEditStore`** - Edit operations, modifications, and undo/redo
 
-- **FileUploader** - File input with drag-and-drop and validation
-- **TreeViewer** - Recursive tree display with expand/collapse
-- **ComparisonView** - Side-by-side comparison layout
-- **KeyDiffItem** - Individual key comparison row
-- **EditControls** - Save, prettify, and reset actions
-- **TierGate** - Tier limit enforcement and upgrade prompts
+### Vue Components (Planned)
+
+- **`FileUploader`** - Drag-and-drop file input with validation
+- **`TreeViewer`** - Recursive tree display with expand/collapse
+- **`ComparisonView`** - Side-by-side comparison layout
+- **`KeyDiffItem`** - Individual key comparison row with diff highlighting
+- **`EditControls`** - Save, prettify, reset, and export actions
+- **`TierGate`** - Tier limit enforcement and upgrade prompts
 
 ### Pages
 
-- **Index.vue** - Main application (comparison tool)
-- **About.vue** - Feature information and pricing
+- **`Index.vue`** - Main comparison tool interface
+- **`About.vue`** - Feature information and pricing details
 
-## Repository
+For detailed architecture information, see [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
-- **GitHub**: [https://github.com/iirving/json-l10n-diff](https://github.com/iirving/json-l10n-diff)
-- **Branch**: `001-json-i18n-comparison` (feature development)
+## 🔗 Repository & Links
+
+- **GitHub**: [iirving/json-l10n-diff](https://github.com/iirving/json-l10n-diff)
+- **Branch**: `001-json-i18n-comparison` (active feature development)
 - **Issues**: [Report bugs or request features](https://github.com/iirving/json-l10n-diff/issues)
-- **Discussions**: [Ask questions or share ideas](https://github.com/iirving/json-l10n-diff/discussions)
+- **Discussions**: [Questions and ideas](https://github.com/iirving/json-l10n-diff/discussions)
 
-## Contributing
+## 🤝 Contributing
 
-We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on:
+Contributions are welcome! This project is well-documented with granular tasks ready to be implemented.
 
-- Setting up your development environment
-- Picking tasks from the task breakdown
-- Code standards and conventions
-- Pull request process
+**Getting Started with Contributing**:
 
-## License
+1. Read [`CONTRIBUTING.md`](CONTRIBUTING.md) for detailed guidelines
+2. Review [`specs/001-json-i18n-comparison/quickstart.md`](specs/001-json-i18n-comparison/quickstart.md) for developer onboarding
+3. Check [`specs/001-json-i18n-comparison/tasks.md`](specs/001-json-i18n-comparison/tasks.md) to pick a task
+4. Follow the component contracts in [`specs/001-json-i18n-comparison/contracts/component-contracts.md`](specs/001-json-i18n-comparison/contracts/component-contracts.md)
 
-[MIT License](LICENSE) - see the LICENSE file for details
+**What We Need**:
 
-## Pricing Tiers
+- 🏗️ Component implementations (see task breakdown)
+- 🧪 Testing and validation
+- 📝 Documentation improvements
+- 🐛 Bug reports and fixes
+- 💡 Feature suggestions and enhancements
 
-- **Free**: Up to 20 keys
-- **Medium**: $5/month - Up to 100 keys
-- **Enterprise**: $99/month - Up to 1000 keys
+## 💰 Pricing (Planned)
+
+| Tier | Price | Key Limit | Target Audience |
+|------|-------|-----------|-----------------|
+| 🆓 **Free** | $0 | 20 keys | Personal projects, demos |
+| 💼 **Medium** | $5/month | 100 keys | Small to medium apps |
+| 🏢 **Enterprise** | $99/month | 1,000 keys | Large-scale applications |
+
+*Key counting includes parent objects (e.g., `user.profile.name` counts as 3 keys)*
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE) - see the LICENSE file for details.
 
 ---
 
-**Note**: This project is currently in the specification phase. All functionality described above is planned but not yet implemented. Follow the tasks in `specs/001-json-i18n-comparison/tasks.md` to begin development.
+**Built with ❤️ using Vue 3 + Vite** | *Privacy-first localization comparison tool*
