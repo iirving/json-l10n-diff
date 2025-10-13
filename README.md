@@ -1,49 +1,59 @@
 # JSON l10n Diff Tool
 
-A client-side web application for comparing and editing JSON localization (l10n) files with visual diff highlighting and inline editing capabilities.
+A client-side web application for comparing and editing JSON localization (l10n/i18n) files with visual diff highlighting and inline editing capabilities. All processing happens entirely in your browser—no data ever leaves your machine.
 
-## Features
+## ✨ Planned Features
 
-- 📤 Upload and compare two JSON localization files
-- 🌳 Visual tree structure with nested keys
-- 🎨 Color-coded differences:
-  - 🔴 **Red**: Missing keys in either file
-  - 🟡 **Yellow**: Identical values across files
-  - ⚪ **Neutral**: Different values
-- ✏️ Inline editing of values
-- ➕ Add missing keys directly
-- 💾 Save and download modified files
-- 🎨 Prettify JSON with consistent formatting
-- 📊 Tier-based key limits (Free: 20, Medium: 100, Enterprise: 1000)
+- 📤 **Upload & Compare** - Drag-and-drop or select two JSON localization files
+- 🌳 **Visual Tree Structure** - Nested key hierarchy with expandable nodes
+- 🎨 **Smart Diff Highlighting**:
+  - 🔴 **Red**: Missing keys (in either file)
+  - 🟡 **Yellow**: Identical values across both files (potential placeholders)
+  - ⚪ **Neutral**: Different values (expected for translations)
+- ✏️ **Inline Editing** - Edit values directly in the comparison view
+- ➕ **Add Missing Keys** - One-click to add missing keys to either file
+- 💾 **Save & Download** - Export modified files with your changes
+- 🎨 **JSON Prettify** - Format with consistent 2-space indentation
+- 📊 **Flexible Tiers**:
+  - 🆓 **Free**: Up to 20 keys
+  - 💼 **Medium** ($5/month): Up to 100 keys
+  - 🏢 **Enterprise** ($99/month): Up to 1000 keys
+- 🔒 **Privacy-First** - 100% client-side, no server uploads
 
-## Tech Stack
+## 🛠️ Tech Stack
 
-- **Vue 3.5.22** - Progressive JavaScript framework with Composition API
-- **Vite 7.1.14** (Rolldown variant) - Next-generation frontend build tool
-- **Pinia** - Vue's official state management library
-- **JavaScript ES6+** - Modern JavaScript features
+- **[Vue 3.5.22](https://vuejs.org/)** - Progressive JavaScript framework with Composition API
+- **[Vite 7.1.14](https://vite.dev/)** (Rolldown variant) - Lightning-fast build tool with HMR
+- **[Pinia 2.2.8](https://pinia.vuejs.org/)** - Intuitive state management for Vue
+- **JavaScript ES6+** - Modern language features (async/await, destructuring, etc.)
+- **100% Client-Side** - No backend, no server uploads, all processing in-browser
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 json-l10n-diff/
 ├── src/
-│   ├── components/       # Vue components (to be implemented)
-│   ├── pages/           # Page components (to be implemented)
-│   ├── stores/          # Pinia stores (to be implemented)
-│   ├── composables/     # Reusable logic (to be implemented)
-│   ├── utils/           # Pure utility functions (to be implemented)
+│   ├── components/       # Vue components (planned)
+│   ├── pages/           # Page components (planned)
+│   ├── stores/          # Pinia stores (planned)
+│   ├── composables/     # Reusable composition functions (planned)
+│   ├── utils/           # Pure utility functions (planned)
 │   ├── App.vue          # Root component
 │   ├── main.js          # Application entry point
 │   └── style.css        # Global styles
-├── specs/               # Feature specifications and planning docs
+├── specs/               # 📋 Comprehensive feature specifications
 │   └── 001-json-i18n-comparison/
-│       ├── spec.md                 # Feature requirements
-│       ├── plan.md                 # Implementation plan
-│       ├── data-model.md           # Entity definitions
-│       ├── quickstart.md           # Developer guide
-│       ├── tasks.md                # Task breakdown (52 tasks)
-│       └── contracts/              # Component contracts
+│       ├── spec.md                 # User stories & requirements
+│       ├── plan.md                 # Technical implementation plan
+│       ├── data-model.md           # Entity & state definitions
+│       ├── quickstart.md           # Developer onboarding guide
+│       ├── tasks.md                # Granular task breakdown (52 tasks)
+│       ├── research.md             # Technical research & decisions
+│       └── contracts/
+│           └── component-contracts.md  # Component & store interfaces
+├── docs/                # 📖 Architecture documentation
+│   ├── ARCHITECTURE.md     # System design & patterns
+│   └── README.md           # Documentation index
 ├── public/              # Static assets
 ├── index.html          # HTML entry point
 ├── package.json        # Dependencies and scripts
