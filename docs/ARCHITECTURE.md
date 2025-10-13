@@ -16,7 +16,7 @@
 
 ## System Overview
 
-JSON i18n Diff Tool is a **client-side web application** designed for comparing and editing JSON internationalization files. All processing happens in the browser—no backend required.
+JSON i18n Diff Tool is a **client-side web application** designed for comparing and editing JSON localization (l10n) files. All processing happens in the browser—no backend required.
 
 ### Core Capabilities
 

@@ -1,10 +1,10 @@
 # JSON i18n Diff Tool
 
-A client-side web application for comparing and editing JSON internationalization (i18n) files with visual diff highlighting and inline editing capabilities.
+A client-side web application for comparing and editing JSON localization (l10n) files with visual diff highlighting and inline editing capabilities.
 
 ## Features
 
-- 📤 Upload and compare two JSON i18n files
+- 📤 Upload and compare two JSON localization files
 - 🌳 Visual tree structure with nested keys
 - 🎨 Color-coded differences:
   - 🔴 **Red**: Missing keys in either file

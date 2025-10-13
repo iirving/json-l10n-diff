@@ -6,7 +6,7 @@
 
 ## Overview
 
-Updated all project documentation to reflect the actual GitHub repository state and provide comprehensive documentation for contributors and users.
+Updated all project documentation to reflect the actual GitHub repository state and provide comprehensive documentation for contributors and users. This tool is designed for JSON localization (l10n) file comparison and editing.
 
 ## Files Created
 

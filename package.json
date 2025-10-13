@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "description": "Client-side JSON i18n comparison and diff tool with visual tree display and inline editing",
+  "description": "Client-side JSON localization (l10n) comparison and diff tool with visual tree display and inline editing",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
