@@ -1,4 +1,4 @@
-# json-i18n-diff Development Guidelines
+# json-l10n-diff Development Guidelines
 
 Auto-generated from all feature plans. Last updated: 2025-10-13
 

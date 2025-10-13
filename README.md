@@ -26,7 +26,7 @@ A client-side web application for comparing and editing JSON localization (l10n)
 ## Project Structure
 
 ```
-json-i18n-diff/
+json-l10n-diff/
 ├── src/
 │   ├── components/       # Vue components (to be implemented)
 │   ├── pages/           # Page components (to be implemented)
