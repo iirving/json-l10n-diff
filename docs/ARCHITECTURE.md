@@ -1,6 +1,6 @@
 # Architecture Overview
 
-> **Last Updated**: October 13, 2025  
+> **Last Updated**: October 13, 2025
 > **Status**: Planning Complete, Implementation Pending
 
 ## Table of Contents
@@ -104,6 +104,7 @@ Application is decomposed into reusable, single-responsibility components:
 ### 2. Composition API Pattern
 
 Leveraging Vue 3's Composition API for:
+
 - **Logic reuse** via composables
 - **Type inference** (when using TypeScript)
 - **Better organization** of component logic
@@ -113,13 +114,13 @@ Leveraging Vue 3's Composition API for:
 // Example: useKeyCounter composable
 export function useKeyCounter() {
   const count = ref(0)
-  
+
   function countKeys(obj) {
     // Logic here
     count.value = result
     return result
   }
-  
+
   return { count, countKeys }
 }
 ```
@@ -163,10 +164,12 @@ Clear separation of concerns:
 ### Component Categories
 
 #### 1. Page Components (`src/pages/`)
+
 - **Index.vue** - Main application page
 - **About.vue** - Information and pricing page
 
 #### 2. Feature Components (`src/components/`)
+
 - **FileUploader** - File input with validation
 - **ComparisonView** - Layout for side-by-side comparison
 - **TreeViewer** - Recursive tree display
@@ -185,6 +188,7 @@ FileUploader  ─→  useFileStore  ─→  ComparisonView
 ```
 
 Components communicate via:
+
 1. **Pinia Stores** - Shared state (preferred)
 2. **Props** - Parent → Child data
 3. **Emits** - Child → Parent events
@@ -197,6 +201,7 @@ Components communicate via:
 Three domain-specific stores:
 
 #### 1. useFileStore
+
 Manages file uploads and comparison:
 
 ```javascript
@@ -223,6 +228,7 @@ Manages file uploads and comparison:
 ```
 
 #### 2. useTierStore
+
 Handles tier limits:
 
 ```javascript
@@ -243,6 +249,7 @@ Handles tier limits:
 ```
 
 #### 3. useEditStore
+
 Tracks modifications:
 
 ```javascript
@@ -340,6 +347,7 @@ Download modified JSON
 ### Monitoring
 
 Key metrics to track:
+
 - Time to parse JSON
 - Time to generate comparison
 - Time to first render
@@ -365,12 +373,12 @@ function validateFile(file) {
   if (file.size > 10 * 1024 * 1024) {
     throw new Error('File too large')
   }
-  
+
   // Check file type
   if (file.type !== 'application/json') {
     throw new Error('Invalid file type')
   }
-  
+
   // Validate JSON structure
   try {
     JSON.parse(content)
@@ -394,6 +402,7 @@ function validateFile(file) {
 ### Scalability
 
 For larger JSON files (>1000 keys):
+
 - Implement virtual scrolling
 - Use Web Workers for parsing
 - Add pagination or filtering

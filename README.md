@@ -55,7 +55,7 @@ json-i18n-diff/
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - npm 9+
 
 ### Installation
@@ -87,6 +87,7 @@ npm run preview
 **⚠️ Project Status: Planning Complete, Implementation Pending**
 
 The project has completed the specification and planning phase:
+
 - ✅ Feature specification with 5 user stories (P1, P2, P3 prioritized)
 - ✅ Technical architecture and design patterns
 - ✅ Data model with 5 entities
@@ -97,6 +98,7 @@ The project has completed the specification and planning phase:
 ### Implementation Roadmap
 
 **MVP (2 weeks)**:
+
 1. Phase 1: Setup (T001-T007) - Project structure and Pinia
 2. Phase 2: Foundational (T008-T014) - Core utilities and stores
 3. Phase 3: User Story 1 (T015-T021) - View and compare files

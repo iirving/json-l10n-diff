@@ -8,9 +8,9 @@ assignees: ''
 
 ## Task Reference
 
-**Task ID**: T###  
-**Phase**: [Phase 1-8]  
-**User Story**: [US1-US5]  
+**Task ID**: T###
+**Phase**: [Phase 1-8]
+**User Story**: [US1-US5]
 
 Link to task in `tasks.md`: [T###](../specs/001-json-i18n-comparison/tasks.md)
 
@@ -21,6 +21,7 @@ Link to task in `tasks.md`: [T###](../specs/001-json-i18n-comparison/tasks.md)
 ## Dependencies
 
 This task depends on:
+
 - [ ] T### - [Description]
 - [ ] T### - [Description]
 

@@ -7,6 +7,7 @@ This directory contains additional project documentation beyond the specificatio
 ### Specifications (`/specs/001-json-i18n-comparison/`)
 
 Core feature specifications and implementation plans:
+
 - **spec.md** - Feature requirements and user stories
 - **plan.md** - Technical architecture
 - **tasks.md** - Implementation task breakdown
@@ -17,6 +18,7 @@ Core feature specifications and implementation plans:
 ### GitHub Documentation (`/.github/`)
 
 GitHub-specific files:
+
 - **ISSUE_TEMPLATE/** - Bug reports, feature requests, task tracking
 - **PULL_REQUEST_TEMPLATE.md** - PR template
 - **workflows/** - GitHub Actions CI/CD
@@ -25,6 +27,7 @@ GitHub-specific files:
 ### Project Documentation (`/docs/` - this directory)
 
 Additional guides and references:
+
 - **ARCHITECTURE.md** - Detailed architecture decisions
 - **DEVELOPMENT.md** - Development workflow and setup
 - **API.md** - Component API documentation

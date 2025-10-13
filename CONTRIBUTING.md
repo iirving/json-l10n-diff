@@ -53,6 +53,7 @@ All work is tracked in `specs/001-json-i18n-comparison/tasks.md`:
 - **Phase 6-8**: Full Feature (T033-T052) - Tier system and polish
 
 Look for tasks marked as:
+
 - `🟢 Ready` - No blockers, can start immediately
 - `🟡 Blocked` - Dependencies must be completed first
 
@@ -123,15 +124,15 @@ const hasErrors = computed(() => {
 export const useFileStore = defineStore('file', () => {
   // State
   const files = ref([])
-  
+
   // Getters
   const hasFiles = computed(() => files.value.length > 0)
-  
+
   // Actions
   function uploadFile(file) {
     // Logic here
   }
-  
+
   return { files, hasFiles, uploadFile }
 })
 ```
@@ -177,6 +178,7 @@ npm run type-check
    - [ ] Documentation updated (if needed)
 
 2. **PR Title Format**:
+
    ```
    feat(T001): Create directory structure
    fix(FileUploader): Handle empty file uploads
@@ -184,18 +186,19 @@ npm run type-check
    ```
 
 3. **PR Description Template**:
+
    ```markdown
    ## Task Reference
    Implements T001 from specs/001-json-i18n-comparison/tasks.md
-   
+
    ## Changes
    - Created src/pages/, src/stores/, src/composables/, src/utils/
    - Added .gitkeep files to preserve directory structure
-   
+
    ## Testing
    - [ ] Verified directories exist
    - [ ] Confirmed no build errors
-   
+
    ## Screenshots
    (if applicable)
    ```
@@ -258,6 +261,7 @@ T003: Implement App.vue navigation shell
 ## Recognition
 
 All contributors will be acknowledged in:
+
 - `README.md` contributors section
 - Release notes
 - Project documentation
