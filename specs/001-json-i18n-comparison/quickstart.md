@@ -25,8 +25,9 @@ The project is already initialized with Vue 3 + Vite. Verify your environment:
 # Check Node version
 node --version  # Should be 18 or higher
 
-# Install dependencies
+# Install dependencies (includes Pinia)
 npm install
+npm install pinia  # If not already in package.json
 
 # Start development server
 npm run dev
@@ -36,6 +37,21 @@ npm run build
 
 # Preview production build
 npm run preview
+```
+
+**Setup Pinia in main.js**:
+
+```javascript
+import { createApp } from 'vue'
+import { createPinia } from 'pinia'
+import App from './App.vue'
+import './style.css'
+
+const app = createApp(App)
+const pinia = createPinia()
+
+app.use(pinia)
+app.mount('#app')
 ```
 
 ---
@@ -48,7 +64,7 @@ npm run preview
 - **Build Tool**: Vite (Rolldown variant 7.1.14)
 - **Language**: JavaScript ES6+
 - **Styling**: CSS (no framework - keep it simple)
-- **State Management**: Vue reactive refs + composables (no Vuex/Pinia)
+- **State Management**: Pinia (<https://pinia.vuejs.org/>) - Vue's official state management library
 - **Testing**: Vitest (if explicitly requested)
 
 ### Project Structure
@@ -65,29 +81,33 @@ src/
 ├── pages/               # Page components
 │   ├── Index.vue        # Main application page
 │   └── About.vue        # About/documentation page
+├── stores/              # Pinia stores (state management)
+│   ├── useFileStore.js  # Files and comparison state
+│   ├── useTierStore.js  # Tier management
+│   └── useEditStore.js  # Edit operations tracking
 ├── composables/         # Reusable business logic
 │   ├── useJsonParser.js
 │   ├── useJsonDiff.js
 │   ├── useKeyCounter.js
-│   ├── useFileDownload.js
-│   └── useTierManager.js
+│   └── useFileDownload.js
 ├── utils/               # Pure utility functions
 │   ├── jsonValidator.js
 │   ├── keyPathUtils.js
 │   └── prettifyJson.js
 ├── App.vue              # Root component with navigation
-├── main.js              # App initialization
+├── main.js              # App initialization (with Pinia setup)
 └── style.css            # Global styles
 ```
 
 ### Key Design Patterns
 
 1. **Composition API**: All components use `<script setup>` for cleaner code
-2. **Composables**: Extract reusable logic into composables (like React hooks)
-3. **Props Down, Events Up**: Parent components pass data via props, children emit events
-4. **Pure Functions**: Utils contain pure functions with no side effects
-5. **Client-Side Only**: No backend, all processing in browser
-6. **Simple Navigation**: Pages organized in src/pages/ with client-side routing in App.vue
+2. **Pinia Stores**: Centralized reactive state management for files, tiers, and edits
+3. **Composables**: Extract reusable logic into composables (like React hooks)
+4. **Props Down, Events Up**: Parent components pass data via props, children emit events
+5. **Pure Functions**: Utils contain pure functions with no side effects
+6. **Client-Side Only**: No backend, all processing in browser
+7. **Simple Navigation**: Pages organized in src/pages/ with client-side routing in App.vue
 
 ---
 
@@ -240,33 +260,33 @@ nav button.active {
 
 ```vue
 <script setup>
-import { ref } from 'vue';
+import { storeToRefs } from 'pinia';
 import FileUploader from '../components/FileUploader.vue';
 import ComparisonView from '../components/ComparisonView.vue';
+import { useFileStore } from '../stores/useFileStore';
+import { useTierStore } from '../stores/useTierStore';
 
-// State
-const file1 = ref(null);
-const file2 = ref(null);
-const diffResults = ref([]);
+// Pinia stores
+const fileStore = useFileStore();
+const tierStore = useTierStore();
+
+// Reactive state from stores
+const { file1, file2, diffResults } = storeToRefs(fileStore);
+const { currentTier } = storeToRefs(tierStore);
 
 // Handlers
 function handleFile1Loaded(file) {
-  file1.value = file;
+  fileStore.setFile1(file);
   if (file2.value) {
-    runComparison();
+    fileStore.runComparison();
   }
 }
 
 function handleFile2Loaded(file) {
-  file2.value = file;
+  fileStore.setFile2(file);
   if (file1.value) {
-    runComparison();
+    fileStore.runComparison();
   }
-}
-
-function runComparison() {
-  // TODO: Implement diff algorithm
-  console.log('Running comparison...');
 }
 </script>
 
@@ -275,10 +295,12 @@ function runComparison() {
     <div class="upload-section">
       <FileUploader
         file-id="file1"
+        :tier="currentTier"
         @file-loaded="handleFile1Loaded"
       />
       <FileUploader
         file-id="file2"
+        :tier="currentTier"
         @file-loaded="handleFile2Loaded"
       />
     </div>

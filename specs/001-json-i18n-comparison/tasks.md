@@ -30,26 +30,29 @@ description: "Task list for JSON i18n Comparison and Diff Tool implementation"
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create directory structure: `src/components/`, `src/pages/`, `src/composables/`, `src/utils/`
-- [ ] T002 Update `src/style.css` with base styles for tree viewer, color coding (red/yellow/neutral), navigation, and responsive layout
-- [ ] T003 [P] Create placeholder components for FileUploader, TreeViewer, ComparisonView, KeyDiffItem, EditControls, TierGate in `src/components/`
-- [ ] T004 [P] Create `src/pages/Index.vue` placeholder (main application page)
-- [ ] T005 [P] Create `src/pages/About.vue` with static content (features, pricing, how it works, technical details)
-- [ ] T006 Update `src/App.vue` with navigation structure (simple client-side routing between Index and About pages)
+- [ ] T001 Create directory structure: `src/components/`, `src/pages/`, `src/stores/`, `src/composables/`, `src/utils/`
+- [ ] T002 Install and configure Pinia in `src/main.js` (createPinia, app.use(pinia))
+- [ ] T003 Update `src/style.css` with base styles for tree viewer, color coding (red/yellow/neutral), navigation, and responsive layout
+- [ ] T004 [P] Create placeholder components for FileUploader, TreeViewer, ComparisonView, KeyDiffItem, EditControls, TierGate in `src/components/`
+- [ ] T005 [P] Create `src/pages/Index.vue` placeholder (main application page)
+- [ ] T006 [P] Create `src/pages/About.vue` with static content (features, pricing, how it works, technical details)
+- [ ] T007 Update `src/App.vue` with navigation structure (simple client-side routing between Index and About pages)
 
 ---
 
 ## Phase 2: Foundational (Blocking Prerequisites)
 
-**Purpose**: Core utilities and composables that MUST be complete before ANY user story can be implemented
+**Purpose**: Core utilities, composables, and Pinia stores that MUST be complete before ANY user story can be implemented
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T007 Implement key counting algorithm in `src/composables/useKeyCounter.js` (recursive depth-first traversal counting all keys including parents)
-- [ ] T008 [P] Implement JSON validation utility in `src/utils/jsonValidator.js` (validate JSON, extract error line numbers from SyntaxError)
-- [ ] T009 [P] Implement key path utilities in `src/utils/keyPathUtils.js` (build dot-notation paths, split paths, navigate nested objects)
-- [ ] T010 Implement JSON parser composable in `src/composables/useJsonParser.js` (parseFile, validateJson, getErrorLine methods using jsonValidator and useKeyCounter)
-- [ ] T011 Implement tier manager composable in `src/composables/useTierManager.js` (LocalStorage for tier preferences, getCurrentTier, checkKeyLimit, getTierConfig methods)
+- [ ] T008 Implement key counting algorithm in `src/composables/useKeyCounter.js` (recursive depth-first traversal counting all keys including parents)
+- [ ] T009 [P] Implement JSON validation utility in `src/utils/jsonValidator.js` (validate JSON, extract error line numbers from SyntaxError)
+- [ ] T010 [P] Implement key path utilities in `src/utils/keyPathUtils.js` (build dot-notation paths, split paths, navigate nested objects)
+- [ ] T011 Implement JSON parser composable in `src/composables/useJsonParser.js` (parseFile, validateJson, getErrorLine methods using jsonValidator and useKeyCounter)
+- [ ] T012 [P] Create Pinia store `src/stores/useFileStore.js` (state: file1, file2, diffResults; actions: setFile1, setFile2, runComparison, reset)
+- [ ] T013 [P] Create Pinia store `src/stores/useTierStore.js` (state: currentTier; actions: setTier, checkKeyLimit, loadTier; getters: keyLimit, tierDisplayName; persists to LocalStorage)
+- [ ] T014 [P] Create Pinia store `src/stores/useEditStore.js` (state: editHistory Map, file1Modified, file2Modified; actions: addEdit, applyEdit, clearEdits)
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -63,13 +66,13 @@ description: "Task list for JSON i18n Comparison and Diff Tool implementation"
 
 ### Implementation for User Story 1
 
-- [ ] T012 [P] [US1] Implement FileUploader component in `src/components/FileUploader.vue` (file input, drag-and-drop, size validation ≤10MB, emit file-loaded/file-error events)
-- [ ] T013 [P] [US1] Implement recursive diff algorithm in `src/composables/useJsonDiff.js` (compareFiles method returning KeyComparisonResult array with status: missing-left, missing-right, identical, different)
-- [ ] T014 [US1] Implement TreeNode subcomponent in `src/components/TreeViewer.vue` (recursive rendering, expand/collapse state, accepts diffResults prop for color coding)
-- [ ] T015 [US1] Implement TreeViewer component in `src/components/TreeViewer.vue` (orchestrates TreeNode recursion, exposes expandAll/collapseAll/scrollToKey methods, emits node-toggled events)
-- [ ] T016 [US1] Implement KeyDiffItem component in `src/components/KeyDiffItem.vue` (render single comparison row with color coding based on status, show values inline, emit add-key/edit-value events)
-- [ ] T017 [US1] Implement ComparisonView component in `src/components/ComparisonView.vue` (side-by-side layout, two TreeViewer instances, accepts file1/file2/diffResults props, emits save-requested/prettify-requested/edit-made events)
-- [ ] T018 [US1] Update `src/pages/Index.vue` to integrate FileUploader (two instances for file1/file2) and ComparisonView, wire up file-loaded handlers to trigger useJsonDiff, manage file1/file2/diffResults state
+- [ ] T015 [P] [US1] Implement FileUploader component in `src/components/FileUploader.vue` (file input, drag-and-drop, size validation ≤10MB, emit file-loaded/file-error events)
+- [ ] T016 [P] [US1] Implement recursive diff algorithm in `src/composables/useJsonDiff.js` (compareFiles method returning KeyComparisonResult array with status: missing-left, missing-right, identical, different)
+- [ ] T017 [US1] Implement TreeNode subcomponent in `src/components/TreeViewer.vue` (recursive rendering, expand/collapse state, accepts diffResults prop for color coding)
+- [ ] T018 [US1] Implement TreeViewer component in `src/components/TreeViewer.vue` (orchestrates TreeNode recursion, exposes expandAll/collapseAll/scrollToKey methods, emits node-toggled events)
+- [ ] T019 [US1] Implement KeyDiffItem component in `src/components/KeyDiffItem.vue` (render single comparison row with color coding based on status, show values inline, emit add-key/edit-value events)
+- [ ] T020 [US1] Implement ComparisonView component in `src/components/ComparisonView.vue` (side-by-side layout, two TreeViewer instances, accepts file1/file2/diffResults props, emits save-requested/prettify-requested/edit-made events)
+- [ ] T021 [US1] Update `src/pages/Index.vue` to integrate FileUploader (two instances for file1/file2) and ComparisonView using Pinia stores (useFileStore, useTierStore), wire up file-loaded handlers to trigger fileStore.runComparison()
 
 **Checkpoint**: At this point, User Story 1 should be fully functional - users can upload two files and see color-coded comparison
 
@@ -83,11 +86,11 @@ description: "Task list for JSON i18n Comparison and Diff Tool implementation"
 
 ### Implementation for User Story 2
 
-- [ ] T019 [P] [US2] Implement EditControls component in `src/components/EditControls.vue` (save button, prettify button, reset button, accept file/modified props, emit save/prettify/reset events, disable when not modified)
-- [ ] T020 [US2] Add inline edit functionality to TreeViewer in `src/components/TreeViewer.vue` (contenteditable or input overlay on value click, emit value-edited event with keyPath/newValue/targetFile)
-- [ ] T021 [US2] Add "add key" action to KeyDiffItem in `src/components/KeyDiffItem.vue` (button appears on missing-left/missing-right status, emit add-key event with keyPath/targetFile)
-- [ ] T022 [US2] Implement EditOperation tracking in `src/pages/Index.vue` (maintain Map of edits, update file content on add-key/value-edited, set modified flag, re-run diff after edits)
-- [ ] T023 [US2] Add visual feedback for modified state in TreeViewer (e.g., asterisk or badge on modified keys, highlight modified values)
+- [ ] T022 [P] [US2] Implement EditControls component in `src/components/EditControls.vue` (save button, prettify button, reset button, accept file/modified props, emit save/prettify/reset events, disable when not modified)
+- [ ] T023 [US2] Add inline edit functionality to TreeViewer in `src/components/TreeViewer.vue` (contenteditable or input overlay on value click, emit value-edited event with keyPath/newValue/targetFile)
+- [ ] T024 [US2] Add "add key" action to KeyDiffItem in `src/components/KeyDiffItem.vue` (button appears on missing-left/missing-right status, emit add-key event with keyPath/targetFile)
+- [ ] T025 [US2] Wire edit events to useEditStore in `src/pages/Index.vue` (call editStore.addEdit, editStore.applyEdit on add-key/value-edited events, re-run fileStore.runComparison after edits)
+- [ ] T026 [US2] Add visual feedback for modified state in TreeViewer (e.g., asterisk or badge on modified keys, highlight modified values using editStore.file1Modified/file2Modified)
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work - users can view differences and make edits
 
@@ -101,12 +104,12 @@ description: "Task list for JSON i18n Comparison and Diff Tool implementation"
 
 ### Implementation for User Story 3
 
-- [ ] T024 [P] [US3] Implement prettify utility in `src/utils/prettifyJson.js` (format JSON with 2-space indentation using JSON.stringify)
-- [ ] T025 [P] [US3] Implement file download composable in `src/composables/useFileDownload.js` (downloadFile method using Blob API and createElement('a') with download attribute)
-- [ ] T026 [US3] Wire EditControls save event to useFileDownload in `src/pages/Index.vue` (convert in-memory file content to JSON string, trigger download with original filename)
-- [ ] T027 [US3] Wire EditControls prettify event to prettifyJson in `src/pages/Index.vue` (apply formatting to file content, update in-memory state, show warning modal about git diff impacts)
-- [ ] T028 [US3] Create warning modal component in `src/components/PrettifyWarning.vue` (display "Prettification may cause extra git diff noise" message, OK/Cancel buttons)
-- [ ] T029 [US3] Add file validation on upload in FileUploader (display error with line number if JSON.parse fails, show clear message with file size if exceeds 10MB)
+- [ ] T027 [P] [US3] Implement prettify utility in `src/utils/prettifyJson.js` (format JSON with 2-space indentation using JSON.stringify)
+- [ ] T028 [P] [US3] Implement file download composable in `src/composables/useFileDownload.js` (downloadFile method using Blob API and createElement('a') with download attribute)
+- [ ] T029 [US3] Wire EditControls save event to useFileDownload in `src/pages/Index.vue` (get file content from fileStore, convert to JSON string, trigger download with original filename)
+- [ ] T030 [US3] Wire EditControls prettify event to prettifyJson in `src/pages/Index.vue` (apply formatting to file content in fileStore, update in-memory state, show warning modal about git diff impacts)
+- [ ] T031 [US3] Create warning modal component in `src/components/PrettifyWarning.vue` (display "Prettification may cause extra git diff noise" message, OK/Cancel buttons)
+- [ ] T032 [US3] Add file validation on upload in FileUploader (display error with line number if JSON.parse fails, show clear message with file size if exceeds 10MB)
 
 **Checkpoint**: All P1 user stories complete - MVP is fully functional for core workflow (upload, compare, edit, save)
 
@@ -120,11 +123,11 @@ description: "Task list for JSON i18n Comparison and Diff Tool implementation"
 
 ### Implementation for User Story 4
 
-- [ ] T030 [P] [US4] Implement TierGate component in `src/components/TierGate.vue` (display tier limits, current key count, blocking modal when limit exceeded, emit upgrade-requested/dismissed events)
-- [ ] T031 [US4] Integrate useKeyCounter in FileUploader validation flow in `src/components/FileUploader.vue` (count keys on file parse, check against tier limit from useTierManager, emit file-error if exceeded)
-- [ ] T032 [US4] Add key count display to ComparisonView in `src/components/ComparisonView.vue` (show "File 1: X keys / [tier limit]" and "File 2: Y keys / [tier limit]" badges)
-- [ ] T033 [US4] Add tier limit error messaging in FileUploader in `src/components/FileUploader.vue` (display "File exceeds Free tier limit of 20 keys. Current: 35 keys. Upgrade to Medium tier for up to 100 keys.")
-- [ ] T034 [US4] Initialize default tier (Free) in `src/pages/Index.vue` using useTierManager (load from LocalStorage or default to free tier)
+- [ ] T033 [P] [US4] Implement TierGate component in `src/components/TierGate.vue` (display tier limits from tierStore, current key count, blocking modal when limit exceeded, emit upgrade-requested/dismissed events)
+- [ ] T034 [US4] Integrate useKeyCounter in FileUploader validation flow in `src/components/FileUploader.vue` (count keys on file parse, check against tier limit from tierStore.checkKeyLimit, emit file-error if exceeded)
+- [ ] T035 [US4] Add key count display to ComparisonView in `src/components/ComparisonView.vue` (show "File 1: X keys / [tier limit]" and "File 2: Y keys / [tier limit]" badges using tierStore.keyLimit)
+- [ ] T036 [US4] Add tier limit error messaging in FileUploader in `src/components/FileUploader.vue` (display "File exceeds Free tier limit of 20 keys. Current: 35 keys. Upgrade to Medium tier for up to 100 keys.")
+- [ ] T037 [US4] Initialize default tier (Free) in `src/pages/Index.vue` using tierStore (call tierStore.loadTier() on mount to load from LocalStorage or default to free tier)
 
 **Checkpoint**: Tier limits are enforced - users see clear feedback when files exceed their tier limits
 
@@ -138,11 +141,10 @@ description: "Task list for JSON i18n Comparison and Diff Tool implementation"
 
 ### Implementation for User Story 5
 
-- [ ] T035 [P] [US5] Create TierSelector component in `src/components/TierSelector.vue` (pricing table showing all tiers, feature comparison, select tier buttons, emit tier-selected event)
-- [ ] T036 [US5] Add tier selection UI to Index.vue in `src/pages/Index.vue` (settings button to open TierSelector modal, handle tier-selected event to update useTierManager)
-- [ ] T037 [US5] Implement tier persistence in useTierManager in `src/composables/useTierManager.js` (setTier method writes to LocalStorage with key 'json-i18n-diff-tier')
-- [ ] T038 [US5] Add upgrade prompts to TierGate in `src/components/TierGate.vue` (when limit exceeded, show "Upgrade to Medium ($5/month)" or "Upgrade to Enterprise ($99/month)" CTAs)
-- [ ] T039 [US5] Add current tier indicator to App header in `src/App.vue` (badge showing "Free", "Medium", or "Enterprise" tier)
+- [ ] T038 [P] [US5] Create TierSelector component in `src/components/TierSelector.vue` (pricing table showing all tiers, feature comparison, select tier buttons, emit tier-selected event)
+- [ ] T039 [US5] Add tier selection UI to Index.vue in `src/pages/Index.vue` (settings button to open TierSelector modal, handle tier-selected event to call tierStore.setTier)
+- [ ] T040 [US5] Add upgrade prompts to TierGate in `src/components/TierGate.vue` (when limit exceeded, show "Upgrade to Medium ($5/month)" or "Upgrade to Enterprise ($99/month)" CTAs)
+- [ ] T041 [US5] Add current tier indicator to App header in `src/App.vue` (badge showing tierStore.tierDisplayName - "Free", "Medium", or "Enterprise")
 
 **Checkpoint**: All user stories complete - full feature set implemented including monetization UI
 
@@ -152,16 +154,17 @@ description: "Task list for JSON i18n Comparison and Diff Tool implementation"
 
 **Purpose**: Improvements that affect multiple user stories and enhance overall quality
 
-- [ ] T040 [P] Add keyboard navigation to TreeViewer in `src/components/TreeViewer.vue` (arrow keys for navigation, Enter to expand/collapse, Tab for focus management)
-- [ ] T041 [P] Add responsive design styles to `src/style.css` (mobile layout: stacked instead of side-by-side, touch-friendly controls)
-- [ ] T042 [P] Add accessibility attributes in all components (ARIA labels, roles, focus management, keyboard shortcuts)
-- [ ] T043 [P] Add loading states to FileUploader in `src/components/FileUploader.vue` (spinner during file parsing, progress indicator for large files)
-- [ ] T044 Add edge case handling for circular references in useJsonDiff in `src/composables/useJsonDiff.js` (detect cycles, display error instead of infinite loop)
-- [ ] T045 Add edge case handling for arrays in useJsonDiff in `src/composables/useJsonDiff.js` (compare array elements, show index-based keys in tree)
-- [ ] T046 Optimize TreeViewer for large files in `src/components/TreeViewer.vue` (implement virtual scrolling if performance < 3s for 1000 keys)
-- [ ] T047 Add JSDoc comments to all composables in `src/composables/` (document params, return types, usage examples)
-- [ ] T048 Add JSDoc comments to all utilities in `src/utils/` (document pure functions, edge cases)
-- [ ] T049 Run through quickstart.md validation scenarios in `specs/001-json-i18n-comparison/quickstart.md` (verify all examples work as documented)
+- [ ] T042 [P] Add keyboard navigation to TreeViewer in `src/components/TreeViewer.vue` (arrow keys for navigation, Enter to expand/collapse, Tab for focus management)
+- [ ] T043 [P] Add responsive design styles to `src/style.css` (mobile layout: stacked instead of side-by-side, touch-friendly controls)
+- [ ] T044 [P] Add accessibility attributes in all components (ARIA labels, roles, focus management, keyboard shortcuts)
+- [ ] T045 [P] Add loading states to FileUploader in `src/components/FileUploader.vue` (spinner during file parsing, progress indicator for large files)
+- [ ] T046 Add edge case handling for circular references in useJsonDiff in `src/composables/useJsonDiff.js` (detect cycles, display error instead of infinite loop)
+- [ ] T047 Add edge case handling for arrays in useJsonDiff in `src/composables/useJsonDiff.js` (compare array elements, show index-based keys in tree)
+- [ ] T048 Optimize TreeViewer for large files in `src/components/TreeViewer.vue` (implement virtual scrolling if performance < 3s for 1000 keys)
+- [ ] T049 Add JSDoc comments to all composables in `src/composables/` (document params, return types, usage examples)
+- [ ] T050 Add JSDoc comments to all utilities in `src/utils/` (document pure functions, edge cases)
+- [ ] T051 Add JSDoc comments to all Pinia stores in `src/stores/` (document state, actions, getters)
+- [ ] T052 Run through quickstart.md validation scenarios in `specs/001-json-i18n-comparison/quickstart.md` (verify all examples work as documented)
 
 ---
 
@@ -189,109 +192,108 @@ description: "Task list for JSON i18n Comparison and Diff Tool implementation"
 
 ### Within Each User Story
 
-- **US1**: T012-T013-T014 can run in parallel ([P]), then T015 depends on T014, T016 can run parallel with T015, T017 depends on T015 and T016, T018 depends on all previous
-- **US2**: T019-T020-T021 can run in parallel ([P]), T022 depends on all three, T023 depends on T022
-- **US3**: T024-T025-T028 can run in parallel ([P]), T026 depends on T025, T027 depends on T024 and T028, T029 can run parallel with others
-- **US4**: T030-T031 can run in parallel ([P]), T032-T033-T034 depend on T030-T031 completion
-- **US5**: T035 runs first, T036-T037 can run after T035, T038 depends on T035 and US4 T030, T039 depends on T037
+- **US1**: T015-T016-T017 can run in parallel ([P]), then T018 depends on T017, T019 can run parallel with T018, T020 depends on T018 and T019, T021 depends on all previous
+- **US2**: T022-T023-T024 can run in parallel ([P]), T025 depends on all three, T026 depends on T025
+- **US3**: T027-T028-T031 can run in parallel ([P]), T029 depends on T028, T030 depends on T027 and T031, T032 can run parallel with others
+- **US4**: T033-T034 can run in parallel ([P]), T035-T036-T037 depend on T033-T034 completion
+- **US5**: T038 runs first, T039 can run after T038, T040 depends on T038 and US4 T033, T041 depends on T039
 
 ### Parallel Opportunities
 
 **Phase 1 (Setup)**:
 
 - T001 must complete first (creates directories)
-- T002, T003, T004, T005, T006 can run in parallel after T001
+- T002 must complete second (installs and configures Pinia)
+- T003, T004, T005, T006, T007 can run in parallel after T001 and T002
 
 **Phase 2 (Foundational)**:
 
-- T007 must complete first (useKeyCounter needed by useJsonParser)
-- T008, T009 can run in parallel after T007
-- T010 depends on T007, T008, T009
-- T011 can run in parallel with T010
+- T008 must complete first (useKeyCounter needed by useJsonParser)
+- T009, T010, T012, T013, T014 can run in parallel after T008 (3 Pinia stores can be created in parallel)
+- T011 depends on T008, T009, T010
 
 **Phase 3 (User Story 1)**:
 
 ```bash
 # Launch in parallel:
-T012: FileUploader component
-T013: useJsonDiff composable
-T014: TreeNode in TreeViewer
+T015: FileUploader component
+T016: useJsonDiff composable
+T017: TreeNode in TreeViewer
 
-# Then after T014:
-T015: Complete TreeViewer
+# Then after T017:
+T018: Complete TreeViewer
 
 # Then in parallel:
-T016: KeyDiffItem component
+T019: KeyDiffItem component
 
-# Then after T015 and T016:
-T017: ComparisonView component
+# Then after T018 and T019:
+T020: ComparisonView component
 
 # Finally:
-T018: Integrate in Index.vue
+T021: Integrate in Index.vue with Pinia stores
 ```
 
 **Phase 4 (User Story 2)**:
 
 ```bash
 # Launch in parallel:
-T019: EditControls component
-T020: Inline edit in TreeViewer
-T021: Add key action in KeyDiffItem
+T022: EditControls component
+T023: Inline edit in TreeViewer
+T024: Add key action in KeyDiffItem
 
 # Then after all three:
-T022: EditOperation tracking in Index.vue
-T023: Visual feedback for modified state
+T025: Wire edit events to useEditStore in Index.vue
+T026: Visual feedback for modified state
 ```
 
 **Phase 5 (User Story 3)**:
 
 ```bash
 # Launch in parallel:
-T024: prettifyJson utility
-T025: useFileDownload composable
-T028: PrettifyWarning modal
+T027: prettifyJson utility
+T028: useFileDownload composable
+T031: PrettifyWarning modal
 
-# Then after T025:
-T026: Wire save in Index.vue
+# Then after T028:
+T029: Wire save in Index.vue
 
-# Then after T024 and T028:
-T027: Wire prettify in Index.vue
+# Then after T027 and T031:
+T030: Wire prettify in Index.vue
 
 # Can run anytime in parallel:
-T029: File validation in FileUploader
+T032: File validation in FileUploader
 ```
 
 **Phase 6 (User Story 4)**:
 
 ```bash
 # Launch in parallel:
-T030: TierGate component
-T031: Integrate useKeyCounter in FileUploader
+T033: TierGate component
+T034: Integrate useKeyCounter in FileUploader
 
 # Then after both:
-T032: Key count display in ComparisonView
-T033: Error messaging in FileUploader
-T034: Initialize tier in Index.vue
+T035: Key count display in ComparisonView
+T036: Error messaging in FileUploader
+T037: Initialize tier in Index.vue
 ```
 
 **Phase 7 (User Story 5)**:
 
 ```bash
 # First:
-T035: TierSelector component
+T038: TierSelector component
 
 # Then in parallel:
-T036: Tier selection UI in Index.vue
-T037: Tier persistence in useTierManager
+T039: Tier selection UI in Index.vue
 
-# Then after T035 and US4 T030:
-T038: Upgrade prompts in TierGate
+# Then after T038 and US4 T033:
+T040: Upgrade prompts in TierGate
 
-# Then after T037:
-T039: Current tier indicator in App.vue
+# Then after T039:
+T041: Current tier indicator in App.vue
 ```
 
-**Phase 8 (Polish)** - All tasks T040-T049 can run in parallel (different concerns, different files)
+**Phase 8 (Polish)** - All tasks T042-T052 can run in parallel (different concerns, different files)
 
 ---
 
@@ -299,9 +301,9 @@ T039: Current tier indicator in App.vue
 
 ```bash
 # Three developers can work simultaneously after Phase 2 completes:
-Developer A: T012 "Implement FileUploader component in src/components/FileUploader.vue"
-Developer B: T013 "Implement recursive diff algorithm in src/composables/useJsonDiff.js"
-Developer C: T014 "Implement TreeNode subcomponent in src/components/TreeViewer.vue"
+Developer A: T015 "Implement FileUploader component in src/components/FileUploader.vue"
+Developer B: T016 "Implement recursive diff algorithm in src/composables/useJsonDiff.js"
+Developer C: T017 "Implement TreeNode subcomponent in src/components/TreeViewer.vue"
 
 # All three can commit without conflicts (different files)
 ```
@@ -312,13 +314,13 @@ Developer C: T014 "Implement TreeNode subcomponent in src/components/TreeViewer.
 
 ### MVP First (User Stories 1-3 Only)
 
-1. Complete Phase 1: Setup (T001-T006) - ~3-4 hours
-2. Complete Phase 2: Foundational (T007-T011) - CRITICAL - ~2-3 days
-3. Complete Phase 3: User Story 1 (T012-T018) - ~5-7 days
+1. Complete Phase 1: Setup (T001-T007) - ~4-5 hours (includes Pinia setup)
+2. Complete Phase 2: Foundational (T008-T014) - CRITICAL - ~3-4 days (includes 3 Pinia stores)
+3. Complete Phase 3: User Story 1 (T015-T021) - ~5-7 days
 4. **STOP and VALIDATE**: Upload two JSON files, verify comparison works
-5. Complete Phase 4: User Story 2 (T019-T023) - ~2-3 days
-6. **STOP and VALIDATE**: Make edits, verify state updates
-7. Complete Phase 5: User Story 3 (T024-T029) - ~2-3 days
+5. Complete Phase 4: User Story 2 (T022-T026) - ~2-3 days
+6. **STOP and VALIDATE**: Make edits, verify state updates in Pinia stores
+7. Complete Phase 5: User Story 3 (T027-T032) - ~2-3 days
 8. **STOP and VALIDATE**: Save and download files, verify contents
 9. **MVP COMPLETE**: Core workflow functional (~2 weeks total)
 
@@ -336,15 +338,15 @@ Developer C: T014 "Implement TreeNode subcomponent in src/components/TreeViewer.
 
 With 3 developers:
 
-1. **All Together**: Complete Setup + Foundational (Phase 1-2) - ~3 days
+1. **All Together**: Complete Setup + Foundational (Phase 1-2) - ~4 days (includes Pinia stores)
 2. **After Foundational Complete**:
-   - Developer A: User Story 1 (T012, T015, T018) + User Story 3 (T025, T026, T027)
-   - Developer B: User Story 1 (T013) + User Story 2 (T019, T022, T023)
-   - Developer C: User Story 1 (T014, T016, T017) + User Story 4 (T030-T034)
+   - Developer A: User Story 1 (T015, T018, T021) + User Story 3 (T028, T029, T030)
+   - Developer B: User Story 1 (T016) + User Story 2 (T022, T025, T026)
+   - Developer C: User Story 1 (T017, T019, T020) + User Story 4 (T033-T037)
 3. **After US1-4 Complete**:
-   - Developer A: User Story 5 (T035-T039)
-   - Developer B: Polish (T040-T044)
-   - Developer C: Polish (T045-T049)
+   - Developer A: User Story 5 (T038-T041)
+   - Developer B: Polish (T042-T047)
+   - Developer C: Polish (T048-T052)
 
 **Timeline with parallel work**: ~2 weeks to MVP, ~3 weeks to full feature set
 
@@ -352,33 +354,33 @@ With 3 developers:
 
 ## Summary
 
-- **Total Tasks**: 49 tasks across 8 phases
-- **MVP Scope**: Phases 1-5 (User Stories 1-3) = 29 tasks
-- **Full Feature Set**: All phases = 49 tasks
+- **Total Tasks**: 52 tasks across 8 phases
+- **MVP Scope**: Phases 1-5 (User Stories 1-3) = 32 tasks
+- **Full Feature Set**: All phases = 52 tasks
 - **Estimated MVP Timeline**: 2 weeks (1 developer) or 1 week (3 developers parallel)
 - **Estimated Full Timeline**: 3-4 weeks (1 developer) or 2 weeks (3 developers parallel)
 
 ### Task Count by User Story
 
-- Setup: 6 tasks (includes pages structure)
-- Foundational: 5 tasks (BLOCKS all stories)
+- Setup: 7 tasks (includes pages structure and Pinia setup)
+- Foundational: 7 tasks (BLOCKS all stories - includes 3 Pinia stores)
 - User Story 1 (P1): 7 tasks - Core comparison view
 - User Story 2 (P1): 5 tasks - Editing functionality
 - User Story 3 (P1): 6 tasks - Save and validation
 - User Story 4 (P2): 5 tasks - Tier limits
-- User Story 5 (P3): 5 tasks - Tier selection
-- Polish: 10 tasks - Quality improvements
+- User Story 5 (P3): 4 tasks - Tier selection
+- Polish: 11 tasks - Quality improvements
 
 ### Parallel Opportunities Identified
 
-- **Phase 1**: 5 parallel tasks after directory creation (T002-T006)
-- **Phase 2**: 3 parallel tasks (utilities and composables)
+- **Phase 1**: 5 parallel tasks after directory creation and Pinia setup (T003-T007)
+- **Phase 2**: 6 parallel tasks (utilities, composables, and 3 Pinia stores)
 - **Phase 3 (US1)**: 3 initial parallel tasks (FileUploader, useJsonDiff, TreeNode)
 - **Phase 4 (US2)**: 3 parallel tasks (EditControls, inline edit, add key action)
 - **Phase 5 (US3)**: 4 parallel tasks (utilities, modal, validation)
 - **Phase 6 (US4)**: 2 initial parallel tasks
-- **Phase 7 (US5)**: 2 parallel tasks after TierSelector
-- **Phase 8**: All 10 polish tasks can run in parallel
+- **Phase 7 (US5)**: 1 parallel task after TierSelector
+- **Phase 8**: All 11 polish tasks can run in parallel
 
 ### Independent Test Criteria
 
@@ -392,7 +394,7 @@ Each user story has clear acceptance criteria:
 
 ### Suggested MVP Scope
 
-**Minimum Viable Product**: User Stories 1-3 (Phases 1-5, tasks T001-T029)
+**Minimum Viable Product**: User Stories 1-3 (Phases 1-5, tasks T001-T032)
 
 This delivers complete core workflow:
 
@@ -401,6 +403,7 @@ This delivers complete core workflow:
 3. Edit values and add missing keys
 4. Save modified files
 5. Navigate between main app and About page
+6. Reactive state management with Pinia stores
 
 **Time to MVP**: ~2 weeks (solo) or ~1 week (team of 3)
 
@@ -418,3 +421,4 @@ This delivers complete core workflow:
 - Tier system (US4-US5) is separable from core functionality (US1-US3)
 - Pages structure added: Index.vue (main app) and About.vue (static info)
 - App.vue now handles simple client-side navigation between pages
+- **Pinia stores centralize state management**: useFileStore (files/comparison), useTierStore (tiers), useEditStore (edits)

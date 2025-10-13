@@ -6,7 +6,148 @@
 
 ## Overview
 
-Since this is a client-side-only application, there are no REST/GraphQL APIs. Instead, this document defines the contracts (props, emits, exposed methods) for Vue 3 components and composables. These contracts ensure components can be developed and tested independently.
+Since this is a client-side-only application, there are no REST/GraphQL APIs. Instead, this document defines the contracts (props, emits, exposed methods) for Vue 3 components, Pinia stores, and composables. These contracts ensure components can be developed and tested independently.
+
+---
+
+## Pinia Stores
+
+### useFileStore
+
+**Purpose**: Centralized state management for uploaded files and comparison results
+
+**Location**: `src/stores/useFileStore.js`
+
+**State**:
+
+```typescript
+interface FileStoreState {
+  file1: JsonFile | null;
+  file2: JsonFile | null;
+  diffResults: KeyComparisonResult[];
+}
+```
+
+**Actions**:
+
+```typescript
+interface FileStoreActions {
+  /** Set first file */
+  setFile1(file: JsonFile): void;
+
+  /** Set second file */
+  setFile2(file: JsonFile): void;
+
+  /** Run comparison between file1 and file2 */
+  runComparison(): void;
+
+  /** Clear all files and results */
+  reset(): void;
+}
+```
+
+**Getters**:
+
+```typescript
+interface FileStoreGetters {
+  /** Check if both files are loaded */
+  hasFiles: boolean;
+
+  /** Get total key count across both files */
+  totalKeyCount: number;
+}
+```
+
+---
+
+### useTierStore
+
+**Purpose**: Manage user tier and key limit enforcement
+
+**Location**: `src/stores/useTierStore.js`
+
+**State**:
+
+```typescript
+interface TierStoreState {
+  currentTier: UserTier;
+}
+```
+
+**Actions**:
+
+```typescript
+interface TierStoreActions {
+  /** Set user tier (persists to LocalStorage) */
+  setTier(tier: 'free' | 'medium' | 'enterprise'): void;
+
+  /** Check if key count is within tier limit */
+  checkKeyLimit(keyCount: number): boolean;
+
+  /** Load tier from LocalStorage on init */
+  loadTier(): void;
+}
+```
+
+**Getters**:
+
+```typescript
+interface TierStoreGetters {
+  /** Get current tier key limit */
+  keyLimit: number;
+
+  /** Get current tier display name */
+  tierDisplayName: string;
+}
+```
+
+---
+
+### useEditStore
+
+**Purpose**: Track edit operations and modified state
+
+**Location**: `src/stores/useEditStore.js`
+
+**State**:
+
+```typescript
+interface EditStoreState {
+  editHistory: Map<string, EditOperation>;
+  file1Modified: boolean;
+  file2Modified: boolean;
+}
+```
+
+**Actions**:
+
+```typescript
+interface EditStoreActions {
+  /** Record an edit operation */
+  addEdit(operation: EditOperation): void;
+
+  /** Apply edit to file in fileStore */
+  applyEdit(operation: EditOperation): void;
+
+  /** Clear all edits */
+  clearEdits(): void;
+
+  /** Undo last edit (future feature) */
+  undo(): void;
+}
+```
+
+**Getters**:
+
+```typescript
+interface EditStoreGetters {
+  /** Check if any file has been modified */
+  hasModifications: boolean;
+
+  /** Get edit count */
+  editCount: number;
+}
+```
 
 ---
 
@@ -20,11 +161,7 @@ Since this is a client-side-only application, there are no REST/GraphQL APIs. In
 
 **Props**: None (root page)
 
-**State**:
-
-- `file1`: Ref<JsonFile | null> - First uploaded file
-- `file2`: Ref<JsonFile | null> - Second uploaded file
-- `diffResults`: Ref<KeyComparisonResult[]> - Comparison results
+**State Management**: Uses Pinia stores (useFileStore, useTierStore, useEditStore)
 
 **Child Components Used**:
 
@@ -33,7 +170,7 @@ Since this is a client-side-only application, there are no REST/GraphQL APIs. In
 - EditControls
 - TierGate
 
-**Note**: This page contains the core application logic previously in App.vue
+**Note**: This page coordinates between components and Pinia stores
 
 ---
 
