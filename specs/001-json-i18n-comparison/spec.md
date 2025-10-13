@@ -5,6 +5,16 @@
 **Status**: Draft
 **Input**: User description: "Upload one and then another JSON file used for internationalization (i18n). Basic validation of json files. For main initial file show tree of nested keys, with values. When second json file is loaded show: new values in the matching nested key hierarchy, where a key is missing in the hierarchy RED with a way to add key to key (This could be in either file), where a value is the same for a key in both files YELLOW with a way to edit values (This could be a legitimate placeholder or a value update missing). Ability to save update either file. Ability to prettify either file with warning that that cause extra git diffing. Versions: Single page app, Downloadable git repo, Host website with simple free version (Limit 20 keys), Medium ($5 monthly, Limited number of keys <100), and enterprise versions ($99 monthly, 100-1000 keys, Additional features?), Command line version, Electron app, VS extension."
 
+## Clarifications
+
+### Session 2025-10-13
+
+- Q: How should nested keys be counted toward tier limits? → A: Count every key including parent objects (e.g., `user.profile.name` = 3 keys: "user", "profile", "name")
+- Q: What indentation should prettify use? → A: 2 spaces (modern standard, compact)
+- Q: Should yellow highlights appear for ALL identical values, or only for suspected placeholders? → A: All identical values get yellow (user decides if it's a problem)
+- Q: Should there be a file size limit? → A: 10 MB per file (very generous)
+- Q: How should conflicting edits be handled? → A: Last edit wins (simplest for single-user)
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - View and Compare Basic i18n Files (Priority: P1)
@@ -98,12 +108,12 @@ A developer with larger translation files subscribes to a Medium ($5/month, up t
 - What happens when a JSON file has circular references or invalid structure?
 - How does the system handle extremely deep nesting (10+ levels)?
 - What happens when both files have the same key but different nesting depths?
-- How does the system handle very large files (approaching memory limits)?
+- How does the system handle very large files (approaching memory limits)? System enforces 10 MB file size limit to prevent browser memory issues.
 - What happens when a user tries to add a key that already exists?
 - How does the system handle special characters in key names or values?
 - What happens if a user uploads non-JSON files (e.g., .txt, .xml)?
 - How does the system handle empty files or files with no keys?
-- What happens when a user makes conflicting edits in quick succession?
+- What happens when a user makes conflicting edits in quick succession? System applies last-edit-wins strategy; most recent edit overwrites previous changes.
 
 ## Requirements *(mandatory)*
 
@@ -116,7 +126,7 @@ A developer with larger translation files subscribes to a Medium ($5/month, up t
 - **FR-003**: System MUST display the first uploaded file as a tree structure showing all nested keys and their values
 - **FR-004**: System MUST overlay the second file's data onto the tree structure when uploaded
 - **FR-005**: System MUST highlight keys that exist in one file but not the other in red
-- **FR-006**: System MUST highlight keys that exist in both files with identical values in yellow
+- **FR-006**: System MUST highlight keys that exist in both files with identical values in yellow; all identical values are highlighted regardless of content (user determines if match is intentional or requires attention)
 - **FR-007**: System MUST display keys with different values in both files in a neutral color (default/uncolored)
 - **FR-008**: System MUST preserve and display the nested hierarchy structure of JSON keys
 
@@ -128,31 +138,33 @@ A developer with larger translation files subscribes to a Medium ($5/month, up t
 - **FR-012**: System MUST allow inline editing of values for any key in either file
 - **FR-013**: System MUST maintain the correct nested position when adding new keys
 - **FR-014**: System MUST update the visual tree immediately when edits are made
+- **FR-015**: System MUST apply last-edit-wins strategy for conflicting edits; most recent change overwrites previous changes to the same key
 
 #### File Operations
 
-- **FR-015**: System MUST provide a "save" action for each file independently
-- **FR-016**: System MUST download the modified file with all user changes applied when saved
-- **FR-017**: System MUST ensure saved files are valid JSON format
-- **FR-018**: System MUST provide a "prettify" action for each file independently
-- **FR-019**: System MUST apply consistent indentation and formatting when prettifying
-- **FR-020**: System MUST display a warning when prettify is used, indicating potential git diff impacts
+- **FR-016**: System MUST provide a "save" action for each file independently
+- **FR-017**: System MUST download the modified file with all user changes applied when saved
+- **FR-018**: System MUST ensure saved files are valid JSON format
+- **FR-019**: System MUST provide a "prettify" action for each file independently
+- **FR-020**: System MUST apply consistent 2-space indentation and formatting when prettifying
+- **FR-021**: System MUST display a warning when prettify is used, indicating potential git diff impacts
 
 #### Validation and Error Handling
 
-- **FR-021**: System MUST display clear error messages when invalid JSON is uploaded
-- **FR-022**: System MUST indicate the location of JSON syntax errors when possible (line number)
-- **FR-023**: System MUST prevent processing of files that exceed the user's tier key limit
-- **FR-024**: System MUST count all keys including nested keys for tier limit enforcement
+- **FR-022**: System MUST display clear error messages when invalid JSON is uploaded
+- **FR-023**: System MUST indicate the location of JSON syntax errors when possible (line number)
+- **FR-024**: System MUST prevent processing of files that exceed the user's tier key limit
+- **FR-025**: System MUST count all keys including nested keys for tier limit enforcement; counting includes parent objects and all descendant keys (e.g., `user.profile.name` counts as 3 keys: "user", "profile", and "name")
+- **FR-026**: System MUST reject files larger than 10 MB with a clear error message indicating the file size limit
 
 #### Tier Management
 
-- **FR-025**: System MUST enforce a 20-key limit for free tier users
-- **FR-026**: System MUST enforce a 100-key limit for Medium tier ($5/month) users
-- **FR-027**: System MUST enforce a 1000-key limit for Enterprise tier ($99/month) users
-- **FR-028**: System MUST display the current key count and limit to the user
-- **FR-029**: System MUST provide clear messaging about tier limits when exceeded
-- **FR-030**: System MUST allow users to view tier options and pricing
+- **FR-027**: System MUST enforce a 20-key limit for free tier users (counting all keys including parent objects)
+- **FR-028**: System MUST enforce a 100-key limit for Medium tier ($5/month) users (counting all keys including parent objects)
+- **FR-029**: System MUST enforce a 1000-key limit for Enterprise tier ($99/month) users (counting all keys including parent objects)
+- **FR-030**: System MUST display the current key count and limit to the user
+- **FR-031**: System MUST provide clear messaging about tier limits when exceeded
+- **FR-032**: System MUST allow users to view tier options and pricing
 
 ### Key Entities
 
@@ -181,12 +193,13 @@ A developer with larger translation files subscribes to a Medium ($5/month, up t
 - Users are familiar with JSON file structure and i18n concepts
 - Users have two i18n files to compare (e.g., different language versions or old vs new versions)
 - Files will use standard JSON format (no custom extensions or non-standard syntax)
-- Key limits are counted as total keys including all nested levels (not just top-level keys)
-- "Prettify" will use standard JSON formatting (2 or 4 space indentation)
+- Key limits are counted as total keys including all nested levels; each key in the hierarchy path counts toward the limit (e.g., `{"user": {"profile": {"name": "John"}}}` contains 3 keys: "user", "profile", "name")
+- "Prettify" will use 2-space indentation following modern JSON formatting standards
 - Payment processing for paid tiers will be handled by a standard payment provider
 - The single-page app version will be the primary version, with other versions (CLI, Electron, VS extension) as future enhancements
 - Users have modern web browsers with JavaScript enabled
 - File uploads will be processed entirely client-side (no server-side storage for privacy)
+- Files will not exceed 10 MB in size; larger files are rejected to prevent browser memory issues
 
 ## Out of Scope
 
