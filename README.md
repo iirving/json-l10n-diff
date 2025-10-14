@@ -36,16 +36,6 @@ Upload your JSON localization files (e.g., `en.json` and `fr.json`) and instantl
 - **Prettify JSON** for consistent formatting
 - **Clean diffs** for easier version control
 
-## 💰 Pricing
-
-| Plan | Price | File Size Limit | Best For |
-|------|-------|-----------------|----------|
-| 🆓 **Free** | $0 | Up to 20 keys | Small projects, testing, demos |
-| 💼 **Medium** | $5/month | Up to 100 keys | Growing apps, indie developers |
-| 🏢 **Enterprise** | $99/month | Up to 1,000 keys | Large applications, teams |
-
-> **Note**: Keys are counted including parent objects. For example, `user.profile.name` counts as 3 keys: "user", "profile", and "name".
-
 ## 🔒 Privacy & Security
 
 - **100% client-side** - All processing happens in your browser
