@@ -82,7 +82,7 @@ You've added new features to your app and need to ensure all languages are up to
 ✅ Upload fr.json (French translations)
 🔴 Missing keys highlighted instantly
 ➕ Add missing keys with one click
-💾 Download updated fr.json
+💾 Save updated fr.json
 ```
 
 ### Scenario 2: Catching Untranslated Placeholders
@@ -91,10 +91,10 @@ Sometimes placeholder text gets copied instead of translated.
 
 ```text
 ✅ Upload en.json: { "welcome": "Welcome" }
-✅ Upload es.json: { "welcome": "Welcome" }
+✅ Upload fr.json: { "welcome": "Welcome" }
 🟡 Identical values highlighted in yellow
-✏️ Edit "Welcome" → "Bienvenido"
-💾 Download corrected es.json
+✏️ Edit "Welcome" → "Bienvenue"
+💾 Save corrected fr.json
 ```
 
 ### Scenario 3: Team Synchronization
@@ -114,7 +114,7 @@ Multiple team members working on translations? Keep files in sync.
 2. **Parse** - Files are validated and structured into a nested tree
 3. **Compare** - Differences are calculated and highlighted
 4. **Edit** - Make changes directly in the interface
-5. **Export** - Download your modified files
+5. **Export** - Save your modified files
 
 All processing happens in your browser—fast, secure, and private.
 
