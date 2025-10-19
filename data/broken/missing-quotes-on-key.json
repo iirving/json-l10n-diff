@@ -3,7 +3,7 @@
     "title": "JSON i18n Diff Tool",
     "description": "Compare translation files"
   },
-  "navigation": {
+  invalid-key: {
     "home": "Home",
     "about": "About"
   }

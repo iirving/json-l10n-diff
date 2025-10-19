@@ -1,10 +1,10 @@
 {
-  "app": {
-    "title": "JSON i18n Diff Tool",
-    "description": "Compare translation files"
+  'app': {
+    'title': 'JSON i18n Diff Tool',
+    'description': 'Compare translation files'
   },
-  "navigation": {
-    "home": "Home",
-    "about": "About"
+  'navigation': {
+    'home': 'Home',
+    'about': 'About'
   }
 }
