@@ -1,19 +1,19 @@
 /**
  * Validates JSON string and extracts error details
- * 
+ *
  * @param {string} jsonString - The JSON string to validate
  * @returns {Object} Validation result with isValid flag and optional error details
- * 
+ *
  * @example
  * validateJson('{"valid": "json"}'); // { isValid: true }
  * validateJson('{"invalid": }'); // { isValid: false, error: '...', line: 1 }
  */
 export const validateJson = (jsonString) => {
-  if (!jsonString || typeof jsonString !== 'string') {
+  if (!jsonString || typeof jsonString !== "string") {
     return {
       isValid: false,
-      error: 'Input must be a non-empty string',
-      line: null
+      error: "Input must be a non-empty string",
+      line: null,
     };
   }
 
@@ -24,7 +24,7 @@ export const validateJson = (jsonString) => {
     return {
       isValid: false,
       error: error.message,
-      line: extractErrorLine(error.message)
+      line: extractErrorLine(error.message),
     };
   }
 };
@@ -32,10 +32,10 @@ export const validateJson = (jsonString) => {
 /**
  * Extracts line number from JSON parse error message
  * Handles various error message formats from different browsers
- * 
+ *
  * @param {string} errorMessage - The error message from JSON.parse
  * @returns {number|null} The line number where the error occurred, or null if not found
- * 
+ *
  * @example
  * extractErrorLine('Unexpected token } in JSON at position 12'); // null
  * extractErrorLine('JSON.parse: unexpected character at line 3'); // 3
