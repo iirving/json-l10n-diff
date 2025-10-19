@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { useJsonParser } from '../../src/composables/useJsonParser.js';
+import { useJsonParser } from '@/composables/useJsonParser.js';
 
 describe('useJsonParser', () => {
   let jsonParser;

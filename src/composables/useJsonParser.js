@@ -1,5 +1,5 @@
-import { validateJson } from '../utils/jsonValidator.js';
-import { countKeys } from '../utils/keyCounter.js';
+import { validateJson } from '@/utils/jsonValidator.js';
+import { countKeys } from '@/utils/keyCounter.js';
 
 /**
  * Composable for parsing and validating JSON files

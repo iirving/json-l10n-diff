@@ -4,7 +4,7 @@ import {
   splitPath,
   getValueByPath,
   setValueByPath,
-} from '../../src/utils/keyPathUtils.js';
+} from '@/utils/keyPathUtils.js';
 
 describe('buildPath', () => {
   it('should build path from array of keys', () => {

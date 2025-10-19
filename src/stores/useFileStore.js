@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { useJsonDiff } from '../composables/useJsonDiff.js';
+import { useJsonDiff } from '@/composables/useJsonDiff.js';
 
 /**
  * Pinia store for managing file state and comparison results

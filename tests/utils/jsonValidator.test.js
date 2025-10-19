@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { validateJson } from '../../src/utils/jsonValidator.js';
+import { validateJson } from '@/utils/jsonValidator.js';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 

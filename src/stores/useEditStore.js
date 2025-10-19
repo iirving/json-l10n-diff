@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { setValueByPath } from '../utils/keyPathUtils.js';
+import { setValueByPath } from '@/utils/keyPathUtils.js';
 
 /**
  * Pinia store for managing edit operations and modified states

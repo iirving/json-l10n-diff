@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { useJsonDiff } from '../../src/composables/useJsonDiff.js';
+import { useJsonDiff } from '@/composables/useJsonDiff.js';
 
 describe('useJsonDiff', () => {
   let jsonDiff;
