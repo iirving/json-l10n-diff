@@ -73,7 +73,7 @@ description: 'Task list for JSON i18n Comparison and Diff Tool implementation'
 
 ### Implementation for User Story 1
 
-- [x] T015 [P] [US1] Implement FileUploader component in `src/components/FileUploader.vue` (file input, drag-and-drop, size validation ≤10MB, emit file-loaded/file-error events)
+- [x] T015 [P] [US1] Implement FileUploader component in `src/components/FileUploader.vue` (file input, drag-and-drop, size validation ≤1MB, emit file-loaded/file-error events)
 - [x] T015-TEST [P] [US1] [TEST] Write unit tests for FileUploader in `tests/components/FileUploader.test.js` (test file selection, drag-and-drop, size validation, error emissions, event emissions, aim for 90%+ coverage)
 - [x] T016 [P] [US1] Implement recursive diff algorithm in `src/composables/useJsonDiff.js` (compareFiles method returning KeyComparisonResult array with status: missing-left, missing-right, identical, different)
 - [x] T016-TEST [P] [US1] [TEST] Write unit tests for useJsonDiff in `tests/composables/useJsonDiff.test.js` (test comparison logic, all status types, nested objects, edge cases, aim for 90%+ coverage)
@@ -133,7 +133,7 @@ description: 'Task list for JSON i18n Comparison and Diff Tool implementation'
 - [ ] T030-TEST [US3] [TEST] Update Index.vue tests in `tests/pages/Index.test.js` (test prettify wiring, state updates, modal display, aim for 90%+ coverage)
 - [ ] T031 [US3] Create warning modal component in `src/components/PrettifyWarning.vue` (display "Prettification may cause extra git diff noise" message, OK/Cancel buttons)
 - [ ] T031-TEST [US3] [TEST] Write unit tests for PrettifyWarning in `tests/components/PrettifyWarning.test.js` (test modal display, button clicks, event emissions, aim for 90%+ coverage)
-- [ ] T032 [US3] Add file validation on upload in FileUploader (display error with line number if JSON.parse fails, show clear message with file size if exceeds 10MB)
+- [ ] T032 [US3] Add file validation on upload in FileUploader (display error with line number if JSON.parse fails, show clear message with file size if exceeds 1MB)
 - [ ] T032-TEST [US3] [TEST] Update FileUploader tests in `tests/components/FileUploader.test.js` (test validation error display, line number extraction, size error messages, aim for 90%+ coverage)
 
 **Checkpoint**: All P1 user stories complete - MVP is fully functional for core workflow (upload, compare, edit, save)

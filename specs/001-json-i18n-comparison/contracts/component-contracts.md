@@ -218,7 +218,7 @@ interface FileUploaderProps {
   accept?: string; // default: ".json,application/json"
 
   /** Maximum file size in bytes */
-  maxSize?: number; // default: 10485760 (10 MB)
+  maxSize?: number; // default: 1048576 (1 MB)
 }
 ```
 
@@ -850,8 +850,8 @@ interface ErrorResponse {
 // Components emit errors, don't throw
 emit('error', {
   code: 'FILE_TOO_LARGE',
-  message: 'File exceeds 10 MB limit. Current size: 12.3 MB.',
-  details: { actualSize: 12.3, limit: 10 },
+  message: 'File exceeds 1 MB limit. Current size: 1.2 MB.',
+  details: { actualSize: 1.2, limit: 1 },
   severity: 'error',
   action: 'Please reduce file size and try again.',
 });

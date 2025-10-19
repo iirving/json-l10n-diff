@@ -142,7 +142,7 @@ Follow this order based on prioritized user stories:
 
 1. **FileUploader Component** (2-3 days)
    - File input with drag-and-drop
-   - Size validation (10 MB limit)
+   - Size validation (1 MB limit)
    - JSON parsing and validation
    - Error display with line numbers
 
@@ -420,7 +420,7 @@ function handleFile2Loaded(file) {
       <h3>Technical Details</h3>
       <p>
         This tool is built with Vue 3 and processes all files client-side for
-        privacy. No data is sent to any server. Maximum file size is 10 MB.
+        privacy. No data is sent to any server. Maximum file size is 1 MB.
       </p>
     </section>
   </div>
@@ -561,7 +561,7 @@ export function useJsonParser() {
 
   async function parseFile(file, tier) {
     // Validate file size
-    const maxSize = 10 * 1024 * 1024; // 10 MB
+    const maxSize = 1 * 1024 * 1024; // 1 MB
     if (file.size > maxSize) {
       return {
         error: true,
