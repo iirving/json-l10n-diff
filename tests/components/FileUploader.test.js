@@ -232,8 +232,8 @@ describe('FileUploader', () => {
   });
 
   describe('file size validation', () => {
-    it('should accept file exactly at 10MB limit', async () => {
-      const content = 'x'.repeat(10 * 1024 * 1024); // Exactly 10MB
+    it('should accept file exactly at 1MB limit', async () => {
+      const content = 'x'.repeat(1 * 1024 * 1024); // Exactly 1MB
       const file = new File([content], 'limit.json', {
         type: 'application/json',
       });
@@ -252,8 +252,8 @@ describe('FileUploader', () => {
       expect(wrapper.emitted('file-error')).toBeFalsy();
     });
 
-    it('should reject file just over 10MB limit', async () => {
-      const content = 'x'.repeat(10 * 1024 * 1024 + 1); // 1 byte over 10MB
+    it('should reject file just over 1MB limit', async () => {
+      const content = 'x'.repeat(1 * 1024 * 1024 + 1); // 1 byte over 1MB
       const file = new File([content], 'over-limit.json', {
         type: 'application/json',
       });
