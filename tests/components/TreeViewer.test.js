@@ -20,6 +20,15 @@ describe('TreeViewer', () => {
 
   const mockDiffResults = [
     {
+      keyPath: 'app',
+      status: 'different',
+      valueLeft: { title: 'My App', welcome: 'Welcome' },
+      valueRight: { title: 'Mon App', welcome: 'Welcome' },
+      depth: 1,
+      isLeaf: false,
+      parentPath: '',
+    },
+    {
       keyPath: 'app.title',
       status: 'different',
       valueLeft: 'My App',
@@ -36,6 +45,24 @@ describe('TreeViewer', () => {
       depth: 2,
       isLeaf: true,
       parentPath: 'app',
+    },
+    {
+      keyPath: 'app.nested',
+      status: 'missing-left',
+      valueLeft: null,
+      valueRight: { deep: 'value' },
+      depth: 2,
+      isLeaf: false,
+      parentPath: 'app',
+    },
+    {
+      keyPath: 'errors',
+      status: 'different',
+      valueLeft: {},
+      valueRight: { notFound: 'Not found' },
+      depth: 1,
+      isLeaf: false,
+      parentPath: '',
     },
     {
       keyPath: 'errors.notFound',
@@ -117,8 +144,8 @@ describe('TreeViewer', () => {
     });
 
     it('should hide children when node is collapsed', async () => {
-      // First, ensure node is expanded
-      await wrapper.setData({ expandedNodes: new Set(['app']) });
+      // First, ensure node is expanded by calling expandAll
+      await wrapper.vm.expandAll();
       await wrapper.vm.$nextTick();
 
       let childNodes = wrapper.findAll('.tree-node[data-parent="app"]');
@@ -205,7 +232,7 @@ describe('TreeViewer', () => {
   });
 
   describe('Recursion', () => {
-    it('should render deeply nested objects', () => {
+    it('should render deeply nested objects', async () => {
       const deepData = {
         level1: {
           level2: {
@@ -223,6 +250,9 @@ describe('TreeViewer', () => {
           defaultExpanded: true,
         },
       });
+
+      // Wait for onMounted to complete
+      await deepWrapper.vm.$nextTick();
 
       expect(deepWrapper.text()).toContain('level1');
       expect(deepWrapper.text()).toContain('level2');
@@ -269,14 +299,23 @@ describe('TreeViewer', () => {
       const targetElement = document.createElement('div');
       targetElement.scrollIntoView = scrollIntoViewMock;
 
-      vi.spyOn(wrapper.vm.$el, 'querySelector').mockReturnValue(targetElement);
+      // Mock document.querySelector instead of wrapper.$el.querySelector
+      const querySelectorSpy = vi
+        .spyOn(document, 'querySelector')
+        .mockReturnValue(targetElement);
 
       await wrapper.vm.scrollToKey('app.title');
 
+      expect(querySelectorSpy).toHaveBeenCalledWith(
+        '[data-key-path="app.title"]'
+      );
       expect(scrollIntoViewMock).toHaveBeenCalledWith({
         behavior: 'smooth',
         block: 'center',
       });
+
+      // Cleanup
+      querySelectorSpy.mockRestore();
     });
   });
 
