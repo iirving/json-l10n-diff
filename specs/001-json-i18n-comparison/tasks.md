@@ -46,10 +46,10 @@ description: "Task list for JSON i18n Comparison and Diff Tool implementation"
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T008 Implement key counting algorithm in `src/composables/useKeyCounter.js` (recursive depth-first traversal counting all keys including parents)
-- [ ] T009 [P] Implement JSON validation utility in `src/utils/jsonValidator.js` (validate JSON, extract error line numbers from SyntaxError)
-- [ ] T010 [P] Implement key path utilities in `src/utils/keyPathUtils.js` (build dot-notation paths, split paths, navigate nested objects)
-- [ ] T011 Implement JSON parser composable in `src/composables/useJsonParser.js` (parseFile, validateJson, getErrorLine methods using jsonValidator and useKeyCounter)
+- [x] T008 Implement key counting algorithm in `src/utils/keyCounter.js` (recursive depth-first traversal counting all keys including parents) - **Note: Changed from composable to utility (pure function)**
+- [x] T009 [P] Implement JSON validation utility in `src/utils/jsonValidator.js` (validate JSON, extract error line numbers from SyntaxError)
+- [x] T010 [P] Implement key path utilities in `src/utils/keyPathUtils.js` (build dot-notation paths, split paths, navigate nested objects)
+- [ ] T011 Implement JSON parser composable in `src/composables/useJsonParser.js` (parseFile, validateJson, getErrorLine methods using jsonValidator and keyCounter from utils)
 - [ ] T012 [P] Create Pinia store `src/stores/useFileStore.js` (state: file1, file2, diffResults; actions: setFile1, setFile2, runComparison, reset)
 - [ ] T013 [P] Create Pinia store `src/stores/useTierStore.js` (state: currentTier; actions: setTier, checkKeyLimit, loadTier; getters: keyLimit, tierDisplayName; persists to LocalStorage)
 - [ ] T014 [P] Create Pinia store `src/stores/useEditStore.js` (state: editHistory Map, file1Modified, file2Modified; actions: addEdit, applyEdit, clearEdits)
@@ -68,7 +68,7 @@ description: "Task list for JSON i18n Comparison and Diff Tool implementation"
 
 - [ ] T015 [P] [US1] Implement FileUploader component in `src/components/FileUploader.vue` (file input, drag-and-drop, size validation ≤10MB, emit file-loaded/file-error events)
 - [ ] T016 [P] [US1] Implement recursive diff algorithm in `src/composables/useJsonDiff.js` (compareFiles method returning KeyComparisonResult array with status: missing-left, missing-right, identical, different)
-- [ ] T017 [US1] Implement TreeNode subcomponent in `src/components/TreeViewer.vue` (recursive rendering, expand/collapse state, accepts diffResults prop for color coding)
+- [ ] T017 [US1] Implement TreeNode component in `src/components/TreeViewer.vue` (recursive rendering, expand/collapse state, accepts diffResults prop for color coding)
 - [ ] T018 [US1] Implement TreeViewer component in `src/components/TreeViewer.vue` (orchestrates TreeNode recursion, exposes expandAll/collapseAll/scrollToKey methods, emits node-toggled events)
 - [ ] T019 [US1] Implement KeyDiffItem component in `src/components/KeyDiffItem.vue` (render single comparison row with color coding based on status, show values inline, emit add-key/edit-value events)
 - [ ] T020 [US1] Implement ComparisonView component in `src/components/ComparisonView.vue` (side-by-side layout, two TreeViewer instances, accepts file1/file2/diffResults props, emits save-requested/prettify-requested/edit-made events)
@@ -303,7 +303,7 @@ T041: Current tier indicator in App.vue
 # Three developers can work simultaneously after Phase 2 completes:
 Developer A: T015 "Implement FileUploader component in src/components/FileUploader.vue"
 Developer B: T016 "Implement recursive diff algorithm in src/composables/useJsonDiff.js"
-Developer C: T017 "Implement TreeNode subcomponent in src/components/TreeViewer.vue"
+Developer C: T017 "Implement TreeNode component in src/components/TreeViewer.vue"
 
 # All three can commit without conflicts (different files)
 ```
