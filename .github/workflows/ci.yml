@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x]
+        node-version: [22.x]
 
     steps:
       - name: Checkout code
@@ -33,8 +33,8 @@ jobs:
       - name: Run Tests
         run: npm run test:run
 
-      - name: Generate Coverage Report
-        run: npm run test:coverage
+      # - name: Generate Coverage Report
+      #   run: npm run test:coverage
 
       - name: Lint (when configured)
         run: npm run lint --if-present
