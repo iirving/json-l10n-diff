@@ -439,7 +439,8 @@ describe('KeyDiffItem', () => {
         },
       });
 
-      expect(wrapper.props('leftValue')).toBeUndefined();
+      // Vue props with default: null will be null when undefined is passed
+      expect(wrapper.props('leftValue')).toBeNull();
     });
 
     it('should handle zero as a value', () => {
