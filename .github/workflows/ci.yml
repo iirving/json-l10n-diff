@@ -32,7 +32,6 @@ jobs:
 
       - name: Run Tests
         run: npm run test:run
-        continue-on-error: false
 
       - name: Generate Coverage Report
         run: npm run test:coverage
