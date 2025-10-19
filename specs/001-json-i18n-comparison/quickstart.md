@@ -39,6 +39,27 @@ npm run build
 npm run preview
 ```
 
+### Test Data Files
+
+The `./data` directory contains l10n JSON test files for test scenarios and examples:
+
+```
+data/
+└── test1/
+    ├── test1.en.json    # English test file
+    └── test1.fr.json    # French test file
+```
+
+These files can be used during development to test:
+
+- File upload functionality
+- Diff comparison algorithms
+- Missing key detection
+- Identical value highlighting
+- Edit and save operations
+
+Use these test files when implementing features to verify functionality before testing with real localization files.
+
 **Setup Pinia in main.js**:
 
 ```javascript
@@ -433,14 +454,6 @@ th {
 ```
 
 ### Step 2: Implement File Upload
-
-    </main>
-  </div>
-</template>
-
-<style>
-/* TODO: Add styles */
-</style>
 
 ```
 

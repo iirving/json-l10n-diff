@@ -33,6 +33,27 @@ npm install
 npm run dev
 ```
 
+### Test Data Files
+
+The `./data` directory contains l10n JSON test files for development and testing:
+
+```text
+data/
+└── test1/
+    ├── test1.en.json    # English test file
+    └── test1.fr.json    # French test file
+```
+
+Use these files when implementing features to:
+
+- Test file upload functionality
+- Verify diff comparison algorithms
+- Check missing key detection
+- Validate identical value highlighting
+- Test edit and save operations
+
+Additional test scenarios can be added to the `./data` directory as needed.
+
 ## Development Workflow
 
 ### 1. Understand the Architecture

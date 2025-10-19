@@ -169,6 +169,19 @@ npm run dev
 npm run build
 ```
 
+### Test Data
+
+The `./data` directory contains l10n JSON test files for development, testing, and examples:
+
+```text
+data/
+└── test1/
+    ├── test1.en.json    # English test file
+    └── test1.fr.json    # French test file
+```
+
+Use these files to test the tool during development or as reference examples.
+
 ### Development Status
 
 **Current Phase**: Implementation in progress (MVP development)
