@@ -1,7 +1,7 @@
 <script setup>
 /**
  * Index.vue - Main Application Page
- * 
+ *
  * Purpose: Main page for JSON i18n comparison tool
  * Features (to be implemented):
  * - Two FileUploader instances (for file1 and file2)
@@ -11,15 +11,15 @@
  * - Handle edit events and save operations
  */
 
-import { ref } from 'vue'
-import FileUploader from '../components/FileUploader.vue'
-import ComparisonView from '../components/ComparisonView.vue'
-import EditControls from '../components/EditControls.vue'
-import TierGate from '../components/TierGate.vue'
+import { ref } from "vue";
+import FileUploader from "../components/FileUploader.vue";
+import ComparisonView from "../components/ComparisonView.vue";
+import EditControls from "../components/EditControls.vue";
+import TierGate from "../components/TierGate.vue";
 
 // Placeholder state - will be replaced with Pinia stores in Phase 3
-const file1 = ref(null)
-const file2 = ref(null)
+const file1 = ref(null);
+const file2 = ref(null);
 </script>
 
 <template>
@@ -40,31 +40,18 @@ const file2 = ref(null)
       </section>
 
       <section class="comparison-section">
-        <ComparisonView 
-          :file1="file1" 
-          :file2="file2"
-          :diff-results="[]"
-        />
+        <ComparisonView :file1="file1" :file2="file2" :diff-results="[]" />
       </section>
 
       <section class="controls-section">
-        <EditControls 
-          file-name="file.json"
-          :modified="false"
-        />
-      </section>
-
-      <section class="tier-section">
-        <TierGate 
-          current-tier="free"
-          :key-count="0"
-          :key-limit="20"
-          :exceeded="false"
-        />
+        <EditControls file-name="file.json" :modified="false" />
       </section>
 
       <div class="placeholder-note">
-        <p>ℹ️ Index.vue placeholder - Full integration with Pinia stores will be implemented in Phase 3 (T021)</p>
+        <p>
+          ℹ️ Index.vue placeholder - Full integration with Pinia stores will be
+          implemented in Phase 3 (T021)
+        </p>
       </div>
     </main>
   </div>
@@ -81,7 +68,11 @@ const file2 = ref(null)
   padding: var(--spacing-xl) var(--spacing-lg);
   text-align: center;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  background: linear-gradient(135deg, rgba(100, 108, 255, 0.1) 0%, rgba(100, 108, 255, 0.05) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(100, 108, 255, 0.1) 0%,
+    rgba(100, 108, 255, 0.05) 100%
+  );
 }
 
 .page-header h1 {
