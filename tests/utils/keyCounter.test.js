@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { countKeys } from "./keyCounter.js";
+import { countKeys } from "../../src/utils/keyCounter.js";
 
 describe("countKeys", () => {
   it("should return 0 for null input", () => {
@@ -37,7 +37,6 @@ describe("countKeys", () => {
         welcome: "Hello",
       },
     };
-    // Should count: app (1) + title (1) + welcome (1) = 3
     expect(countKeys(obj)).toBe(3);
   });
 
@@ -51,7 +50,6 @@ describe("countKeys", () => {
         },
       },
     };
-    // Should count: level1 (1) + level2 (1) + level3 (1) + value (1) = 4
     expect(countKeys(obj)).toBe(4);
   });
 
@@ -68,7 +66,6 @@ describe("countKeys", () => {
         },
       },
     };
-    // app (1) + title (1) + welcome (1) + user (1) + profile (1) + name (1) + email (1) = 7
     expect(countKeys(obj)).toBe(7);
   });
 
@@ -79,7 +76,6 @@ describe("countKeys", () => {
         items: ["a", "b"],
       },
     };
-    // list (1) + nested (1) + items (1) = 3 (arrays are not counted)
     expect(countKeys(obj)).toBe(3);
   });
 
@@ -90,7 +86,6 @@ describe("countKeys", () => {
         c: null,
       },
     };
-    // a (1) + b (1) + c (1) = 3
     expect(countKeys(obj)).toBe(3);
   });
 
@@ -101,7 +96,6 @@ describe("countKeys", () => {
         c: undefined,
       },
     };
-    // a (1) + b (1) + c (1) = 3
     expect(countKeys(obj)).toBe(3);
   });
 
@@ -118,7 +112,6 @@ describe("countKeys", () => {
         },
       },
     };
-    // string (1) + number (1) + boolean (1) + nullValue (1) + nested (1) + array (1) + obj (1) + deep (1) = 8
     expect(countKeys(obj)).toBe(8);
   });
 
@@ -129,7 +122,6 @@ describe("countKeys", () => {
         nested: "two",
       },
     };
-    // 1 (1) + 2 (1) + nested (1) = 3
     expect(countKeys(obj)).toBe(3);
   });
 
@@ -140,7 +132,6 @@ describe("countKeys", () => {
         key: "value",
       },
     };
-    // empty (1) + notEmpty (1) + key (1) = 3
     expect(countKeys(obj)).toBe(3);
   });
 });

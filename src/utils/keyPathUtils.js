@@ -52,6 +52,12 @@ export const getValueByPath = (obj, path) => {
   }
 
   const keys = splitPath(path);
+
+  // Return undefined for empty path instead of the entire object
+  if (keys.length === 0) {
+    return undefined;
+  }
+
   return keys.reduce((current, key) => {
     if (current && typeof current === "object") {
       return current[key];

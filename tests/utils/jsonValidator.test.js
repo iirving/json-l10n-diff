@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { validateJson } from "./jsonValidator.js";
+import { validateJson } from "../../src/utils/jsonValidator.js";
 
 describe("validateJson", () => {
   describe("invalid input handling", () => {
