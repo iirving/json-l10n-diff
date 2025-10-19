@@ -26,7 +26,7 @@ const props = defineProps({
 const emit = defineEmits(['file-loaded', 'file-error']);
 
 // Constants
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB in bytes
+const MAX_FILE_SIZE = 1 * 1024 * 1024; // 1MB in bytes
 
 /**
  * Generate a unique file input ID
