@@ -10,7 +10,7 @@
  * countKeys(obj); // Returns 3 (app, title, welcome)
  */
 export const countKeys = (obj) => {
-  if (!obj || typeof obj !== "object" || Array.isArray(obj)) {
+  if (!obj || typeof obj !== 'object' || Array.isArray(obj)) {
     return 0;
   }
 
@@ -20,7 +20,7 @@ export const countKeys = (obj) => {
   // Recursively count keys in nested objects
   for (const key of keys) {
     const value = obj[key];
-    if (value && typeof value === "object" && !Array.isArray(value)) {
+    if (value && typeof value === 'object' && !Array.isArray(value)) {
       count += countKeys(value);
     }
   }

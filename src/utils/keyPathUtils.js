@@ -10,11 +10,11 @@
  */
 export const buildPath = (keys) => {
   if (!Array.isArray(keys)) {
-    return "";
+    return '';
   }
   return keys
-    .filter((key) => key !== null && key !== undefined && key !== "")
-    .join(".");
+    .filter((key) => key !== null && key !== undefined && key !== '')
+    .join('.');
 };
 
 /**
@@ -28,10 +28,10 @@ export const buildPath = (keys) => {
  * splitPath('user.profile.name'); // ['user', 'profile', 'name']
  */
 export const splitPath = (path) => {
-  if (!path || typeof path !== "string") {
+  if (!path || typeof path !== 'string') {
     return [];
   }
-  return path.split(".").filter((key) => key !== "");
+  return path.split('.').filter((key) => key !== '');
 };
 
 /**
@@ -47,7 +47,7 @@ export const splitPath = (path) => {
  * getValueByPath(obj, 'app.missing'); // undefined
  */
 export const getValueByPath = (obj, path) => {
-  if (!obj || typeof obj !== "object") {
+  if (!obj || typeof obj !== 'object') {
     return undefined;
   }
 
@@ -59,7 +59,7 @@ export const getValueByPath = (obj, path) => {
   }
 
   return keys.reduce((current, key) => {
-    if (current && typeof current === "object") {
+    if (current && typeof current === 'object') {
       return current[key];
     }
     return undefined;
@@ -80,7 +80,7 @@ export const getValueByPath = (obj, path) => {
  * setValueByPath(obj, 'app.title', 'My App'); // { app: { title: 'My App' } }
  */
 export const setValueByPath = (obj, path, value) => {
-  if (!obj || typeof obj !== "object") {
+  if (!obj || typeof obj !== 'object') {
     return obj;
   }
 
@@ -93,7 +93,7 @@ export const setValueByPath = (obj, path, value) => {
     if (index === keys.length - 1) {
       current[key] = value;
     } else {
-      if (!current[key] || typeof current[key] !== "object") {
+      if (!current[key] || typeof current[key] !== 'object') {
         current[key] = {};
       }
     }

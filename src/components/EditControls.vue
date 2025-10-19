@@ -1,7 +1,7 @@
 <script setup>
 /**
  * EditControls Component (Placeholder)
- * 
+ *
  * Purpose: Provide save, prettify, and reset actions
  * Features (to be implemented):
  * - Save button (downloads modified file)
@@ -13,20 +13,22 @@
 defineProps({
   fileName: {
     type: String,
-    default: 'file.json'
+    default: 'file.json',
   },
   modified: {
     type: Boolean,
-    default: false
-  }
-})
+    default: false,
+  },
+});
 
-defineEmits(['save', 'prettify', 'reset'])
+defineEmits(['save', 'prettify', 'reset']);
 </script>
 
 <template>
   <div class="edit-controls">
-    <p class="placeholder-note">EditControls placeholder - to be implemented in Phase 4</p>
+    <p class="placeholder-note">
+      EditControls placeholder - to be implemented in Phase 4
+    </p>
     <div class="controls-group">
       <button disabled>Save {{ fileName }}</button>
       <button disabled>Prettify</button>

@@ -63,16 +63,16 @@ Use these test files when implementing features to verify functionality before t
 **Setup Pinia in main.js**:
 
 ```javascript
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
-import App from './App.vue'
-import './style.css'
+import { createApp } from 'vue';
+import { createPinia } from 'pinia';
+import App from './App.vue';
+import './style.css';
 
-const app = createApp(App)
-const pinia = createPinia()
+const app = createApp(App);
+const pinia = createPinia();
 
-app.use(pinia)
-app.mount('#app')
+app.use(pinia);
+app.mount('#app');
 ```
 
 ---
@@ -360,10 +360,13 @@ function handleFile2Loaded(file) {
       <ul>
         <li>Upload and compare two JSON i18n files</li>
         <li>Visual tree structure with nested keys</li>
-        <li>Color-coded differences:
+        <li>
+          Color-coded differences:
           <ul>
             <li><strong style="color: red;">Red</strong>: Missing keys</li>
-            <li><strong style="color: #ffa500;">Yellow</strong>: Identical values</li>
+            <li>
+              <strong style="color: #ffa500;">Yellow</strong>: Identical values
+            </li>
             <li>Neutral: Different values</li>
           </ul>
         </li>
@@ -416,8 +419,8 @@ function handleFile2Loaded(file) {
     <section>
       <h3>Technical Details</h3>
       <p>
-        This tool is built with Vue 3 and processes all files client-side
-        for privacy. No data is sent to any server. Maximum file size is 10 MB.
+        This tool is built with Vue 3 and processes all files client-side for
+        privacy. No data is sent to any server. Maximum file size is 10 MB.
       </p>
     </section>
   </div>
@@ -440,7 +443,8 @@ table {
   margin: 1rem 0;
 }
 
-th, td {
+th,
+td {
   border: 1px solid #ddd;
   padding: 0.75rem;
   text-align: left;
@@ -455,7 +459,7 @@ th {
 
 ### Step 2: Implement File Upload
 
-```
+````
 
 ### Step 2: Implement FileUploader Component
 
@@ -543,7 +547,7 @@ function triggerUpload() {
 <style scoped>
 /* TODO: Add component styles */
 </style>
-```
+````
 
 ### Step 3: Create useJsonParser Composable
 
@@ -564,7 +568,7 @@ export function useJsonParser() {
         code: 'FILE_TOO_LARGE',
         message: `File exceeds 10 MB limit. Current size: ${(file.size / 1024 / 1024).toFixed(1)} MB.`,
         details: { actualSize: file.size, limit: maxSize },
-        severity: 'error'
+        severity: 'error',
       };
     }
 
@@ -582,7 +586,7 @@ export function useJsonParser() {
         code: 'INVALID_JSON',
         message: `Invalid JSON${line ? ` at line ${line}` : ''}: ${error.message}`,
         details: { line, originalError: error.message },
-        severity: 'error'
+        severity: 'error',
       };
     }
 
@@ -603,7 +607,7 @@ export function useJsonParser() {
       content: parsedContent,
       keyCount,
       uploadedAt: new Date().toISOString(),
-      modified: false
+      modified: false,
     };
   }
 
@@ -623,7 +627,7 @@ export function useJsonParser() {
   }
 
   return {
-    parseFile
+    parseFile,
   };
 }
 ```
@@ -664,7 +668,7 @@ export function useKeyCounter() {
         code: 'TIER_LIMIT_EXCEEDED',
         message: `File exceeds ${tier.displayName} tier limit of ${limit} keys. Current: ${count} keys. Upgrade to access larger files.`,
         details: { tier: tier.displayName, limit, count },
-        severity: 'error'
+        severity: 'error',
       };
     }
 
@@ -673,7 +677,7 @@ export function useKeyCounter() {
 
   return {
     countKeys,
-    validateKeyCount
+    validateKeyCount,
   };
 }
 ```
@@ -717,7 +721,7 @@ export function useJsonDiff() {
           valueRight: side === 'right' ? sourceValue : undefined,
           depth: currentPath.split('.').length,
           isLeaf: !isObject(sourceValue),
-          parentPath: parentPath || null
+          parentPath: parentPath || null,
         });
         continue;
       }
@@ -725,12 +729,20 @@ export function useJsonDiff() {
       // Both have the key
       if (isObject(sourceValue) && isObject(targetValue)) {
         // Recurse for nested objects
-        traverseObject(sourceValue, targetValue, currentPath, results, visited, side);
+        traverseObject(
+          sourceValue,
+          targetValue,
+          currentPath,
+          results,
+          visited,
+          side
+        );
       } else {
         // Compare leaf values
-        const status = JSON.stringify(sourceValue) === JSON.stringify(targetValue)
-          ? 'identical'
-          : 'different';
+        const status =
+          JSON.stringify(sourceValue) === JSON.stringify(targetValue)
+            ? 'identical'
+            : 'different';
 
         results.push({
           keyPath: currentPath,
@@ -739,7 +751,7 @@ export function useJsonDiff() {
           valueRight: side === 'right' ? sourceValue : targetValue,
           depth: currentPath.split('.').length,
           isLeaf: true,
-          parentPath: parentPath || null
+          parentPath: parentPath || null,
         });
       }
     }
@@ -750,7 +762,7 @@ export function useJsonDiff() {
   }
 
   return {
-    compareObjects
+    compareObjects,
   };
 }
 ```
@@ -797,7 +809,7 @@ try {
   emit('error', {
     code: 'OPERATION_FAILED',
     message: error.message,
-    severity: 'error'
+    severity: 'error',
   });
 }
 ```
@@ -837,7 +849,7 @@ export function useFeature() {
   return {
     state,
     derived,
-    method
+    method,
   };
 }
 ```
@@ -862,7 +874,7 @@ Install Vue DevTools browser extension for:
 console.log('[FileUploader] File loaded:', {
   name: file.name,
   size: file.size,
-  keyCount
+  keyCount,
 });
 
 // Remove console.logs before committing

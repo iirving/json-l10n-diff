@@ -114,24 +114,24 @@ test(jsonValidator): add nested object tests
 
 ```vue
 <script setup>
-import { ref, computed } from 'vue'
-import { useFileStore } from '@/stores/useFileStore'
+import { ref, computed } from 'vue';
+import { useFileStore } from '@/stores/useFileStore';
 
 // Props
 const props = defineProps({
   // Always define with types
-})
+});
 
 // Store
-const fileStore = useFileStore()
+const fileStore = useFileStore();
 
 // Local state
-const isExpanded = ref(false)
+const isExpanded = ref(false);
 
 // Computed
 const hasErrors = computed(() => {
   // Logic here
-})
+});
 </script>
 ```
 
@@ -144,18 +144,18 @@ const hasErrors = computed(() => {
 ```javascript
 export const useFileStore = defineStore('file', () => {
   // State
-  const files = ref([])
+  const files = ref([]);
 
   // Getters
-  const hasFiles = computed(() => files.value.length > 0)
+  const hasFiles = computed(() => files.value.length > 0);
 
   // Actions
   function uploadFile(file) {
     // Logic here
   }
 
-  return { files, hasFiles, uploadFile }
-})
+  return { files, hasFiles, uploadFile };
+});
 ```
 
 #### Utilities
@@ -210,17 +210,21 @@ npm run type-check
 
    ```markdown
    ## Task Reference
+
    Implements T001 from specs/001-json-i18n-comparison/tasks.md
 
    ## Changes
+
    - Created src/pages/, src/stores/, src/composables/, src/utils/
    - Added .gitkeep files to preserve directory structure
 
    ## Testing
+
    - [ ] Verified directories exist
    - [ ] Confirmed no build errors
 
    ## Screenshots
+
    (if applicable)
    ```
 
@@ -257,9 +261,9 @@ src/
 Use `@/` for src imports:
 
 ```javascript
-import { useFileStore } from '@/stores/useFileStore'
-import { validateJSON } from '@/utils/jsonValidator'
-import FileUploader from '@/components/FileUploader.vue'
+import { useFileStore } from '@/stores/useFileStore';
+import { validateJSON } from '@/utils/jsonValidator';
+import FileUploader from '@/components/FileUploader.vue';
 ```
 
 ## Getting Help

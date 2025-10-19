@@ -24,7 +24,7 @@ A client-side single-page application that allows developers to upload and compa
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 ### Component Architecture ✅
 
@@ -134,7 +134,7 @@ public/                        # Static assets
 
 ## Complexity Tracking
 
-*No constitution violations detected. All requirements align with simplicity principles.*
+_No constitution violations detected. All requirements align with simplicity principles._
 
 ---
 

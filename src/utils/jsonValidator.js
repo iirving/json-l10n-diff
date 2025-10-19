@@ -9,10 +9,10 @@
  * validateJson('{"invalid": }'); // { isValid: false, error: '...', line: 1 }
  */
 export const validateJson = (jsonString) => {
-  if (!jsonString || typeof jsonString !== "string") {
+  if (!jsonString || typeof jsonString !== 'string') {
     return {
       isValid: false,
-      error: "Input must be a non-empty string",
+      error: 'Input must be a non-empty string',
       line: null,
     };
   }

@@ -11,11 +11,10 @@
  * - Handle edit events and save operations
  */
 
-import { ref } from "vue";
-import FileUploader from "../components/FileUploader.vue";
-import ComparisonView from "../components/ComparisonView.vue";
-import EditControls from "../components/EditControls.vue";
-import TierGate from "../components/TierGate.vue";
+import { ref } from 'vue';
+import FileUploader from '../components/FileUploader.vue';
+import ComparisonView from '../components/ComparisonView.vue';
+import EditControls from '../components/EditControls.vue';
 
 // Placeholder state - will be replaced with Pinia stores in Phase 3
 const file1 = ref(null);

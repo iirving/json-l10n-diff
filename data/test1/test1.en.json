@@ -14,22 +14,22 @@
         "item5": "Diversity across the Value Chain",
         "item6": "Outreach and Expanding the Pool"
       },
-        "bannertext":"With the aging population and declining birthrate, immigration has become the principal source of labour market growth in Canada."
+      "bannertext": "With the aging population and declining birthrate, immigration has become the principal source of labour market growth in Canada."
     },
     "purpose": {
       "header": "The Purpose of the Diversity Assessment Tool (DAT)",
       "text": "Today more than ever, organizations need effective equity, diversity and inclusion (EDI) strategies to keep pace with a rapidly changing environment.",
       "text2": "Canada’s population is changing, talent pools are changing and markets are changing.",
-      "item1":"With the aging population and declining birthrate, immigration has become the main source of labour market growth in Canada.",
-      "item2":"Increasingly, the population is racialized.",
-      "item3":"Indigenous youth are the fastest- growing segment of the population.",
-      "text3":"A strong EDI strategy, linked to your corporate strategy, has become a vital part of your toolkit for success. You need to:",
-      "item4":"Attract the best and the brightest",
-      "item5":"Access increasingly diverse markets",
-      "item6":"Drive innovation and creativity",
-      "item7":"Improve employee satisfaction, retention and performance",
-      "item8":"Meet evolving regulatory requirements and expectations of governments, large corporations, investors and customers",
-      "item9":"Manage risks"
+      "item1": "With the aging population and declining birthrate, immigration has become the main source of labour market growth in Canada.",
+      "item2": "Increasingly, the population is racialized.",
+      "item3": "Indigenous youth are the fastest- growing segment of the population.",
+      "text3": "A strong EDI strategy, linked to your corporate strategy, has become a vital part of your toolkit for success. You need to:",
+      "item4": "Attract the best and the brightest",
+      "item5": "Access increasingly diverse markets",
+      "item6": "Drive innovation and creativity",
+      "item7": "Improve employee satisfaction, retention and performance",
+      "item8": "Meet evolving regulatory requirements and expectations of governments, large corporations, investors and customers",
+      "item9": "Manage risks"
     },
     "intro": {
       "header": "Introduction to the Diversity Assessment Tool",
@@ -72,7 +72,7 @@
     "understanding": {
       "header": "Understanding your Diversity Assessment",
       "text": "The Diversity Assessment Tool (DAT) will help you assess your current EDI policies and practices and to develop a strategy to support your business goals.",
-      "text2":"Your responses to the DAT questionnaire will give you a score and actions to improve your organization’s EDI practices. The score is not good or bad, but shows where you stand relative to other organizations and best practices. It will help you identify areas for improvement."
+      "text2": "Your responses to the DAT questionnaire will give you a score and actions to improve your organization’s EDI practices. The score is not good or bad, but shows where you stand relative to other organizations and best practices. It will help you identify areas for improvement."
     },
     "benchmarking": {
       "header1": "Benchmarking:",
@@ -80,12 +80,11 @@
       "header3": "Tracking EDI Compliance",
       "text": {
         "firstPart": "It’s normal for organizations to be at different stages of development, depending on their sector, size and strategy. The purpose of the DAT is to help you understand where your organization stands and to suggest how and where you can improve.",
-        "item1":"Level 1 or 2 indicates you may have begun your work but are at a level of minimal compliance.",
-        "item2":"Level 3 shows that you have achieved a basic or foundational level of EDI.",
-        "item3":"Level 4 indicates that you have implemented advanced practices.",
-        "item4":"Level 5 is “best in class” integration of EDI with your strategic priorities, showing advanced implementation of EDI in this dimension.",
+        "item1": "Level 1 or 2 indicates you may have begun your work but are at a level of minimal compliance.",
+        "item2": "Level 3 shows that you have achieved a basic or foundational level of EDI.",
+        "item3": "Level 4 indicates that you have implemented advanced practices.",
+        "item4": "Level 5 is “best in class” integration of EDI with your strategic priorities, showing advanced implementation of EDI in this dimension.",
         "secondPart": ""
-
       },
       "legend": {
         "header": "Levels",
@@ -262,7 +261,7 @@
       }
     },
     "conclusion": {
-      "text":"Thank you for addressing the need for EDI in your organization and taking a step in the right direction by analyzing your current practices with the Diversity Assessment Tool!",
+      "text": "Thank you for addressing the need for EDI in your organization and taking a step in the right direction by analyzing your current practices with the Diversity Assessment Tool!",
       "header": "Conclusion",
       "item1": "Your organization performed best in:&nbsp;",
       "item2": "Your organization has the most opportunities for growth in:&nbsp;",

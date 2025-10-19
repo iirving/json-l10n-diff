@@ -301,7 +301,11 @@ interface TreeViewerEmits {
   'add-key-requested': (keyPath: string, targetFile: 'file1' | 'file2') => void;
 
   /** Emitted when user edits a value */
-  'value-edited': (keyPath: string, newValue: any, targetFile: 'file1' | 'file2') => void;
+  'value-edited': (
+    keyPath: string,
+    newValue: any,
+    targetFile: 'file1' | 'file2'
+  ) => void;
 
   /** Emitted when user expands/collapses a node */
   'node-toggled': (keyPath: string, expanded: boolean) => void;
@@ -436,7 +440,11 @@ interface KeyDiffItemEmits {
   'add-key': (keyPath: string, targetFile: 'file1' | 'file2') => void;
 
   /** Emitted when edit button clicked */
-  'edit-value': (keyPath: string, currentValue: any, targetFile: 'file1' | 'file2') => void;
+  'edit-value': (
+    keyPath: string,
+    currentValue: any,
+    targetFile: 'file1' | 'file2'
+  ) => void;
 }
 ```
 
@@ -482,13 +490,13 @@ interface EditControlsProps {
 ```typescript
 interface EditControlsEmits {
   /** Emitted when save button clicked */
-  'save': () => void;
+  save: () => void;
 
   /** Emitted when prettify button clicked */
-  'prettify': () => void;
+  prettify: () => void;
 
   /** Emitted when reset button clicked */
-  'reset': () => void;
+  reset: () => void;
 }
 ```
 
@@ -538,7 +546,7 @@ interface TierGateEmits {
   'upgrade-requested': (targetTier: 'medium' | 'enterprise') => void;
 
   /** Emitted when user dismisses gate */
-  'dismissed': () => void;
+  dismissed: () => void;
 }
 ```
 
@@ -768,7 +776,11 @@ export function getValueAtPath(obj: object, path: string | string[]): any;
  * @param value - Value to set
  * @returns New object with value set
  */
-export function setValueAtPath(obj: object, path: string | string[], value: any): object;
+export function setValueAtPath(
+  obj: object,
+  path: string | string[],
+  value: any
+): object;
 
 /**
  * Check if path exists in object
@@ -841,7 +853,7 @@ emit('error', {
   message: 'File exceeds 10 MB limit. Current size: 12.3 MB.',
   details: { actualSize: 12.3, limit: 10 },
   severity: 'error',
-  action: 'Please reduce file size and try again.'
+  action: 'Please reduce file size and try again.',
 });
 ```
 

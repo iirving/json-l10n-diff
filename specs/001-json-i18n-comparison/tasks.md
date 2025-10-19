@@ -1,5 +1,5 @@
 ---
-description: "Task list for JSON i18n Comparison and Diff Tool implementation"
+description: 'Task list for JSON i18n Comparison and Diff Tool implementation'
 ---
 
 # Tasks: JSON i18n Comparison and Diff Tool

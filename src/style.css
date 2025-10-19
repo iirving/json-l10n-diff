@@ -18,20 +18,20 @@
   --color-different: #6b7280; /* Neutral gray for different values */
   --color-success: #22c55e; /* Green for success states */
   --color-primary: #646cff; /* Primary brand color */
-  
+
   /* Background colors for diff highlighting */
   --bg-missing: rgba(239, 68, 68, 0.1);
   --bg-identical: rgba(234, 179, 8, 0.1);
   --bg-different: transparent;
   --bg-modified: rgba(59, 130, 246, 0.1);
-  
+
   /* Spacing */
   --spacing-xs: 0.25rem;
   --spacing-sm: 0.5rem;
   --spacing-md: 1rem;
   --spacing-lg: 1.5rem;
   --spacing-xl: 2rem;
-  
+
   /* Border radius */
   --radius-sm: 4px;
   --radius-md: 8px;
@@ -202,12 +202,12 @@ nav a.active {
     grid-template-columns: 1fr;
     gap: var(--spacing-md);
   }
-  
+
   nav {
     flex-direction: column;
     gap: var(--spacing-sm);
   }
-  
+
   .tree-node {
     margin-left: var(--spacing-md);
   }
@@ -217,35 +217,35 @@ nav a.active {
   :root {
     color: #213547;
     background-color: #ffffff;
-    
+
     /* Light mode color adjustments */
     --color-missing: #dc2626;
     --color-identical: #ca8a04;
     --color-different: #4b5563;
-    
+
     --bg-missing: rgba(220, 38, 38, 0.1);
     --bg-identical: rgba(202, 138, 4, 0.1);
     --bg-modified: rgba(59, 130, 246, 0.1);
   }
-  
+
   a:hover {
     color: #747bff;
   }
-  
+
   button {
     background-color: #f9f9f9;
   }
-  
+
   nav {
     border-bottom-color: rgba(0, 0, 0, 0.1);
     background-color: rgba(0, 0, 0, 0.05);
   }
-  
+
   .comparison-panel {
     border-color: rgba(0, 0, 0, 0.1);
     background-color: rgba(0, 0, 0, 0.02);
   }
-  
+
   .tree-node-value {
     color: rgba(0, 0, 0, 0.6);
   }

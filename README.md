@@ -1,5 +1,7 @@
 # JSON l10n Diff Tool
 
+[![CI](https://github.com/iirving/json-l10n-diff/actions/workflows/ci.yml/badge.svg)](https://github.com/iirving/json-l10n-diff/actions/workflows/ci.yml)
+
 > **⚠️ Status**: Coming Soon - In Active Development
 
 Compare and synchronize your translation files effortlessly. A fast, secure, browser-based tool for managing JSON localization files across multiple languages.
@@ -213,4 +215,4 @@ This project is licensed under the [MIT License](LICENSE) - free to use, modify,
 
 ---
 
-**Built with ❤️ using Vue 3 + Vite** | *Privacy-first localization comparison tool*
+**Built with ❤️ using Vue 3 + Vite** | _Privacy-first localization comparison tool_
