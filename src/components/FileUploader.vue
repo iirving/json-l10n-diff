@@ -11,7 +11,9 @@
  */
 
 import { ref, computed } from 'vue';
+import { useJsonParser } from '@/composables/useJsonParser.js';
 
+// eslint-disable-next-line no-unused-vars
 const props = defineProps({
   label: {
     type: String,
@@ -24,6 +26,9 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['file-loaded', 'file-error']);
+
+// JSON Parser
+const { parseFile } = useJsonParser();
 
 // Constants
 const MAX_FILE_SIZE = 1 * 1024 * 1024; // 1MB in bytes
@@ -40,11 +45,13 @@ const generateFileInputId = () => {
 const isDragOver = ref(false);
 const selectedFile = ref(null);
 const errorMessage = ref('');
+const errorType = ref(''); // 'size', 'parse', or ''
 const fileInputId = ref(generateFileInputId());
+const isValidating = ref(false);
 
 // Computed
 const hasError = computed(() => !!errorMessage.value);
-const hasFile = computed(() => !!selectedFile.value);
+const hasFile = computed(() => !!selectedFile.value && !hasError.value);
 
 /**
  * Validate file size
@@ -55,7 +62,8 @@ const validateFileSize = (file) => {
   if (file.size > MAX_FILE_SIZE) {
     const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
     errorMessage.value = `File size (${fileSizeMB}MB) exceeds the maximum allowed size of 10MB`;
-    emit('file-error', errorMessage.value);
+    errorType.value = 'size';
+    emit('file-error', { type: 'size', message: errorMessage.value, file });
     return false;
   }
   return true;
@@ -65,11 +73,13 @@ const validateFileSize = (file) => {
  * Handle file selection/upload
  * @param {File} file - Selected file
  */
-const handleFile = (file) => {
+const handleFile = async (file) => {
   if (!file) return;
 
   // Clear previous error
   errorMessage.value = '';
+  errorType.value = '';
+  selectedFile.value = file;
 
   // Validate file size
   if (!validateFileSize(file)) {
@@ -77,9 +87,22 @@ const handleFile = (file) => {
     return;
   }
 
-  // File is valid
-  selectedFile.value = file;
-  emit('file-loaded', file);
+  // Validate and parse JSON
+  isValidating.value = true;
+  try {
+    const parsedData = await parseFile(file);
+    // File is valid
+    errorMessage.value = '';
+    errorType.value = '';
+    emit('file-loaded', parsedData);
+  } catch (error) {
+    // JSON parsing/validation error
+    errorMessage.value = error.message;
+    errorType.value = 'parse';
+    emit('file-error', { type: 'parse', message: error.message, file });
+  } finally {
+    isValidating.value = false;
+  }
 };
 
 /**
@@ -168,7 +191,7 @@ const triggerFileInput = () => {
         @change="handleFileInputChange"
       />
 
-      <div v-if="!hasFile" class="file-uploader__instructions">
+      <div v-if="!hasFile && !isValidating" class="file-uploader__instructions">
         <svg
           class="file-uploader__icon"
           xmlns="http://www.w3.org/2000/svg"
@@ -189,6 +212,30 @@ const triggerFileInput = () => {
           >
           <span class="file-uploader__text--secondary">or click to browse</span>
         </p>
+      </div>
+
+      <div v-else-if="isValidating" class="file-uploader__validating">
+        <svg
+          class="file-uploader__icon file-uploader__icon--spinner"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+        <p class="file-uploader__validating-text">Validating JSON...</p>
       </div>
 
       <div v-else class="file-uploader__file-info">
@@ -216,7 +263,29 @@ const triggerFileInput = () => {
       data-testid="error-message"
       role="alert"
     >
-      {{ errorMessage }}
+      <div class="file-uploader__error-header">
+        <svg
+          class="file-uploader__error-icon"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+        <span class="file-uploader__error-type">
+          {{ errorType === 'size' ? 'File Size Error' : 'JSON Parsing Error' }}
+        </span>
+      </div>
+      <p class="file-uploader__error-message">{{ errorMessage }}</p>
+      <p v-if="selectedFile" class="file-uploader__error-filename">
+        File: {{ selectedFile.name }}
+      </p>
     </div>
   </div>
 </template>
@@ -285,6 +354,22 @@ const triggerFileInput = () => {
   color: var(--success-color, #10b981);
 }
 
+.file-uploader__icon--spinner {
+  width: 48px;
+  height: 48px;
+  color: var(--primary-color, #646cff);
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .file-uploader__text {
   display: flex;
   flex-direction: column;
@@ -299,6 +384,19 @@ const triggerFileInput = () => {
 }
 
 .file-uploader__text--secondary {
+  font-size: 0.875rem;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.6));
+}
+
+.file-uploader__validating {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm, 0.5rem);
+}
+
+.file-uploader__validating-text {
+  margin: 0;
   font-size: 0.875rem;
   color: var(--text-secondary, rgba(255, 255, 255, 0.6));
 }
@@ -320,11 +418,42 @@ const triggerFileInput = () => {
 
 .file-uploader__error {
   margin-top: var(--spacing-sm, 0.5rem);
-  padding: var(--spacing-sm, 0.5rem) var(--spacing-md, 1rem);
+  padding: var(--spacing-md, 1rem);
   background-color: var(--error-bg, rgba(239, 68, 68, 0.1));
   border: 1px solid var(--error-color, #ef4444);
   border-radius: var(--radius-sm, 0.25rem);
   color: var(--error-color, #ef4444);
   font-size: 0.875rem;
+}
+
+.file-uploader__error-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs, 0.25rem);
+  margin-bottom: var(--spacing-xs, 0.25rem);
+}
+
+.file-uploader__error-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.file-uploader__error-type {
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.file-uploader__error-message {
+  margin: var(--spacing-xs, 0.25rem) 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.file-uploader__error-filename {
+  margin: var(--spacing-xs, 0.25rem) 0 0 0;
+  font-size: 0.75rem;
+  opacity: 0.8;
+  font-style: italic;
 }
 </style>

@@ -11,14 +11,56 @@
  * - Handle edit events and save operations
  */
 
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import FileUploader from '@/components/FileUploader.vue';
 import ComparisonView from '@/components/ComparisonView.vue';
 import EditControls from '@/components/EditControls.vue';
 
-// Placeholder state - will be replaced with Pinia stores in Phase 3
+// File state
 const file1 = ref(null);
 const file2 = ref(null);
+const file1Error = ref(null);
+const file2Error = ref(null);
+
+// Computed
+const hasFiles = computed(() => file1.value && file2.value);
+const hasErrors = computed(() => file1Error.value || file2Error.value);
+
+/**
+ * Handle file 1 loaded successfully
+ * @param {Object} parsedData - Parsed file data
+ */
+const handleFile1Loaded = (parsedData) => {
+  file1.value = parsedData;
+  file1Error.value = null;
+};
+
+/**
+ * Handle file 1 error
+ * @param {Object} errorData - Error information
+ */
+const handleFile1Error = (errorData) => {
+  file1.value = null;
+  file1Error.value = errorData;
+};
+
+/**
+ * Handle file 2 loaded successfully
+ * @param {Object} parsedData - Parsed file data
+ */
+const handleFile2Loaded = (parsedData) => {
+  file2.value = parsedData;
+  file2Error.value = null;
+};
+
+/**
+ * Handle file 2 error
+ * @param {Object} errorData - Error information
+ */
+const handleFile2Error = (errorData) => {
+  file2.value = null;
+  file2Error.value = errorData;
+};
 </script>
 
 <template>
@@ -31,25 +73,101 @@ const file2 = ref(null);
     <main class="page-content">
       <section class="upload-section">
         <div class="upload-group">
-          <FileUploader label="Upload File 1" />
+          <FileUploader
+            label="Upload File 1"
+            @file-loaded="handleFile1Loaded"
+            @file-error="handleFile1Error"
+          />
+          <div
+            v-if="file1 && !file1Error"
+            class="file-status file-status--success"
+          >
+            <svg
+              class="file-status__icon"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <div class="file-status__info">
+              <span class="file-status__text">{{ file1.fileName }}</span>
+              <span class="file-status__details"
+                >{{ file1.keyCount }} keys •
+                {{ (file1.fileSize / 1024).toFixed(2) }} KB</span
+              >
+            </div>
+          </div>
         </div>
         <div class="upload-group">
-          <FileUploader label="Upload File 2" />
+          <FileUploader
+            label="Upload File 2"
+            @file-loaded="handleFile2Loaded"
+            @file-error="handleFile2Error"
+          />
+          <div
+            v-if="file2 && !file2Error"
+            class="file-status file-status--success"
+          >
+            <svg
+              class="file-status__icon"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <div class="file-status__info">
+              <span class="file-status__text">{{ file2.fileName }}</span>
+              <span class="file-status__details"
+                >{{ file2.keyCount }} keys •
+                {{ (file2.fileSize / 1024).toFixed(2) }} KB</span
+              >
+            </div>
+          </div>
         </div>
       </section>
 
-      <section class="comparison-section">
+      <section v-if="hasFiles" class="comparison-section">
         <ComparisonView :file1="file1" :file2="file2" :diff-results="[]" />
       </section>
 
-      <section class="controls-section">
+      <section v-if="hasFiles" class="controls-section">
         <EditControls file-name="file.json" :modified="false" />
       </section>
 
-      <div class="placeholder-note">
-        <p>
-          ℹ️ Index.vue placeholder - Full integration with Pinia stores will be
-          implemented in Phase 3 (T021)
+      <div v-if="!hasFiles && !hasErrors" class="placeholder-note">
+        <svg
+          class="placeholder-note__icon"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+          />
+        </svg>
+        <p class="placeholder-note__text">
+          Upload two JSON files to start comparing
+        </p>
+        <p class="placeholder-note__subtext">
+          Drag and drop or click to browse for files
         </p>
       </div>
     </main>
@@ -116,17 +234,80 @@ const file2 = ref(null);
   margin-bottom: var(--spacing-lg);
 }
 
-.placeholder-note {
-  padding: var(--spacing-md);
-  border-radius: var(--radius-md);
-  background-color: rgba(100, 108, 255, 0.1);
-  border: 1px solid rgba(100, 108, 255, 0.3);
-  text-align: center;
+.upload-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
 }
 
-.placeholder-note p {
+.file-status {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+}
+
+.file-status--success {
+  background-color: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.file-status__icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: var(--success-color, #10b981);
+}
+
+.file-status__info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs, 0.25rem);
+  flex: 1;
+}
+
+.file-status__text {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--success-color, #10b981);
+}
+
+.file-status__details {
+  font-size: 0.75rem;
+  color: var(--success-color, #10b981);
+}
+
+.placeholder-note {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-xl) var(--spacing-md);
+  border-radius: var(--radius-md);
+  background-color: rgba(100, 108, 255, 0.05);
+  border: 2px dashed rgba(100, 108, 255, 0.3);
+  text-align: center;
+  margin-top: var(--spacing-xl);
+}
+
+.placeholder-note__icon {
+  width: 64px;
+  height: 64px;
+  color: rgba(100, 108, 255, 0.5);
+}
+
+.placeholder-note__text {
   margin: 0;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.125rem;
+  font-weight: 500;
+}
+
+.placeholder-note__subtext {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.6);
   font-size: 0.875rem;
 }
 
