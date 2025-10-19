@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ main, 001-json-i18n-comparison ]
+    branches: [ '**' ]
   pull_request:
-    branches: [ main, 001-json-i18n-comparison ]
+    branches: [ '**' ]
 
 jobs:
   build:
@@ -30,8 +30,11 @@ jobs:
     - name: Build
       run: npm run build
 
+    - name: Run Tests
+      run: npm run test:run
+
+    - name: Generate Coverage Report
+      run: npm run test:coverage
+
     - name: Lint (when configured)
       run: npm run lint --if-present
-
-    - name: Test (when configured)
-      run: npm test --if-present
