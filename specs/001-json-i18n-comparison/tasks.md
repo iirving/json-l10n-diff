@@ -73,8 +73,8 @@ description: 'Task list for JSON i18n Comparison and Diff Tool implementation'
 
 ### Implementation for User Story 1
 
-- [ ] T015 [P] [US1] Implement FileUploader component in `src/components/FileUploader.vue` (file input, drag-and-drop, size validation ≤10MB, emit file-loaded/file-error events)
-- [ ] T015-TEST [P] [US1] [TEST] Write unit tests for FileUploader in `tests/components/FileUploader.test.js` (test file selection, drag-and-drop, size validation, error emissions, event emissions, aim for 90%+ coverage)
+- [x] T015 [P] [US1] Implement FileUploader component in `src/components/FileUploader.vue` (file input, drag-and-drop, size validation ≤10MB, emit file-loaded/file-error events)
+- [x] T015-TEST [P] [US1] [TEST] Write unit tests for FileUploader in `tests/components/FileUploader.test.js` (test file selection, drag-and-drop, size validation, error emissions, event emissions, aim for 90%+ coverage)
 - [x] T016 [P] [US1] Implement recursive diff algorithm in `src/composables/useJsonDiff.js` (compareFiles method returning KeyComparisonResult array with status: missing-left, missing-right, identical, different)
 - [x] T016-TEST [P] [US1] [TEST] Write unit tests for useJsonDiff in `tests/composables/useJsonDiff.test.js` (test comparison logic, all status types, nested objects, edge cases, aim for 90%+ coverage)
 - [ ] T017 [US1] Implement TreeNode component in `src/components/TreeNode.vue` (recursive rendering, expand/collapse state, accepts diffResults prop for color coding)
