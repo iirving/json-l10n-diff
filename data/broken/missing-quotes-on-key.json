@@ -1,9 +1,9 @@
 {
   "app": {
-    title: "JSON i18n Diff Tool",
+    "title": "JSON i18n Diff Tool",
     "description": "Compare translation files"
   },
-  navigation: {
+  "navigation": {
     "home": "Home",
     "about": "About"
   }
