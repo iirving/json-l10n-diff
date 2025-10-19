@@ -58,8 +58,6 @@ description: "Task list for JSON i18n Comparison and Diff Tool implementation"
 - [ ] T011-TEST [TEST] Write unit tests for useJsonParser in `tests/composables/useJsonParser.test.js` (test parseFile with valid/invalid files, validateJson, getErrorLine, integration with utilities, aim for 90%+ coverage)
 - [ ] T012 [P] Create Pinia store `src/stores/useFileStore.js` (state: file1, file2, diffResults; actions: setFile1, setFile2, runComparison, reset)
 - [ ] T012-TEST [P] [TEST] Write unit tests for useFileStore in `tests/stores/useFileStore.test.js` (test all actions, state updates, runComparison logic, reset functionality, aim for 90%+ coverage)
-- [ ] T013 [P] Create Pinia store `src/stores/useTierStore.js` (state: currentTier; actions: setTier, checkKeyLimit, loadTier; getters: keyLimit, tierDisplayName; persists to LocalStorage)
-- [ ] T013-TEST [P] [TEST] Write unit tests for useTierStore in `tests/stores/useTierStore.test.js` (test tier changes, LocalStorage persistence, checkKeyLimit, getters, aim for 90%+ coverage)
 - [ ] T014 [P] Create Pinia store `src/stores/useEditStore.js` (state: editHistory Map, file1Modified, file2Modified; actions: addEdit, applyEdit, clearEdits)
 - [ ] T014-TEST [P] [TEST] Write unit tests for useEditStore in `tests/stores/useEditStore.test.js` (test edit tracking, applyEdit, clearEdits, history management, aim for 90%+ coverage)
 
@@ -87,7 +85,7 @@ description: "Task list for JSON i18n Comparison and Diff Tool implementation"
 - [ ] T019-TEST [US1] [TEST] Write unit tests for KeyDiffItem in `tests/components/KeyDiffItem.test.js` (test rendering with different statuses, color coding, event emissions, aim for 90%+ coverage)
 - [ ] T020 [US1] Implement ComparisonView component in `src/components/ComparisonView.vue` (side-by-side layout, two TreeViewer instances, accepts file1/file2/diffResults props, emits save-requested/prettify-requested/edit-made events)
 - [ ] T020-TEST [US1] [TEST] Write unit tests for ComparisonView in `tests/components/ComparisonView.test.js` (test layout, TreeViewer integration, prop handling, event emissions, aim for 90%+ coverage)
-- [ ] T021 [US1] Update `src/pages/Index.vue` to integrate FileUploader (two instances for file1/file2) and ComparisonView using Pinia stores (useFileStore, useTierStore), wire up file-loaded handlers to trigger fileStore.runComparison()
+- [ ] T021 [US1] Update `src/pages/Index.vue` to integrate FileUploader (two instances for file1/file2) and ComparisonView using Pinia stores (useFileStore), wire up file-loaded handlers to trigger fileStore.runComparison()
 - [ ] T021-TEST [US1] [TEST] Write integration tests for Index.vue in `tests/pages/Index.test.js` (test FileUploader integration, store interactions, runComparison trigger, aim for 90%+ coverage)
 
 **Checkpoint**: At this point, User Story 1 should be fully functional - users can upload two files and see color-coded comparison
@@ -142,51 +140,7 @@ description: "Task list for JSON i18n Comparison and Diff Tool implementation"
 
 ---
 
-## Phase 6: User Story 4 - Work Within Free Tier Limits (Priority: P2)
-
-**Goal**: Enforce tier-based key limits (Free: 20, Medium: 100, Enterprise: 1000) and display clear error messages when exceeded
-
-**Independent Test**: Set tier to Free in LocalStorage, upload file with exactly 20 keys (success), upload file with 21 keys (rejection with error message showing key count and upgrade suggestion)
-
-### Implementation for User Story 4
-
-- [ ] T033 [P] [US4] Implement TierGate component in `src/components/TierGate.vue` (display tier limits from tierStore, current key count, blocking modal when limit exceeded, emit upgrade-requested/dismissed events)
-- [ ] T033-TEST [P] [US4] [TEST] Write unit tests for TierGate in `tests/components/TierGate.test.js` (test modal display, tier limit display, key count, event emissions, aim for 90%+ coverage)
-- [ ] T034 [US4] Integrate useKeyCounter in FileUploader validation flow in `src/components/FileUploader.vue` (count keys on file parse, check against tier limit from tierStore.checkKeyLimit, emit file-error if exceeded)
-- [ ] T034-TEST [US4] [TEST] Update FileUploader tests in `tests/components/FileUploader.test.js` (test key counting, tier limit checking, error emissions for exceeded limits, aim for 90%+ coverage)
-- [ ] T035 [US4] Add key count display to ComparisonView in `src/components/ComparisonView.vue` (show "File 1: X keys / [tier limit]" and "File 2: Y keys / [tier limit]" badges using tierStore.keyLimit)
-- [ ] T035-TEST [US4] [TEST] Update ComparisonView tests in `tests/components/ComparisonView.test.js` (test key count badge display, tier limit display, aim for 90%+ coverage)
-- [ ] T036 [US4] Add tier limit error messaging in FileUploader in `src/components/FileUploader.vue` (display "File exceeds Free tier limit of 20 keys. Current: 35 keys. Upgrade to Medium tier for up to 100 keys.")
-- [ ] T036-TEST [US4] [TEST] Update FileUploader tests in `tests/components/FileUploader.test.js` (test error message formatting, upgrade suggestions, aim for 90%+ coverage)
-- [ ] T037 [US4] Initialize default tier (Free) in `src/pages/Index.vue` using tierStore (call tierStore.loadTier() on mount to load from LocalStorage or default to free tier)
-- [ ] T037-TEST [US4] [TEST] Update Index.vue tests in `tests/pages/Index.test.js` (test tier initialization, LocalStorage loading, default tier, aim for 90%+ coverage)
-
-**Checkpoint**: Tier limits are enforced - users see clear feedback when files exceed their tier limits
-
----
-
-## Phase 7: User Story 5 - Subscribe to Paid Tiers (Priority: P3)
-
-**Goal**: Allow users to view tier options and select their subscription level (Free/Medium/Enterprise)
-
-**Independent Test**: Open tier selection UI, select Medium tier, verify LocalStorage updated, upload file with 50 keys (success), verify key count display shows "50 / 100"
-
-### Implementation for User Story 5
-
-- [ ] T038 [P] [US5] Create TierSelector component in `src/components/TierSelector.vue` (pricing table showing all tiers, feature comparison, select tier buttons, emit tier-selected event)
-- [ ] T038-TEST [P] [US5] [TEST] Write unit tests for TierSelector in `tests/components/TierSelector.test.js` (test tier display, button clicks, tier-selected event, aim for 90%+ coverage)
-- [ ] T039 [US5] Add tier selection UI to Index.vue in `src/pages/Index.vue` (settings button to open TierSelector modal, handle tier-selected event to call tierStore.setTier)
-- [ ] T039-TEST [US5] [TEST] Update Index.vue tests in `tests/pages/Index.test.js` (test settings button, modal opening, tier selection handling, aim for 90%+ coverage)
-- [ ] T040 [US5] Add upgrade prompts to TierGate in `src/components/TierGate.vue` (when limit exceeded, show "Upgrade to Medium ($5/month)" or "Upgrade to Enterprise ($99/month)" CTAs)
-- [ ] T040-TEST [US5] [TEST] Update TierGate tests in `tests/components/TierGate.test.js` (test upgrade prompt display, CTA messages, aim for 90%+ coverage)
-- [ ] T041 [US5] Add current tier indicator to App header in `src/App.vue` (badge showing tierStore.tierDisplayName - "Free", "Medium", or "Enterprise")
-- [ ] T041-TEST [US5] [TEST] Write unit tests for App.vue in `tests/App.test.js` (test tier indicator display, store integration, aim for 90%+ coverage)
-
-**Checkpoint**: All user stories complete - full feature set implemented including monetization UI
-
----
-
-## Phase 8: Polish & Cross-Cutting Concerns
+## Phase 6: Polish & Cross-Cutting Concerns
 
 **Purpose**: Improvements that affect multiple user stories and enhance overall quality
 
@@ -219,29 +173,23 @@ description: "Task list for JSON i18n Comparison and Diff Tool implementation"
 
 - **Setup (Phase 1)**: No dependencies - can start immediately
 - **Foundational (Phase 2)**: Depends on Setup completion - BLOCKS all user stories
-- **User Stories (Phase 3-7)**: All depend on Foundational phase completion
+- **User Stories (Phase 3-5)**: All depend on Foundational phase completion
   - User Story 1 (P1): Can start after Phase 2
   - User Story 2 (P1): Can start after Phase 2, but Task T019 depends on T010 (useJsonDiff) from US1
   - User Story 3 (P1): Can start after Phase 2
-  - User Story 4 (P2): Can start after Phase 2, but T028 depends on T009 (FileUploader) from US1
-  - User Story 5 (P3): Can start after Phase 2, but T035 depends on T027 (TierGate) from US4
-- **Polish (Phase 8)**: Depends on desired user stories being complete (minimally US1-US3 for MVP)
+- **Polish (Phase 6)**: Depends on desired user stories being complete (minimally US1-US3 for MVP)
 
 ### User Story Dependencies
 
 - **User Story 1 (P1)**: No dependencies on other stories - can be fully completed independently
-- **User Story 2 (P1)**: Depends on US1 T013 (useJsonDiff) for re-running comparison after edits
+- **User Story 2 (P1)**: Depends on US1 T016 (useJsonDiff) for re-running comparison after edits
 - **User Story 3 (P1)**: No dependencies on other stories - can be fully completed independently (but makes most sense after US2 for editing)
-- **User Story 4 (P2)**: Depends on US1 T012 (FileUploader) for integration
-- **User Story 5 (P3)**: Depends on US4 T030 (TierGate) for upgrade prompts
 
 ### Within Each User Story
 
 - **US1**: T015-T016-T017 can run in parallel ([P]), then T018 depends on T017, T019 can run parallel with T018, T020 depends on T018 and T019, T021 depends on all previous
 - **US2**: T022-T023-T024 can run in parallel ([P]), T025 depends on all three, T026 depends on T025
 - **US3**: T027-T028-T031 can run in parallel ([P]), T029 depends on T028, T030 depends on T027 and T031, T032 can run parallel with others
-- **US4**: T033-T034 can run in parallel ([P]), T035-T036-T037 depend on T033-T034 completion
-- **US5**: T038 runs first, T039 can run after T038, T040 depends on T038 and US4 T033, T041 depends on T039
 
 ### Parallel Opportunities
 
@@ -253,8 +201,8 @@ description: "Task list for JSON i18n Comparison and Diff Tool implementation"
 
 **Phase 2 (Foundational)**:
 
-- T008 must complete first (useKeyCounter needed by useJsonParser)
-- T009, T010, T012, T013, T014 can run in parallel after T008 (3 Pinia stores can be created in parallel)
+- T008 must complete first (keyCounter needed by useJsonParser)
+- T009, T010, T012, T014 can run in parallel after T008 (2 Pinia stores can be created in parallel)
 - T011 depends on T008, T009, T010
 
 **Phase 3 (User Story 1)**:
@@ -309,36 +257,7 @@ T030: Wire prettify in Index.vue
 T032: File validation in FileUploader
 ```
 
-**Phase 6 (User Story 4)**:
-
-```bash
-# Launch in parallel:
-T033: TierGate component
-T034: Integrate useKeyCounter in FileUploader
-
-# Then after both:
-T035: Key count display in ComparisonView
-T036: Error messaging in FileUploader
-T037: Initialize tier in Index.vue
-```
-
-**Phase 7 (User Story 5)**:
-
-```bash
-# First:
-T038: TierSelector component
-
-# Then in parallel:
-T039: Tier selection UI in Index.vue
-
-# Then after T038 and US4 T033:
-T040: Upgrade prompts in TierGate
-
-# Then after T039:
-T041: Current tier indicator in App.vue
-```
-
-**Phase 8 (Polish)** - All tasks T042-T052 can run in parallel (different concerns, different files)
+**Phase 6 (Polish)** - All tasks T042-T053 can run in parallel (different concerns, different files)
 
 ---
 
@@ -360,7 +279,7 @@ Developer C: T017 "Implement TreeNode component in src/components/TreeViewer.vue
 ### MVP First (User Stories 1-3 Only)
 
 1. Complete Phase 1: Setup (T001-T007) - ~4-5 hours (includes Pinia setup)
-2. Complete Phase 2: Foundational (T008-T014) - CRITICAL - ~3-4 days (includes 3 Pinia stores)
+2. Complete Phase 2: Foundational (T008-T014) - CRITICAL - ~3-4 days (includes 2 Pinia stores)
 3. Complete Phase 3: User Story 1 (T015-T021) - ~5-7 days
 4. **STOP and VALIDATE**: Upload two JSON files, verify comparison works
 5. Complete Phase 4: User Story 2 (T022-T026) - ~2-3 days
@@ -375,9 +294,7 @@ Developer C: T017 "Implement TreeNode component in src/components/TreeViewer.vue
 2. Add User Story 1 (Phase 3) → Test independently → **Deploy Demo v0.1** (view-only comparison)
 3. Add User Story 2 (Phase 4) → Test independently → **Deploy Demo v0.2** (editable comparison)
 4. Add User Story 3 (Phase 5) → Test independently → **Deploy Demo v0.3 (MVP!)** (complete workflow)
-5. Add User Story 4 (Phase 6) → Test independently → **Deploy v1.0** (with tier limits)
-6. Add User Story 5 (Phase 7) → Test independently → **Deploy v1.1** (with tier selection)
-7. Add Polish (Phase 8) → **Deploy v1.2** (production-ready)
+5. Add Polish (Phase 6) → **Deploy v1.0** (production-ready)
 
 ### Parallel Team Strategy
 
@@ -387,33 +304,31 @@ With 3 developers:
 2. **After Foundational Complete**:
    - Developer A: User Story 1 (T015, T018, T021) + User Story 3 (T028, T029, T030)
    - Developer B: User Story 1 (T016) + User Story 2 (T022, T025, T026)
-   - Developer C: User Story 1 (T017, T019, T020) + User Story 4 (T033-T037)
-3. **After US1-4 Complete**:
-   - Developer A: User Story 5 (T038-T041)
-   - Developer B: Polish (T042-T047)
-   - Developer C: Polish (T048-T052)
+   - Developer C: User Story 1 (T017, T019, T020) + User Story 3 (T027, T031, T032)
+3. **After US1-3 Complete**:
+   - Developer A: Polish (T042-T044)
+   - Developer B: Polish (T045-T047)
+   - Developer C: Polish (T048-T053)
 
-**Timeline with parallel work**: ~2 weeks to MVP, ~3 weeks to full feature set
+**Timeline with parallel work**: ~2 weeks to MVP, ~2.5 weeks to production-ready
 
 ---
 
 ## Summary
 
-- **Total Tasks**: 105 tasks across 8 phases (52 implementation + 52 test + 1 coverage validation)
+- **Total Tasks**: 73 tasks across 6 phases (36 implementation + 36 test + 1 coverage validation)
 - **MVP Scope**: Phases 1-5 (User Stories 1-3) = 64 tasks (32 implementation + 32 test)
-- **Full Feature Set**: All phases = 105 tasks
+- **Full Feature Set**: All phases = 73 tasks
 - **Estimated MVP Timeline**: 2-3 weeks (1 developer) or 1.5-2 weeks (3 developers parallel)
-- **Estimated Full Timeline**: 4-5 weeks (1 developer) or 2.5-3 weeks (3 developers parallel)
+- **Estimated Full Timeline**: 3-3.5 weeks (1 developer) or 2-2.5 weeks (3 developers parallel)
 
 ### Task Count by User Story
 
 - Setup: 7 implementation tasks
-- Foundational: 14 tasks (7 implementation + 7 test) - includes 3 Pinia stores
+- Foundational: 10 tasks (5 implementation + 5 test) - includes 2 Pinia stores
 - User Story 1 (P1): 14 tasks (7 implementation + 7 test) - Core comparison view
 - User Story 2 (P1): 10 tasks (5 implementation + 5 test) - Editing functionality
 - User Story 3 (P1): 12 tasks (6 implementation + 6 test) - Save and validation
-- User Story 4 (P2): 10 tasks (5 implementation + 5 test) - Tier limits
-- User Story 5 (P3): 8 tasks (4 implementation + 4 test) - Tier selection
 - Polish: 21 tasks (11 implementation + 9 test + 1 coverage validation) - Quality improvements
 
 ### Test Strategy
