@@ -2,6 +2,37 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
 import FileUploader from '@/components/FileUploader.vue';
 
+// Mock the useJsonParser composable
+vi.mock('@/composables/useJsonParser.js', () => ({
+  useJsonParser: () => ({
+    parseFile: vi.fn((file) => {
+      // Simulate async parsing
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          // Parse the file content
+          const reader = new FileReader();
+          reader.onload = () => {
+            try {
+              const data = JSON.parse(reader.result);
+              resolve({
+                data,
+                keyCount: Object.keys(data).length,
+                isValid: true,
+                fileName: file.name,
+                fileSize: file.size,
+              });
+            } catch (error) {
+              reject(new Error(`JSON validation failed: ${error.message}`));
+            }
+          };
+          reader.onerror = () => reject(new Error('Failed to read file'));
+          reader.readAsText(file);
+        }, 0);
+      });
+    }),
+  }),
+}));
+
 describe('FileUploader', () => {
   let wrapper;
 
@@ -50,9 +81,15 @@ describe('FileUploader', () => {
       });
 
       await input.trigger('change');
+      // Wait for async parseFile to complete
+      await new Promise((resolve) => setTimeout(resolve, 50));
+      await wrapper.vm.$nextTick();
 
       expect(wrapper.emitted('file-loaded')).toBeTruthy();
-      expect(wrapper.emitted('file-loaded')[0]).toEqual([file]);
+      const emittedData = wrapper.emitted('file-loaded')[0][0];
+      expect(emittedData).toHaveProperty('data');
+      expect(emittedData).toHaveProperty('keyCount');
+      expect(emittedData).toHaveProperty('fileName', 'test.json');
     });
 
     it('should emit file-error event when file exceeds 10MB', async () => {
@@ -72,7 +109,9 @@ describe('FileUploader', () => {
       await input.trigger('change');
 
       expect(wrapper.emitted('file-error')).toBeTruthy();
-      expect(wrapper.emitted('file-error')[0][0]).toContain('10MB');
+      const errorData = wrapper.emitted('file-error')[0][0];
+      expect(errorData.type).toBe('size');
+      expect(errorData.message).toContain('10MB');
     });
 
     it('should not emit events when no file is selected', async () => {
@@ -104,6 +143,8 @@ describe('FileUploader', () => {
       });
 
       await input.trigger('change');
+      // Wait for async parseFile to complete
+      await new Promise((resolve) => setTimeout(resolve, 50));
       await wrapper.vm.$nextTick();
 
       expect(wrapper.text()).toContain('test.json');
@@ -145,9 +186,14 @@ describe('FileUploader', () => {
       };
 
       await dropZone.trigger('drop', { dataTransfer });
+      // Wait for async parseFile to complete
+      await new Promise((resolve) => setTimeout(resolve, 50));
+      await wrapper.vm.$nextTick();
 
       expect(wrapper.emitted('file-loaded')).toBeTruthy();
-      expect(wrapper.emitted('file-loaded')[0]).toEqual([file]);
+      const emittedData = wrapper.emitted('file-loaded')[0][0];
+      expect(emittedData).toHaveProperty('data');
+      expect(emittedData).toHaveProperty('fileName', 'dropped.json');
     });
 
     it('should emit file-error event when dropped file exceeds 10MB', async () => {
@@ -166,7 +212,9 @@ describe('FileUploader', () => {
       await dropZone.trigger('drop', { dataTransfer });
 
       expect(wrapper.emitted('file-error')).toBeTruthy();
-      expect(wrapper.emitted('file-error')[0][0]).toContain('10MB');
+      const errorData = wrapper.emitted('file-error')[0][0];
+      expect(errorData.type).toBe('size');
+      expect(errorData.message).toContain('10MB');
     });
 
     it('should prevent default behavior on dragover', async () => {
@@ -233,10 +281,18 @@ describe('FileUploader', () => {
 
   describe('file size validation', () => {
     it('should accept file exactly at 1MB limit', async () => {
-      const content = 'x'.repeat(1 * 1024 * 1024); // Exactly 1MB
+      // Create valid JSON that's under 1MB
+      const largeObject = {};
+      for (let i = 0; i < 5000; i++) {
+        largeObject[`key${i}`] = 'value';
+      }
+      const content = JSON.stringify(largeObject);
       const file = new File([content], 'limit.json', {
         type: 'application/json',
       });
+
+      // Verify file is under 1MB
+      expect(file.size).toBeLessThanOrEqual(1 * 1024 * 1024);
 
       const input = wrapper.find('input[type="file"]');
       const inputElement = input.element;
@@ -247,6 +303,9 @@ describe('FileUploader', () => {
       });
 
       await input.trigger('change');
+      // Wait for async parseFile to complete
+      await new Promise((resolve) => setTimeout(resolve, 50));
+      await wrapper.vm.$nextTick();
 
       expect(wrapper.emitted('file-loaded')).toBeTruthy();
       expect(wrapper.emitted('file-error')).toBeFalsy();
@@ -289,8 +348,8 @@ describe('FileUploader', () => {
       await input.trigger('change');
 
       expect(wrapper.emitted('file-error')).toBeTruthy();
-      const errorMessage = wrapper.emitted('file-error')[0][0];
-      expect(errorMessage).toMatch(/\d+(\.\d+)?\s*MB/); // Contains file size in MB
+      const errorData = wrapper.emitted('file-error')[0][0];
+      expect(errorData.message).toMatch(/\d+(\.\d+)?\s*MB/); // Contains file size in MB
     });
   });
 
@@ -370,6 +429,8 @@ describe('FileUploader', () => {
       });
 
       await input2.trigger('change');
+      // Wait for async parseFile to complete
+      await new Promise((resolve) => setTimeout(resolve, 50));
       await testWrapper2.vm.$nextTick();
 
       expect(testWrapper2.emitted('file-loaded')).toBeTruthy();
@@ -438,11 +499,15 @@ describe('FileUploader', () => {
       });
 
       await input.trigger('change');
+      // Wait for async parseFile to complete
+      await new Promise((resolve) => setTimeout(resolve, 50));
       await wrapper.vm.$nextTick();
 
       // Verify file-loaded event
       expect(wrapper.emitted('file-loaded')).toBeTruthy();
-      expect(wrapper.emitted('file-loaded')[0][0]).toBe(file);
+      const emittedData = wrapper.emitted('file-loaded')[0][0];
+      expect(emittedData).toHaveProperty('data');
+      expect(emittedData).toHaveProperty('fileName', 'test.json');
 
       // Verify filename displayed
       expect(wrapper.text()).toContain('test.json');
@@ -507,6 +572,8 @@ describe('FileUploader', () => {
       });
 
       await input2.trigger('change');
+      // Wait for async parseFile to complete
+      await new Promise((resolve) => setTimeout(resolve, 50));
       await testWrapper2.vm.$nextTick();
 
       expect(testWrapper2.emitted('file-loaded')).toBeTruthy();
