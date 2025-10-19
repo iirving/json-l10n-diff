@@ -1,5 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { validateJson } from "../../src/utils/jsonValidator.js";
+import { readFileSync } from "fs";
+import { join } from "path";
 
 describe("validateJson", () => {
   describe("invalid input handling", () => {
@@ -177,6 +179,18 @@ describe("validateJson", () => {
     it("should handle whitespace-only string", () => {
       const result = validateJson("   \n\t   ");
       expect(result.isValid).toBe(false);
+    });
+  });
+
+  describe("real world test files", () => {
+    it("should validate test1.en.json from data directory", () => {
+      const filePath = join(process.cwd(), "data/test1/test1.en.json");
+      const fileContent = readFileSync(filePath, "utf-8");
+      const result = validateJson(fileContent);
+
+      expect(result.isValid).toBe(true);
+      expect(result.error).toBeUndefined();
+      expect(result.line).toBeUndefined();
     });
   });
 });
