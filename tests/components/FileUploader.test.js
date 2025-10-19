@@ -82,11 +82,13 @@ describe('FileUploader', () => {
 
       await input.trigger('change');
       // Wait for async parseFile to complete
-      await new Promise((resolve) => setTimeout(resolve, 50));
+      await new Promise((resolve) => setTimeout(resolve, 100));
       await wrapper.vm.$nextTick();
 
-      expect(wrapper.emitted('file-loaded')).toBeTruthy();
-      const emittedData = wrapper.emitted('file-loaded')[0][0];
+      const emitted = wrapper.emitted('file-loaded');
+      expect(emitted).toBeTruthy();
+      expect(emitted).toHaveLength(1);
+      const emittedData = emitted[0][0];
       expect(emittedData).toHaveProperty('data');
       expect(emittedData).toHaveProperty('keyCount');
       expect(emittedData).toHaveProperty('fileName', 'test.json');
