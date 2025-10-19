@@ -1,7 +1,7 @@
 <script setup>
 /**
  * FileUploader Component (Placeholder)
- * 
+ *
  * Purpose: Handle file upload via drag-and-drop or file input
  * Features (to be implemented):
  * - File input with drag-and-drop support
@@ -13,17 +13,19 @@
 defineProps({
   label: {
     type: String,
-    default: 'Upload JSON File'
-  }
-})
+    default: 'Upload JSON File',
+  },
+});
 
-defineEmits(['file-loaded', 'file-error'])
+defineEmits(['file-loaded', 'file-error']);
 </script>
 
 <template>
   <div class="file-uploader">
     <p>{{ label }}</p>
-    <p class="placeholder-note">FileUploader placeholder - to be implemented in Phase 3</p>
+    <p class="placeholder-note">
+      FileUploader placeholder - to be implemented in Phase 3
+    </p>
   </div>
 </template>
 

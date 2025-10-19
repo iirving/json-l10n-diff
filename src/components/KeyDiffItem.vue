@@ -1,7 +1,7 @@
 <script setup>
 /**
  * KeyDiffItem Component (Placeholder)
- * 
+ *
  * Purpose: Display a single key comparison row with diff status
  * Features (to be implemented):
  * - Color coding based on status (missing-left, missing-right, identical, different)
@@ -13,30 +13,35 @@
 defineProps({
   keyPath: {
     type: String,
-    required: true
+    required: true,
   },
   status: {
     type: String,
     required: true,
-    validator: (value) => ['missing-left', 'missing-right', 'identical', 'different'].includes(value)
+    validator: (value) =>
+      ['missing-left', 'missing-right', 'identical', 'different'].includes(
+        value
+      ),
   },
   value1: {
     type: [String, Number, Boolean, Object],
-    default: null
+    default: null,
   },
   value2: {
     type: [String, Number, Boolean, Object],
-    default: null
-  }
-})
+    default: null,
+  },
+});
 
-defineEmits(['add-key', 'edit-value'])
+defineEmits(['add-key', 'edit-value']);
 </script>
 
 <template>
   <div class="key-diff-item" :class="`diff-${status}`">
     <span class="key-path">{{ keyPath }}</span>
-    <p class="placeholder-note">KeyDiffItem placeholder - to be implemented in Phase 3</p>
+    <p class="placeholder-note">
+      KeyDiffItem placeholder - to be implemented in Phase 3
+    </p>
   </div>
 </template>
 

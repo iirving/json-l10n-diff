@@ -15,7 +15,7 @@
 - Q: Should there be a file size limit? → A: 10 MB per file (very generous)
 - Q: How should conflicting edits be handled? → A: Last edit wins (simplest for single-user)
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - View and Compare Basic i18n Files (Priority: P1)
 
@@ -115,7 +115,7 @@ A developer with larger translation files subscribes to a Medium ($5/month, up t
 - How does the system handle empty files or files with no keys?
 - What happens when a user makes conflicting edits in quick succession? System applies last-edit-wins strategy; most recent edit overwrites previous changes.
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -173,7 +173,7 @@ A developer with larger translation files subscribes to a Medium ($5/month, up t
 - **User Tier**: Represents the subscription level of a user; determines maximum key limit (20 for free, 100 for Medium, 1000 for Enterprise); affects file upload validation
 - **Edit Operation**: Represents a user modification; can be "add key", "edit value", or "delete key"; tracked to enable save functionality
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

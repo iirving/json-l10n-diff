@@ -1,5 +1,5 @@
 ---
-applyTo: "**/*.vue, **/*.js"
+applyTo: '**/*.vue, **/*.js'
 ---
 
 description: GitHub Copilot Guidelines for Vue

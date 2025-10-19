@@ -18,15 +18,15 @@ Represents an uploaded JSON i18n file in memory.
 
 **Properties**:
 
-| Property | Type | Required | Description | Validation |
-|----------|------|----------|-------------|------------|
-| `id` | string | Yes | Unique identifier (file1/file2) | Must be 'file1' or 'file2' |
-| `name` | string | Yes | Original filename | Must end with .json (warning if not) |
-| `size` | number | Yes | File size in bytes | Must be <= 10485760 (10 MB) |
-| `content` | object | Yes | Parsed JSON object | Valid JSON structure |
-| `keyCount` | number | Yes | Total keys (including parents) | Calculated, >= 0 |
-| `uploadedAt` | Date | Yes | Upload timestamp | ISO 8601 format |
-| `modified` | boolean | No | Has user made edits? | Default: false |
+| Property     | Type    | Required | Description                     | Validation                           |
+| ------------ | ------- | -------- | ------------------------------- | ------------------------------------ |
+| `id`         | string  | Yes      | Unique identifier (file1/file2) | Must be 'file1' or 'file2'           |
+| `name`       | string  | Yes      | Original filename               | Must end with .json (warning if not) |
+| `size`       | number  | Yes      | File size in bytes              | Must be <= 10485760 (10 MB)          |
+| `content`    | object  | Yes      | Parsed JSON object              | Valid JSON structure                 |
+| `keyCount`   | number  | Yes      | Total keys (including parents)  | Calculated, >= 0                     |
+| `uploadedAt` | Date    | Yes      | Upload timestamp                | ISO 8601 format                      |
+| `modified`   | boolean | No       | Has user made edits?            | Default: false                       |
 
 **State Lifecycle**:
 
@@ -70,15 +70,15 @@ Represents the comparison result for a single key path across two files.
 
 **Properties**:
 
-| Property | Type | Required | Description | Validation |
-|----------|------|----------|-------------|------------|
-| `keyPath` | string | Yes | Dot-notation path | e.g., "user.profile.name" |
-| `status` | enum | Yes | Comparison status | One of: missing-left, missing-right, identical, different |
-| `valueLeft` | any | No | Value in file1 (if exists) | Any JSON-serializable value |
-| `valueRight` | any | No | Value in file2 (if exists) | Any JSON-serializable value |
-| `depth` | number | Yes | Nesting depth | >= 0 |
-| `isLeaf` | boolean | Yes | Is this a leaf node? | true if value is not object/array |
-| `parentPath` | string | No | Parent key path | null for root-level keys |
+| Property     | Type    | Required | Description                | Validation                                                |
+| ------------ | ------- | -------- | -------------------------- | --------------------------------------------------------- |
+| `keyPath`    | string  | Yes      | Dot-notation path          | e.g., "user.profile.name"                                 |
+| `status`     | enum    | Yes      | Comparison status          | One of: missing-left, missing-right, identical, different |
+| `valueLeft`  | any     | No       | Value in file1 (if exists) | Any JSON-serializable value                               |
+| `valueRight` | any     | No       | Value in file2 (if exists) | Any JSON-serializable value                               |
+| `depth`      | number  | Yes      | Nesting depth              | >= 0                                                      |
+| `isLeaf`     | boolean | Yes      | Is this a leaf node?       | true if value is not object/array                         |
+| `parentPath` | string  | No       | Parent key path            | null for root-level keys                                  |
 
 **Status Values**:
 
@@ -136,16 +136,16 @@ Represents a user edit action (add key, modify value, delete key).
 
 **Properties**:
 
-| Property | Type | Required | Description | Validation |
-|----------|------|----------|-------------|------------|
-| `id` | string | Yes | Unique operation ID | UUID or timestamp-based |
-| `type` | enum | Yes | Operation type | One of: add-key, edit-value, delete-key |
-| `targetFile` | enum | Yes | Which file to modify | 'file1' or 'file2' |
-| `keyPath` | string | Yes | Affected key path | Dot-notation path |
-| `oldValue` | any | No | Previous value | For edit-value and delete-key |
-| `newValue` | any | No | New value | For add-key and edit-value |
-| `timestamp` | Date | Yes | When edit occurred | ISO 8601 format |
-| `applied` | boolean | Yes | Is edit applied? | Default: true |
+| Property     | Type    | Required | Description          | Validation                              |
+| ------------ | ------- | -------- | -------------------- | --------------------------------------- |
+| `id`         | string  | Yes      | Unique operation ID  | UUID or timestamp-based                 |
+| `type`       | enum    | Yes      | Operation type       | One of: add-key, edit-value, delete-key |
+| `targetFile` | enum    | Yes      | Which file to modify | 'file1' or 'file2'                      |
+| `keyPath`    | string  | Yes      | Affected key path    | Dot-notation path                       |
+| `oldValue`   | any     | No       | Previous value       | For edit-value and delete-key           |
+| `newValue`   | any     | No       | New value            | For add-key and edit-value              |
+| `timestamp`  | Date    | Yes      | When edit occurred   | ISO 8601 format                         |
+| `applied`    | boolean | Yes      | Is edit applied?     | Default: true                           |
 
 **Type Values**:
 
@@ -182,21 +182,21 @@ Represents the user's subscription tier and associated limits.
 
 **Properties**:
 
-| Property | Type | Required | Description | Validation |
-|----------|------|----------|-------------|------------|
-| `level` | enum | Yes | Tier level | One of: free, medium, enterprise |
-| `keyLimit` | number | Yes | Maximum keys allowed | 20, 100, or 1000 |
-| `displayName` | string | Yes | User-friendly tier name | "Free", "Medium", "Enterprise" |
-| `price` | string | No | Monthly price | "$0", "$5/month", "$99/month" |
-| `features` | array | No | Tier-specific features | Array of strings |
+| Property      | Type   | Required | Description             | Validation                       |
+| ------------- | ------ | -------- | ----------------------- | -------------------------------- |
+| `level`       | enum   | Yes      | Tier level              | One of: free, medium, enterprise |
+| `keyLimit`    | number | Yes      | Maximum keys allowed    | 20, 100, or 1000                 |
+| `displayName` | string | Yes      | User-friendly tier name | "Free", "Medium", "Enterprise"   |
+| `price`       | string | No       | Monthly price           | "$0", "$5/month", "$99/month"    |
+| `features`    | array  | No       | Tier-specific features  | Array of strings                 |
 
 **Tier Definitions**:
 
-| Level | Key Limit | Price | Features |
-|-------|-----------|-------|----------|
-| free | 20 | $0 | Basic comparison, edit, save |
-| medium | 100 | $5/month | All Free features + larger files |
-| enterprise | 1000 | $99/month | All Medium features + priority support |
+| Level      | Key Limit | Price     | Features                               |
+| ---------- | --------- | --------- | -------------------------------------- |
+| free       | 20        | $0        | Basic comparison, edit, save           |
+| medium     | 100       | $5/month  | All Free features + larger files       |
+| enterprise | 1000      | $99/month | All Medium features + priority support |
 
 **Example**:
 
@@ -218,10 +218,13 @@ Represents the user's subscription tier and associated limits.
 
 ```javascript
 // Stored in LocalStorage as:
-localStorage.setItem('userTier', JSON.stringify({
-  level: 'free',
-  selectedAt: '2025-10-13T10:00:00Z'
-}));
+localStorage.setItem(
+  'userTier',
+  JSON.stringify({
+    level: 'free',
+    selectedAt: '2025-10-13T10:00:00Z',
+  })
+);
 ```
 
 **Notes**:
@@ -238,22 +241,22 @@ Represents validation errors during file upload or parsing.
 
 **Properties**:
 
-| Property | Type | Required | Description | Validation |
-|----------|------|----------|-------------|------------|
-| `code` | enum | Yes | Error code | See error codes below |
-| `message` | string | Yes | User-friendly error message | Specific, actionable |
-| `details` | object | No | Additional error context | Varies by error code |
-| `severity` | enum | Yes | Error severity | 'error' or 'warning' |
+| Property   | Type   | Required | Description                 | Validation            |
+| ---------- | ------ | -------- | --------------------------- | --------------------- |
+| `code`     | enum   | Yes      | Error code                  | See error codes below |
+| `message`  | string | Yes      | User-friendly error message | Specific, actionable  |
+| `details`  | object | No       | Additional error context    | Varies by error code  |
+| `severity` | enum   | Yes      | Error severity              | 'error' or 'warning'  |
 
 **Error Codes**:
 
-| Code | Message Template | Details |
-|------|------------------|---------|
-| FILE_TOO_LARGE | "File exceeds 10 MB limit. Current size: {size} MB." | `{ actualSize: number }` |
-| INVALID_JSON | "Invalid JSON at line {line}: {reason}" | `{ line: number, reason: string }` |
+| Code                | Message Template                                                         | Details                                          |
+| ------------------- | ------------------------------------------------------------------------ | ------------------------------------------------ |
+| FILE_TOO_LARGE      | "File exceeds 10 MB limit. Current size: {size} MB."                     | `{ actualSize: number }`                         |
+| INVALID_JSON        | "Invalid JSON at line {line}: {reason}"                                  | `{ line: number, reason: string }`               |
 | TIER_LIMIT_EXCEEDED | "File exceeds {tier} tier limit of {limit} keys. Current: {count} keys." | `{ tier: string, limit: number, count: number }` |
-| NOT_JSON_FILE | "File does not have .json extension. Proceed anyway?" | `{ extension: string }` |
-| EMPTY_FILE | "File is empty or contains no keys." | `{}` |
+| NOT_JSON_FILE       | "File does not have .json extension. Proceed anyway?"                    | `{ extension: string }`                          |
+| EMPTY_FILE          | "File is empty or contains no keys."                                     | `{}`                                             |
 
 **Example**:
 
@@ -379,9 +382,9 @@ UserTier ──> validates ──> JsonFile.keyCount
 
 ### Memory Usage
 
-- **Typical file**: 100 keys * 50 bytes avg = 5 KB per file
-- **Large file**: 1000 keys * 100 bytes avg = 100 KB per file
-- **Comparison results**: 1000 keys * 200 bytes = 200 KB
+- **Typical file**: 100 keys \* 50 bytes avg = 5 KB per file
+- **Large file**: 1000 keys \* 100 bytes avg = 100 KB per file
+- **Comparison results**: 1000 keys \* 200 bytes = 200 KB
 - **Total memory**: ~500 KB for Enterprise tier worst case
 - **Acceptable**: Well within browser limits (GB range)
 

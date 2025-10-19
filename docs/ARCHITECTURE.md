@@ -111,15 +111,15 @@ Leveraging Vue 3's Composition API for:
 ```javascript
 // Example: useKeyCounter composable
 export function useKeyCounter() {
-  const count = ref(0)
+  const count = ref(0);
 
   function countKeys(obj) {
     // Logic here
-    count.value = result
-    return result
+    count.value = result;
+    return result;
   }
 
-  return { count, countKeys }
+  return { count, countKeys };
 }
 ```
 
@@ -369,19 +369,19 @@ Since this is a client-side app:
 function validateFile(file) {
   // Check file size (max 10MB)
   if (file.size > 10 * 1024 * 1024) {
-    throw new Error('File too large')
+    throw new Error('File too large');
   }
 
   // Check file type
   if (file.type !== 'application/json') {
-    throw new Error('Invalid file type')
+    throw new Error('Invalid file type');
   }
 
   // Validate JSON structure
   try {
-    JSON.parse(content)
+    JSON.parse(content);
   } catch (e) {
-    throw new Error('Invalid JSON')
+    throw new Error('Invalid JSON');
   }
 }
 ```

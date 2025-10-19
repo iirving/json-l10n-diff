@@ -1,7 +1,7 @@
 <script setup>
 /**
  * App.vue - Root Application Component
- * 
+ *
  * Purpose: Main application shell with simple client-side routing
  * Features:
  * - Navigation between Index and About pages
@@ -9,38 +9,38 @@
  * - Responsive navigation bar
  */
 
-import { ref, computed } from 'vue'
-import Index from './pages/Index.vue'
-import About from './pages/About.vue'
+import { ref, computed } from 'vue';
+import Index from './pages/Index.vue';
+import About from './pages/About.vue';
 
 // Simple hash-based routing
-const currentRoute = ref(window.location.hash.slice(1) || '/')
+const currentRoute = ref(window.location.hash.slice(1) || '/');
 
 // Update route on hash change
 window.addEventListener('hashchange', () => {
-  currentRoute.value = window.location.hash.slice(1) || '/'
-})
+  currentRoute.value = window.location.hash.slice(1) || '/';
+});
 
 // Computed component based on route
 const currentComponent = computed(() => {
   switch (currentRoute.value) {
     case '/about':
-      return About
+      return About;
     case '/':
     default:
-      return Index
+      return Index;
   }
-})
+});
 
 // Navigation helper
 const navigate = (path) => {
-  window.location.hash = path
-}
+  window.location.hash = path;
+};
 
 // Check if route is active
 const isActive = (path) => {
-  return currentRoute.value === path
-}
+  return currentRoute.value === path;
+};
 </script>
 
 <template>
@@ -52,15 +52,15 @@ const isActive = (path) => {
         </a>
       </div>
       <div class="nav-links">
-        <a 
-          href="#/" 
+        <a
+          href="#/"
           :class="{ active: isActive('/') }"
           @click.prevent="navigate('/')"
         >
           Home
         </a>
-        <a 
-          href="#/about" 
+        <a
+          href="#/about"
           :class="{ active: isActive('/about') }"
           @click.prevent="navigate('/about')"
         >
@@ -124,7 +124,9 @@ const isActive = (path) => {
   text-decoration: none;
   color: rgba(255, 255, 255, 0.87);
   font-weight: 500;
-  transition: background-color 0.2s, color 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
   cursor: pointer;
 }
 

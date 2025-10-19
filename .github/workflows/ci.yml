@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ '**' ]
+    branches: ['**']
 
 jobs:
   build:
@@ -15,27 +15,27 @@ jobs:
         node-version: [18.x, 20.x]
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Setup Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
 
-    - name: Install dependencies
-      run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
-    - name: Build
-      run: npm run build
+      - name: Build
+        run: npm run build
 
-    - name: Run Tests
-      run: npm run test:run
-      continue-on-error: false
+      - name: Run Tests
+        run: npm run test:run
+        continue-on-error: false
 
-    - name: Generate Coverage Report
-      run: npm run test:coverage
+      - name: Generate Coverage Report
+        run: npm run test:coverage
 
-    - name: Lint (when configured)
-      run: npm run lint --if-present
+      - name: Lint (when configured)
+        run: npm run lint --if-present

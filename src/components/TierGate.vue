@@ -1,7 +1,7 @@
 <script setup>
 /**
  * TierGate Component (Placeholder)
- * 
+ *
  * Purpose: Display tier limits and blocking modal when exceeded
  * Features (to be implemented):
  * - Show current tier and key limits
@@ -12,29 +12,33 @@
 defineProps({
   currentTier: {
     type: String,
-    default: 'free'
+    default: 'free',
   },
   keyCount: {
     type: Number,
-    default: 0
+    default: 0,
   },
   keyLimit: {
     type: Number,
-    default: 20
+    default: 20,
   },
   exceeded: {
     type: Boolean,
-    default: false
-  }
-})
+    default: false,
+  },
+});
 
-defineEmits(['upgrade-requested', 'dismissed'])
+defineEmits(['upgrade-requested', 'dismissed']);
 </script>
 
 <template>
   <div class="tier-gate">
-    <p class="placeholder-note">TierGate placeholder - to be implemented in Phase 6</p>
-    <p>Current tier: {{ currentTier }} ({{ keyCount }} / {{ keyLimit }} keys)</p>
+    <p class="placeholder-note">
+      TierGate placeholder - to be implemented in Phase 6
+    </p>
+    <p>
+      Current tier: {{ currentTier }} ({{ keyCount }} / {{ keyLimit }} keys)
+    </p>
   </div>
 </template>
 

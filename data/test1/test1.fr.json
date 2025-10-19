@@ -14,22 +14,22 @@
         "item5": "Diversité à travers la chaîne de valeurs",
         "item6": "Sensibilisation et élargissement du bassin"
       },
-      "bannertext":"Avec le vieillissement de la population et la baisse du taux de natalité, l'immigration est devenue la principale source de croissance du marché du travail en Canada."
+      "bannertext": "Avec le vieillissement de la population et la baisse du taux de natalité, l'immigration est devenue la principale source de croissance du marché du travail en Canada."
     },
     "purpose": {
       "header": "Objectif de l’Outil de diagnostic de la diversité (ODD)",
       "text": "Aujourd’hui plus que jamais, les organisations ont besoin de stratégies efficaces en matière d’équité, de diversité et d’inclusion (EDI) pour suivre l’évolution rapide de leur environnement.",
       "text2": "La population canadienne évolue, les bassins de talents changent, et les marchés se transforment:",
-      "item1":"Avec le vieillissement de la population et le taux de natalité en baisse, l’immigration est devenue la principale source de croissance du marché du travail au Canada.",
-      "item2":"De plus en plus, la population est racisée.",
-      "item3":"Les jeunes autochtones forment le segment de la population dont la croissance est la plus rapide.",
-      "text3":"Une stratégie solide en matière d’EDI, intégrée à votre stratégie d’entreprise, est un atout essentiel pour assurer votre réussite. Pour atteindre cet objectif, il vous est nécessaire de:",
-      "item4":"Attirer les meilleurs talents",
-      "item5":"Explorer des marchés de plus en plus diversifiés",
-      "item6":"Stimuler l’innovation et la créativité",
-      "item7":"Améliorer la satisfaction, la rétention et la performance des employés",
-      "item8":"Répondre aux exigences réglementaires et aux attentes évolutives des gouvernements, des grandes entreprises, des investisseurs et des clients",
-      "item9":"Gérer les risques"
+      "item1": "Avec le vieillissement de la population et le taux de natalité en baisse, l’immigration est devenue la principale source de croissance du marché du travail au Canada.",
+      "item2": "De plus en plus, la population est racisée.",
+      "item3": "Les jeunes autochtones forment le segment de la population dont la croissance est la plus rapide.",
+      "text3": "Une stratégie solide en matière d’EDI, intégrée à votre stratégie d’entreprise, est un atout essentiel pour assurer votre réussite. Pour atteindre cet objectif, il vous est nécessaire de:",
+      "item4": "Attirer les meilleurs talents",
+      "item5": "Explorer des marchés de plus en plus diversifiés",
+      "item6": "Stimuler l’innovation et la créativité",
+      "item7": "Améliorer la satisfaction, la rétention et la performance des employés",
+      "item8": "Répondre aux exigences réglementaires et aux attentes évolutives des gouvernements, des grandes entreprises, des investisseurs et des clients",
+      "item9": "Gérer les risques"
     },
     "intro": {
       "header": "Présentation de l’Outil de diagnostic de la diversité",
@@ -71,7 +71,7 @@
     "understanding": {
       "header": "Comprendre votre évaluation de la diversité",
       "text": "L’Outil de diagnostic de la diversité (ODD) vous aidera à évaluer vos politiques et pratiques en matière d’EDI actuelles et à élaborer une stratégie pour soutenir vos objectifs d’affaires.",
-      "text2":"Vos réponses au questionnaire de l’ODD vous fourniront une note ainsi que des actions pour améliorer les pratiques en matière d’EDI de votre organisation. Cette note n’est ni bonne ni mauvaise, mais montre votre situation par rapport aux autres organisations et aux pratiques exemplaires, et vous aide à identifier les domaines à améliorer."
+      "text2": "Vos réponses au questionnaire de l’ODD vous fourniront une note ainsi que des actions pour améliorer les pratiques en matière d’EDI de votre organisation. Cette note n’est ni bonne ni mauvaise, mais montre votre situation par rapport aux autres organisations et aux pratiques exemplaires, et vous aide à identifier les domaines à améliorer."
     },
     "benchmarking": {
       "header1": "Analyse comparative :",
@@ -79,10 +79,10 @@
       "header3": "Suivi de la conformité à l'EDI",
       "text": {
         "firstPart": "Il est normal que les organisations se trouvent à différents stades de développement, selon leur secteur, leur taille et leur stratégie. ",
-        "item1":"Un niveau 1 ou 2 indique que vous avez peut-être entamé le travail, mais que vous êtes au niveau de conformité minimale.",
-        "item2":"Un niveau 3 montre que vous avez atteint un niveau de base ou fondamental en EDI.",
-        "item3":"Un niveau 4 indique que vous avez mis en place des pratiques avancées.",
-        "item4":"Un niveau 5 représente l’intégration de l’EDI aux priorités stratégiques, démontrant une mise en œuvre avancée dans cette dimension.",
+        "item1": "Un niveau 1 ou 2 indique que vous avez peut-être entamé le travail, mais que vous êtes au niveau de conformité minimale.",
+        "item2": "Un niveau 3 montre que vous avez atteint un niveau de base ou fondamental en EDI.",
+        "item3": "Un niveau 4 indique que vous avez mis en place des pratiques avancées.",
+        "item4": "Un niveau 5 représente l’intégration de l’EDI aux priorités stratégiques, démontrant une mise en œuvre avancée dans cette dimension.",
         "secondPart": ""
       },
       "legend": {
@@ -260,7 +260,7 @@
       }
     },
     "conclusion": {
-      "text":"Nous vous remercions d'avoir répondu au besoin d'intégration de l'EDI dans votre organisation et d'avoir fait un pas dans la bonne direction en analysant vos pratiques actuelles à l'aide de l’Outil de diagnostic de la diversité!",
+      "text": "Nous vous remercions d'avoir répondu au besoin d'intégration de l'EDI dans votre organisation et d'avoir fait un pas dans la bonne direction en analysant vos pratiques actuelles à l'aide de l’Outil de diagnostic de la diversité!",
       "header": "Conclusion",
       "item1": "Votre organisation a obtenu les meilleurs résultats dans les domaines suivants:&nbsp;",
       "item2": "Votre organisation a le plus de possibilités de croissance dans les domaines suivants:&nbsp;",

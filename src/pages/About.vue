@@ -1,7 +1,7 @@
 <script setup>
 /**
  * About.vue - Static Information Page
- * 
+ *
  * Purpose: Provide information about the tool, features, and how it works
  * Content:
  * - Feature overview
@@ -26,45 +26,51 @@
           <div class="feature-card">
             <div class="feature-icon">📤</div>
             <h3>Upload & Compare</h3>
-            <p>Drag-and-drop or select two JSON localization files to compare instantly</p>
+            <p>
+              Drag-and-drop or select two JSON localization files to compare
+              instantly
+            </p>
           </div>
-          
+
           <div class="feature-card">
             <div class="feature-icon">🌳</div>
             <h3>Visual Tree Structure</h3>
             <p>View nested key hierarchy with expandable/collapsible nodes</p>
           </div>
-          
+
           <div class="feature-card">
             <div class="feature-icon">🎨</div>
             <h3>Smart Diff Highlighting</h3>
-            <p>Color-coded differences: red for missing keys, yellow for identical values, neutral for translations</p>
+            <p>
+              Color-coded differences: red for missing keys, yellow for
+              identical values, neutral for translations
+            </p>
           </div>
-          
+
           <div class="feature-card">
             <div class="feature-icon">✏️</div>
             <h3>Inline Editing</h3>
             <p>Edit translations directly in the comparison view</p>
           </div>
-          
+
           <div class="feature-card">
             <div class="feature-icon">➕</div>
             <h3>Add Missing Keys</h3>
             <p>One-click to add missing keys to either file</p>
           </div>
-          
+
           <div class="feature-card">
             <div class="feature-icon">💾</div>
             <h3>Save & Download</h3>
             <p>Export modified files with all your changes</p>
           </div>
-          
+
           <div class="feature-card">
             <div class="feature-icon">🎨</div>
             <h3>JSON Prettify</h3>
             <p>Format with consistent 2-space indentation</p>
           </div>
-          
+
           <div class="feature-card">
             <div class="feature-icon">🔒</div>
             <h3>Privacy-First</h3>
@@ -84,7 +90,7 @@
               <p>Drag and drop or select your JSON localization files</p>
             </div>
           </div>
-          
+
           <div class="step">
             <div class="step-number">2</div>
             <div class="step-content">
@@ -92,15 +98,17 @@
               <p>Files are validated and structured into a nested tree</p>
             </div>
           </div>
-          
+
           <div class="step">
             <div class="step-number">3</div>
             <div class="step-content">
               <h3>Compare</h3>
-              <p>Differences are calculated and highlighted with color coding</p>
+              <p>
+                Differences are calculated and highlighted with color coding
+              </p>
             </div>
           </div>
-          
+
           <div class="step">
             <div class="step-number">4</div>
             <div class="step-content">
@@ -108,7 +116,7 @@
               <p>Make changes directly in the interface</p>
             </div>
           </div>
-          
+
           <div class="step">
             <div class="step-number">5</div>
             <div class="step-content">
@@ -130,27 +138,27 @@
             <h4>Framework</h4>
             <p>Vue 3.5.22 with Composition API</p>
           </div>
-          
+
           <div class="tech-item">
             <h4>Build Tool</h4>
             <p>Vite 7.1.14 (Rolldown variant)</p>
           </div>
-          
+
           <div class="tech-item">
             <h4>State Management</h4>
             <p>Pinia 2.2.8</p>
           </div>
-          
+
           <div class="tech-item">
             <h4>Language</h4>
             <p>JavaScript ES6+</p>
           </div>
-          
+
           <div class="tech-item">
             <h4>File Size Limit</h4>
             <p>10 MB per file</p>
           </div>
-          
+
           <div class="tech-item">
             <h4>Supported Format</h4>
             <p>Valid JSON files only</p>
@@ -169,7 +177,7 @@
               <p>All file processing happens entirely in your browser</p>
             </div>
           </div>
-          
+
           <div class="privacy-item">
             <span class="check-icon">✓</span>
             <div>
@@ -177,7 +185,7 @@
               <p>Your files never leave your computer</p>
             </div>
           </div>
-          
+
           <div class="privacy-item">
             <span class="check-icon">✓</span>
             <div>
@@ -185,12 +193,20 @@
               <p>We don't collect or store your data</p>
             </div>
           </div>
-          
+
           <div class="privacy-item">
             <span class="check-icon">✓</span>
             <div>
               <h4>Open Source</h4>
-              <p>Inspect the code yourself on <a href="https://github.com/iirving/json-l10n-diff" target="_blank" rel="noopener noreferrer">GitHub</a></p>
+              <p>
+                Inspect the code yourself on
+                <a
+                  href="https://github.com/iirving/json-l10n-diff"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >GitHub</a
+                >
+              </p>
             </div>
           </div>
         </div>
@@ -201,36 +217,47 @@
         <h2>📝 Use Cases</h2>
         <div class="use-case">
           <h3>Finding Missing Translations</h3>
-          <p>You've added new features to your app and need to ensure all languages are up to date.</p>
+          <p>
+            You've added new features to your app and need to ensure all
+            languages are up to date.
+          </p>
           <div class="example-box">
-            <code>✅ Upload en.json (your main language file)<br>
-✅ Upload fr.json (French translations)<br>
-🔴 Missing keys highlighted instantly<br>
-➕ Add missing keys with one click<br>
-💾 Save updated fr.json</code>
+            <code
+              >✅ Upload en.json (your main language file)<br />
+              ✅ Upload fr.json (French translations)<br />
+              🔴 Missing keys highlighted instantly<br />
+              ➕ Add missing keys with one click<br />
+              💾 Save updated fr.json</code
+            >
           </div>
         </div>
-        
+
         <div class="use-case">
           <h3>Catching Untranslated Placeholders</h3>
           <p>Sometimes placeholder text gets copied instead of translated.</p>
           <div class="example-box">
-            <code>✅ Upload en.json: { "welcome": "Welcome" }<br>
-✅ Upload fr.json: { "welcome": "Welcome" }<br>
-🟡 Identical values highlighted in yellow<br>
-✏️ Edit "Welcome" → "Bienvenue"<br>
-💾 Save corrected fr.json</code>
+            <code
+              >✅ Upload en.json: { "welcome": "Welcome" }<br />
+              ✅ Upload fr.json: { "welcome": "Welcome" }<br />
+              🟡 Identical values highlighted in yellow<br />
+              ✏️ Edit "Welcome" → "Bienvenue"<br />
+              💾 Save corrected fr.json</code
+            >
           </div>
         </div>
-        
+
         <div class="use-case">
           <h3>Team Synchronization</h3>
-          <p>Multiple team members working on translations? Keep files in sync.</p>
+          <p>
+            Multiple team members working on translations? Keep files in sync.
+          </p>
           <div class="example-box">
-            <code>✅ Compare your local changes against the main branch<br>
-🔴 See what others added that you're missing<br>
-➕ Add new keys to your file<br>
-💾 Export and commit synchronized files</code>
+            <code
+              >✅ Compare your local changes against the main branch<br />
+              🔴 See what others added that you're missing<br />
+              ➕ Add new keys to your file<br />
+              💾 Export and commit synchronized files</code
+            >
           </div>
         </div>
       </section>
@@ -249,7 +276,11 @@
   padding: var(--spacing-xl) var(--spacing-lg);
   text-align: center;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  background: linear-gradient(135deg, rgba(100, 108, 255, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(100, 108, 255, 0.1) 0%,
+    rgba(139, 92, 246, 0.1) 100%
+  );
 }
 
 .page-header h1 {
@@ -294,7 +325,9 @@
   border-radius: var(--radius-md);
   background-color: rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: transform 0.2s, border-color 0.2s;
+  transition:
+    transform 0.2s,
+    border-color 0.2s;
 }
 
 .feature-card:hover {

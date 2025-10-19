@@ -168,11 +168,11 @@ function countKeys(obj, count = 0) {
 
 ```javascript
 // In ComparisonView component or composable
-const file1 = ref(null);           // Parsed JSON object
-const file2 = ref(null);           // Parsed JSON object
-const diffResults = ref([]);       // Array of comparison results
+const file1 = ref(null); // Parsed JSON object
+const file2 = ref(null); // Parsed JSON object
+const diffResults = ref([]); // Array of comparison results
 const editHistory = ref(new Map()); // Track changes for save
-const currentTier = ref('free');   // User's subscription tier
+const currentTier = ref('free'); // User's subscription tier
 ```
 
 **Alternatives Considered**:
@@ -229,6 +229,7 @@ function downloadFile(jsonObject, filename) {
 - Accessible with keyboard navigation
 
 **Warning Text**:
+
 > "Prettifying will reformat the JSON with consistent spacing. This may create additional lines in git diffs, making it harder to see actual translation changes. Proceed with prettify?"
 
 **Alternatives Considered**:

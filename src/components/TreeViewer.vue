@@ -1,7 +1,7 @@
 <script setup>
 /**
  * TreeViewer Component (Placeholder)
- * 
+ *
  * Purpose: Display JSON structure as an expandable tree
  * Features (to be implemented):
  * - Recursive tree node rendering
@@ -13,15 +13,15 @@
 defineProps({
   data: {
     type: Object,
-    default: () => ({})
+    default: () => ({}),
   },
   diffResults: {
     type: Array,
-    default: () => []
-  }
-})
+    default: () => [],
+  },
+});
 
-defineEmits(['node-toggled', 'value-edited'])
+defineEmits(['node-toggled', 'value-edited']);
 </script>
 
 <template>

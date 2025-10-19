@@ -215,4 +215,4 @@ This project is licensed under the [MIT License](LICENSE) - free to use, modify,
 
 ---
 
-**Built with ❤️ using Vue 3 + Vite** | *Privacy-first localization comparison tool*
+**Built with ❤️ using Vue 3 + Vite** | _Privacy-first localization comparison tool_
