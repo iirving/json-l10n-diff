@@ -54,12 +54,12 @@ description: 'Task list for JSON i18n Comparison and Diff Tool implementation'
 - [x] T009-TEST [P] [TEST] Write unit tests for jsonValidator in `tests/utils/jsonValidator.test.js` (test valid/invalid JSON, error line extraction, edge cases, aim for 90%+ coverage)
 - [x] T010 [P] Implement key path utilities in `src/utils/keyPathUtils.js` (build dot-notation paths, split paths, navigate nested objects)
 - [x] T010-TEST [P] [TEST] Write unit tests for keyPathUtils in `tests/utils/keyPathUtils.test.js` (test buildPath, splitPath, getValueByPath, setValueByPath with various inputs, aim for 90%+ coverage)
-- [ ] T011 Implement JSON parser composable in `src/composables/useJsonParser.js` (parseFile, validateJson, getErrorLine methods using jsonValidator and keyCounter from utils)
-- [ ] T011-TEST [TEST] Write unit tests for useJsonParser in `tests/composables/useJsonParser.test.js` (test parseFile with valid/invalid files, validateJson, getErrorLine, integration with utilities, aim for 90%+ coverage)
-- [ ] T012 [P] Create Pinia store `src/stores/useFileStore.js` (state: file1, file2, diffResults; actions: setFile1, setFile2, runComparison, reset)
-- [ ] T012-TEST [P] [TEST] Write unit tests for useFileStore in `tests/stores/useFileStore.test.js` (test all actions, state updates, runComparison logic, reset functionality, aim for 90%+ coverage)
-- [ ] T014 [P] Create Pinia store `src/stores/useEditStore.js` (state: editHistory Map, file1Modified, file2Modified; actions: addEdit, applyEdit, clearEdits)
-- [ ] T014-TEST [P] [TEST] Write unit tests for useEditStore in `tests/stores/useEditStore.test.js` (test edit tracking, applyEdit, clearEdits, history management, aim for 90%+ coverage)
+- [x] T011 Implement JSON parser composable in `src/composables/useJsonParser.js` (parseFile, validateJson, getErrorLine methods using jsonValidator and keyCounter from utils)
+- [x] T011-TEST [TEST] Write unit tests for useJsonParser in `tests/composables/useJsonParser.test.js` (test parseFile with valid/invalid files, validateJson, getErrorLine, integration with utilities, aim for 90%+ coverage)
+- [x] T012 [P] Create Pinia store `src/stores/useFileStore.js` (state: file1, file2, diffResults; actions: setFile1, setFile2, runComparison, reset)
+- [x] T012-TEST [P] [TEST] Write unit tests for useFileStore in `tests/stores/useFileStore.test.js` (test all actions, state updates, runComparison logic, reset functionality, aim for 90%+ coverage)
+- [x] T014 [P] Create Pinia store `src/stores/useEditStore.js` (state: editHistory Map, file1Modified, file2Modified; actions: addEdit, applyEdit, clearEdits)
+- [x] T014-TEST [P] [TEST] Write unit tests for useEditStore in `tests/stores/useEditStore.test.js` (test edit tracking, applyEdit, clearEdits, history management, aim for 90%+ coverage)
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
