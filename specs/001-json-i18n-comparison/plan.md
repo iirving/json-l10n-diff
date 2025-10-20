@@ -7,7 +7,7 @@
 
 ## Summary
 
-A client-side single-page application that allows developers to upload and compare two JSON i18n files, visualizing differences in a tree structure with color-coded highlights (red for missing keys, yellow for identical values, neutral for different values). Users can inline-edit values, add missing keys, and save modified files. The tool includes tier-based access control (Free: 20 keys, Medium: 100 keys, Enterprise: 1000 keys) and enforces a 10 MB file size limit. Built with Vue 3 Composition API and Vite, following a component-based architecture for modularity and testability.
+A client-side single-page application that allows developers to upload and compare two JSON i18n files, visualizing differences in a tree structure with color-coded highlights (red for missing keys, yellow for identical values, neutral for different values). Users can inline-edit values, add missing keys, and save modified files. The tool includes tier-based access control (Free: 20 keys, Medium: 100 keys, Enterprise: 1000 keys) and enforces a 1 MB file size limit. Built with Vue 3 Composition API and Vite, following a component-based architecture for modularity and testability.
 
 ## Technical Context
 
@@ -19,7 +19,7 @@ A client-side single-page application that allows developers to upload and compa
 **Target Platform**: Modern web browsers (Chrome, Firefox, Safari, Edge - latest 2 versions)
 **Project Type**: Single-page web application
 **Performance Goals**: <3 seconds to parse and display files up to 1000 keys; <100ms UI response to edits
-**Constraints**: <10 MB file size limit; client-side processing only (no server); must work offline after initial load
+**Constraints**: <1 MB file size limit; client-side processing only (no server); must work offline after initial load
 **Scale/Scope**: Single-user application; up to 1000 keys per file (Enterprise tier); up to 2 files compared simultaneously
 
 ## Constitution Check

@@ -12,7 +12,7 @@
 - Q: How should nested keys be counted toward tier limits? → A: Count every key including parent objects (e.g., `user.profile.name` = 3 keys: "user", "profile", "name")
 - Q: What indentation should prettify use? → A: 2 spaces (modern standard, compact)
 - Q: Should yellow highlights appear for ALL identical values, or only for suspected placeholders? → A: All identical values get yellow (user decides if it's a problem)
-- Q: Should there be a file size limit? → A: 10 MB per file (very generous)
+- Q: Should there be a file size limit? → A: 1 MB per file
 - Q: How should conflicting edits be handled? → A: Last edit wins (simplest for single-user)
 
 ## User Scenarios & Testing _(mandatory)_
@@ -108,7 +108,7 @@ A developer with larger translation files subscribes to a Medium ($5/month, up t
 - What happens when a JSON file has circular references or invalid structure?
 - How does the system handle extremely deep nesting (10+ levels)?
 - What happens when both files have the same key but different nesting depths?
-- How does the system handle very large files (approaching memory limits)? System enforces 10 MB file size limit to prevent browser memory issues.
+- How does the system handle very large files (approaching memory limits)? System enforces 1 MB file size limit to prevent browser memory issues.
 - What happens when a user tries to add a key that already exists?
 - How does the system handle special characters in key names or values?
 - What happens if a user uploads non-JSON files (e.g., .txt, .xml)?
@@ -155,7 +155,7 @@ A developer with larger translation files subscribes to a Medium ($5/month, up t
 - **FR-023**: System MUST indicate the location of JSON syntax errors when possible (line number)
 - **FR-024**: System MUST prevent processing of files that exceed the user's tier key limit
 - **FR-025**: System MUST count all keys including nested keys for tier limit enforcement; counting includes parent objects and all descendant keys (e.g., `user.profile.name` counts as 3 keys: "user", "profile", and "name")
-- **FR-026**: System MUST reject files larger than 10 MB with a clear error message indicating the file size limit
+- **FR-026**: System MUST reject files larger than 1 MB with a clear error message indicating the file size limit
 
 #### Tier Management
 
@@ -199,7 +199,7 @@ A developer with larger translation files subscribes to a Medium ($5/month, up t
 - The single-page app version will be the primary version, with other versions (CLI, Electron, VS extension) as future enhancements
 - Users have modern web browsers with JavaScript enabled
 - File uploads will be processed entirely client-side (no server-side storage for privacy)
-- Files will not exceed 10 MB in size; larger files are rejected to prevent browser memory issues
+- Files will not exceed 1 MB in size; larger files are rejected to prevent browser memory issues
 
 ## Out of Scope
 

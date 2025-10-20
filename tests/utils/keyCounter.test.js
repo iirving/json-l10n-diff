@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { countKeys } from '../../src/utils/keyCounter.js';
+import { countKeys } from '@/utils/keyCounter.js';
 
 describe('countKeys', () => {
   it('should return 0 for null input', () => {

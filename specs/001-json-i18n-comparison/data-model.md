@@ -22,7 +22,7 @@ Represents an uploaded JSON i18n file in memory.
 | ------------ | ------- | -------- | ------------------------------- | ------------------------------------ |
 | `id`         | string  | Yes      | Unique identifier (file1/file2) | Must be 'file1' or 'file2'           |
 | `name`       | string  | Yes      | Original filename               | Must end with .json (warning if not) |
-| `size`       | number  | Yes      | File size in bytes              | Must be <= 10485760 (10 MB)          |
+| `size`       | number  | Yes      | File size in bytes              | Must be <= 1048576 (1 MB)            |
 | `content`    | object  | Yes      | Parsed JSON object              | Valid JSON structure                 |
 | `keyCount`   | number  | Yes      | Total keys (including parents)  | Calculated, >= 0                     |
 | `uploadedAt` | Date    | Yes      | Upload timestamp                | ISO 8601 format                      |
@@ -252,7 +252,7 @@ Represents validation errors during file upload or parsing.
 
 | Code                | Message Template                                                         | Details                                          |
 | ------------------- | ------------------------------------------------------------------------ | ------------------------------------------------ |
-| FILE_TOO_LARGE      | "File exceeds 10 MB limit. Current size: {size} MB."                     | `{ actualSize: number }`                         |
+| FILE_TOO_LARGE      | "File exceeds 1 MB limit. Current size: {size} MB."                      | `{ actualSize: number }`                         |
 | INVALID_JSON        | "Invalid JSON at line {line}: {reason}"                                  | `{ line: number, reason: string }`               |
 | TIER_LIMIT_EXCEEDED | "File exceeds {tier} tier limit of {limit} keys. Current: {count} keys." | `{ tier: string, limit: number, count: number }` |
 | NOT_JSON_FILE       | "File does not have .json extension. Proceed anyway?"                    | `{ extension: string }`                          |
@@ -308,7 +308,7 @@ UserTier ──> validates ──> JsonFile.keyCount
 ```
 1. User selects file
 2. Read file metadata (name, size)
-3. Validate size <= 10 MB → ValidationError if fails
+3. Validate size <= 1 MB → ValidationError if fails
 4. Read file content
 5. Parse JSON → ValidationError if invalid
 6. Count keys recursively
@@ -356,7 +356,7 @@ UserTier ──> validates ──> JsonFile.keyCount
 
 ### JsonFile Validation
 
-- **File size**: Must be <= 10485760 bytes (10 MB)
+- **File size**: Must be <= 1048576 bytes (1 MB)
 - **File name**: Should end with .json (warning if not, allow override)
 - **JSON structure**: Must parse without SyntaxError
 - **Key count**: Must be <= UserTier.keyLimit

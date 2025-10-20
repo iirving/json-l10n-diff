@@ -13,3 +13,6 @@ yarn.lock
 # Cache
 .vite
 .vitest
+
+# Test data with intentionally broken JSON
+data/broken
