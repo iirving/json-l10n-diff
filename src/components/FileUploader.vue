@@ -411,7 +411,7 @@ const triggerFileInput = () => {
   margin: 0;
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--text-primary, #fff);
+  color: var(--success-color, #10b981);
   word-break: break-all;
 }
 
