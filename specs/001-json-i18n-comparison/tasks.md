@@ -83,8 +83,8 @@ description: 'Task list for JSON i18n Comparison and Diff Tool implementation'
 - [x] T018-TEST [US1] [TEST] Write unit tests for TreeViewer in `tests/components/TreeViewer.test.js` (test TreeNode orchestration, expandAll/collapseAll, scrollToKey, event emissions, aim for 90%+ coverage)
 - [x] T019 [US1] Implement KeyDiffItem component in `src/components/KeyDiffItem.vue` (render single comparison row with color coding based on status, show values inline, emit add-key/edit-value events)
 - [x] T019-TEST [US1] [TEST] Write unit tests for KeyDiffItem in `tests/components/KeyDiffItem.test.js` (test rendering with different statuses, color coding, event emissions, aim for 90%+ coverage)
-- [ ] T020 [US1] Implement ComparisonView component in `src/components/ComparisonView.vue` (side-by-side layout, two TreeViewer instances, accepts file1/file2/diffResults props, emits save-requested/prettify-requested/edit-made events)
-- [ ] T020-TEST [US1] [TEST] Write unit tests for ComparisonView in `tests/components/ComparisonView.test.js` (test layout, TreeViewer integration, prop handling, event emissions, aim for 90%+ coverage)
+- [] T020 [US1] Implement ComparisonView component in `src/components/ComparisonView.vue` (side-by-side layout, two TreeViewer instances, accepts file1/file2/diffResults props, emits save-requested/prettify-requested/edit-made events)
+- [x] T020-TEST [US1] [TEST] Write unit tests for ComparisonView in `tests/components/ComparisonView.test.js` (test layout, TreeViewer integration, prop handling, event emissions, aim for 90%+ coverage)
 - [ ] T021 [US1] Update `src/pages/Index.vue` to integrate FileUploader (two instances for file1/file2) and ComparisonView using Pinia stores (useFileStore), wire up file-loaded handlers to trigger fileStore.runComparison()
 - [ ] T021-TEST [US1] [TEST] Write integration tests for Index.vue in `tests/pages/Index.test.js` (test FileUploader integration, store interactions, runComparison trigger, aim for 90%+ coverage)
 
