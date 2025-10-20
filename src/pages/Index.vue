@@ -98,29 +98,6 @@ const handleAddKeyToFile2 = ({ keyPath, value }) => {
                 @file-loaded="handleFile1Loaded"
                 @file-error="handleFile1Error"
               />
-
-              <div v-if="file1Error" class="file-status file-status--error">
-                <svg
-                  class="file-status__icon"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-                <div class="file-status__info">
-                  <span class="file-status__text">Error loading File 1</span>
-                  <span class="file-status__details">{{
-                    file1Error.message
-                  }}</span>
-                </div>
-              </div>
             </div>
 
             <div class="upload-group">
@@ -129,29 +106,6 @@ const handleAddKeyToFile2 = ({ keyPath, value }) => {
                 @file-loaded="handleFile2Loaded"
                 @file-error="handleFile2Error"
               />
-
-              <div v-if="file2Error" class="file-status file-status--error">
-                <svg
-                  class="file-status__icon"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-                <div class="file-status__info">
-                  <span class="file-status__text">Error loading File 2</span>
-                  <span class="file-status__details">{{
-                    file2Error.message
-                  }}</span>
-                </div>
-              </div>
             </div>
           </div>
         </div>
