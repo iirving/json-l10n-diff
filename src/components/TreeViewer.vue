@@ -187,7 +187,7 @@ defineExpose({
 }
 
 .empty-state {
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(0, 0, 0, 0.4);
   font-style: italic;
   padding: var(--spacing-lg, 24px);
   text-align: center;

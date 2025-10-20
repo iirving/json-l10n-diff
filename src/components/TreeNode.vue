@@ -78,7 +78,7 @@ const handleToggle = () => {
     :data-status="diffStatus"
     :data-parent="parentPath"
   >
-    <div class="tree-node-content" :style="{ paddingLeft: depth * 20 + 'px' }">
+    <div class="tree-node-content" :style="{ paddingLeft: depth * 4 + 'px' }">
       <span v-if="isParent" class="expand-icon" @click="handleToggle">
         {{ isExpanded ? '▼' : '▶' }}
       </span>
@@ -125,7 +125,7 @@ const handleToggle = () => {
 }
 
 .tree-node-content:hover {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba(0, 0, 0, 0.03);
 }
 
 .expand-icon {
@@ -133,14 +133,14 @@ const handleToggle = () => {
   width: 16px;
   display: inline-block;
   text-align: center;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(0, 0, 0, 0.6);
   margin-right: 4px;
   font-size: 0.75rem;
   user-select: none;
 }
 
 .expand-icon:hover {
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(0, 0, 0, 0.9);
 }
 
 .expand-icon-placeholder {
@@ -151,17 +151,20 @@ const handleToggle = () => {
 
 .node-key {
   font-weight: 600;
-  color: #61dafb;
+  color: #000000;
   margin-right: 4px;
 }
 
 .node-separator {
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(0, 0, 0, 0.5);
   margin-right: 4px;
 }
 
 .node-value {
-  color: #98c379;
+  color: #0066cc;
+  background-color: #e8e8e8;
+  padding: 2px 6px;
+  border-radius: 3px;
 }
 
 .node-value-hint {
@@ -171,36 +174,36 @@ const handleToggle = () => {
 
 /* Diff status color coding */
 .tree-node[data-status='missing-left'] .tree-node-content {
-  background-color: rgba(255, 0, 0, 0.1);
-  border-left: 3px solid rgba(255, 0, 0, 0.6);
+  background-color: rgba(255, 0, 0, 0.08);
+  border-left: 3px solid rgba(255, 0, 0, 0.5);
 }
 
 .tree-node[data-status='missing-right'] .tree-node-content {
-  background-color: rgba(255, 0, 0, 0.1);
-  border-left: 3px solid rgba(255, 0, 0, 0.6);
+  background-color: rgba(255, 0, 0, 0.08);
+  border-left: 3px solid rgba(255, 0, 0, 0.5);
 }
 
 .tree-node[data-status='identical'] .tree-node-content {
-  background-color: rgba(255, 255, 0, 0.1);
-  border-left: 3px solid rgba(255, 255, 0, 0.6);
+  background-color: rgba(255, 255, 0, 0.15);
+  border-left: 3px solid rgba(204, 204, 0, 0.6);
 }
 
 .tree-node[data-status='different'] .tree-node-content {
-  background-color: rgba(100, 100, 255, 0.05);
-  border-left: 3px solid rgba(100, 100, 255, 0.3);
+  background-color: rgba(100, 100, 255, 0.08);
+  border-left: 3px solid rgba(100, 100, 255, 0.4);
 }
 
 /* Hover states for diff status */
 .tree-node[data-status='missing-left'] .tree-node-content:hover,
 .tree-node[data-status='missing-right'] .tree-node-content:hover {
-  background-color: rgba(255, 0, 0, 0.15);
+  background-color: rgba(255, 0, 0, 0.12);
 }
 
 .tree-node[data-status='identical'] .tree-node-content:hover {
-  background-color: rgba(255, 255, 0, 0.15);
+  background-color: rgba(255, 255, 0, 0.2);
 }
 
 .tree-node[data-status='different'] .tree-node-content:hover {
-  background-color: rgba(100, 100, 255, 0.1);
+  background-color: rgba(100, 100, 255, 0.12);
 }
 </style>

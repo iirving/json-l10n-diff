@@ -125,7 +125,7 @@ function handleNodeToggled(toggleDetails) {
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(0, 0, 0, 0.4);
 }
 
 .comparison-container {
@@ -140,15 +140,16 @@ function handleNodeToggled(toggleDetails) {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 0.25rem;
-  background: rgba(0, 0, 0, 0.2);
+  background: #ffffff;
 }
 
 .file-label {
   padding: 0.75rem 1rem;
   font-weight: 600;
-  background: rgba(255, 255, 255, 0.05);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: #000000;
+  background: #f5f5f5;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 </style>
