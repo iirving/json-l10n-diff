@@ -1,0 +1,494 @@
+/**
+ * Tests for Index.vue
+ * Main application page component
+ */
+
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { mount } from '@vue/test-utils';
+import Index from '@/pages/Index.vue';
+import FileUploader from '@/components/FileUploader.vue';
+import ComparisonView from '@/components/ComparisonView.vue';
+import EditControls from '@/components/EditControls.vue';
+
+// Mock the file size utility
+vi.mock('@/utils/fileSize.js', () => ({
+  BYTES_PER_KB: 1024,
+  BYTES_PER_MB: 1024 * 1024,
+  bytesToKB: vi.fn((bytes) => Number((bytes / 1024).toFixed(2))),
+  bytesToMB: vi.fn((bytes) => Number((bytes / (1024 * 1024)).toFixed(2))),
+  formatFileSize: vi.fn((bytes) => {
+    if (bytes === 0) return '0 Bytes';
+    if (bytes < 1024) return `${bytes} Bytes`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(2)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+  }),
+}));
+
+describe('Index.vue', () => {
+  let wrapper;
+
+  const mockFile1Data = {
+    fileName: 'test1.json',
+    fileSize: 2048, // 2KB
+    keyCount: 10,
+    content: { key1: 'value1' },
+  };
+
+  const mockFile2Data = {
+    fileName: 'test2.json',
+    fileSize: 4096, // 4KB
+    keyCount: 15,
+    content: { key1: 'value1', key2: 'value2' },
+  };
+
+  beforeEach(() => {
+    wrapper = mount(Index, {
+      global: {
+        stubs: {
+          FileUploader: true,
+          ComparisonView: true,
+          EditControls: true,
+        },
+      },
+    });
+  });
+
+  describe('Component Rendering', () => {
+    it('renders the page header with title', () => {
+      expect(wrapper.find('.page-header h1').text()).toBe(
+        'JSON l10n Diff Tool'
+      );
+    });
+
+    it('renders the subtitle', () => {
+      expect(wrapper.find('.subtitle').text()).toBe(
+        'Compare and synchronize your translation files'
+      );
+    });
+
+    it('renders two FileUploader components', () => {
+      const uploaders = wrapper.findAllComponents(FileUploader);
+      expect(uploaders).toHaveLength(2);
+    });
+
+    it('renders FileUploader with correct labels', () => {
+      const uploaders = wrapper.findAllComponents(FileUploader);
+      expect(uploaders[0].props('label')).toBe('Upload File 1');
+      expect(uploaders[1].props('label')).toBe('Upload File 2');
+    });
+
+    it('renders placeholder note when no files uploaded', () => {
+      const placeholder = wrapper.find('.placeholder-note');
+      expect(placeholder.exists()).toBe(true);
+      expect(placeholder.text()).toContain(
+        'Upload two JSON files to start comparing'
+      );
+    });
+
+    it('does not render ComparisonView when no files uploaded', () => {
+      const comparison = wrapper.findComponent(ComparisonView);
+      expect(comparison.exists()).toBe(false);
+    });
+
+    it('does not render EditControls when no files uploaded', () => {
+      const controls = wrapper.findComponent(EditControls);
+      expect(controls.exists()).toBe(false);
+    });
+  });
+
+  describe('File 1 Events', () => {
+    it('handles file-loaded event for file 1', async () => {
+      const uploaders = wrapper.findAllComponents(FileUploader);
+      await uploaders[0].vm.$emit('file-loaded', mockFile1Data);
+
+      expect(wrapper.vm.file1).toEqual(mockFile1Data);
+      expect(wrapper.vm.file1Error).toBeNull();
+    });
+
+    it('displays file 1 status after successful upload', async () => {
+      const uploaders = wrapper.findAllComponents(FileUploader);
+      await uploaders[0].vm.$emit('file-loaded', mockFile1Data);
+      await wrapper.vm.$nextTick();
+
+      const fileStatus = wrapper.findAll('.file-status--success')[0];
+      expect(fileStatus.exists()).toBe(true);
+      expect(fileStatus.text()).toContain('test1.json');
+      expect(fileStatus.text()).toContain('10 keys');
+    });
+
+    it('displays correct file size for file 1', async () => {
+      const uploaders = wrapper.findAllComponents(FileUploader);
+      await uploaders[0].vm.$emit('file-loaded', mockFile1Data);
+      await wrapper.vm.$nextTick();
+
+      const fileStatus = wrapper.findAll('.file-status--success')[0];
+      expect(fileStatus.text()).toContain('2 KB');
+    });
+
+    it('handles file-error event for file 1', async () => {
+      const errorData = { type: 'parse', message: 'Invalid JSON' };
+      const uploaders = wrapper.findAllComponents(FileUploader);
+      await uploaders[0].vm.$emit('file-error', errorData);
+
+      expect(wrapper.vm.file1).toBeNull();
+      expect(wrapper.vm.file1Error).toEqual(errorData);
+    });
+
+    it('clears file 1 error on successful upload', async () => {
+      const errorData = { type: 'parse', message: 'Invalid JSON' };
+      const uploaders = wrapper.findAllComponents(FileUploader);
+
+      await uploaders[0].vm.$emit('file-error', errorData);
+      expect(wrapper.vm.file1Error).toEqual(errorData);
+
+      await uploaders[0].vm.$emit('file-loaded', mockFile1Data);
+      expect(wrapper.vm.file1Error).toBeNull();
+    });
+  });
+
+  describe('File 2 Events', () => {
+    it('handles file-loaded event for file 2', async () => {
+      const uploaders = wrapper.findAllComponents(FileUploader);
+      await uploaders[1].vm.$emit('file-loaded', mockFile2Data);
+
+      expect(wrapper.vm.file2).toEqual(mockFile2Data);
+      expect(wrapper.vm.file2Error).toBeNull();
+    });
+
+    it('displays file 2 status after successful upload', async () => {
+      const uploaders = wrapper.findAllComponents(FileUploader);
+      await uploaders[1].vm.$emit('file-loaded', mockFile2Data);
+      await wrapper.vm.$nextTick();
+
+      const fileStatuses = wrapper.findAll('.file-status--success');
+      expect(fileStatuses).toHaveLength(1);
+      expect(fileStatuses[0].text()).toContain('test2.json');
+      expect(fileStatuses[0].text()).toContain('15 keys');
+    });
+
+    it('displays correct file size for file 2', async () => {
+      const uploaders = wrapper.findAllComponents(FileUploader);
+      await uploaders[1].vm.$emit('file-loaded', mockFile2Data);
+      await wrapper.vm.$nextTick();
+
+      const fileStatuses = wrapper.findAll('.file-status--success');
+      expect(fileStatuses[0].text()).toContain('4 KB');
+    });
+
+    it('handles file-error event for file 2', async () => {
+      const errorData = { type: 'size', message: 'File too large' };
+      const uploaders = wrapper.findAllComponents(FileUploader);
+      await uploaders[1].vm.$emit('file-error', errorData);
+
+      expect(wrapper.vm.file2).toBeNull();
+      expect(wrapper.vm.file2Error).toEqual(errorData);
+    });
+
+    it('clears file 2 error on successful upload', async () => {
+      const errorData = { type: 'size', message: 'File too large' };
+      const uploaders = wrapper.findAllComponents(FileUploader);
+
+      await uploaders[1].vm.$emit('file-error', errorData);
+      expect(wrapper.vm.file2Error).toEqual(errorData);
+
+      await uploaders[1].vm.$emit('file-loaded', mockFile2Data);
+      expect(wrapper.vm.file2Error).toBeNull();
+    });
+  });
+
+  describe('Computed Properties', () => {
+    it('hasFiles is false when no files uploaded', () => {
+      expect(wrapper.vm.hasFiles).toBeFalsy();
+    });
+
+    it('hasFiles is false when only file 1 uploaded', async () => {
+      const uploaders = wrapper.findAllComponents(FileUploader);
+      await uploaders[0].vm.$emit('file-loaded', mockFile1Data);
+
+      expect(wrapper.vm.hasFiles).toBeFalsy();
+    });
+
+    it('hasFiles is false when only file 2 uploaded', async () => {
+      const uploaders = wrapper.findAllComponents(FileUploader);
+      await uploaders[1].vm.$emit('file-loaded', mockFile2Data);
+
+      expect(wrapper.vm.hasFiles).toBeFalsy();
+    });
+
+    it('hasFiles is true when both files uploaded', async () => {
+      const uploaders = wrapper.findAllComponents(FileUploader);
+      await uploaders[0].vm.$emit('file-loaded', mockFile1Data);
+      await uploaders[1].vm.$emit('file-loaded', mockFile2Data);
+
+      expect(wrapper.vm.hasFiles).toBeTruthy();
+    });
+
+    it('hasErrors is false when no errors', () => {
+      expect(wrapper.vm.hasErrors).toBeFalsy();
+    });
+
+    it('hasErrors is true when file 1 has error', async () => {
+      const uploaders = wrapper.findAllComponents(FileUploader);
+      await uploaders[0].vm.$emit('file-error', {
+        type: 'parse',
+        message: 'Error',
+      });
+
+      expect(wrapper.vm.hasErrors).toBeTruthy();
+    });
+
+    it('hasErrors is true when file 2 has error', async () => {
+      const uploaders = wrapper.findAllComponents(FileUploader);
+      await uploaders[1].vm.$emit('file-error', {
+        type: 'size',
+        message: 'Error',
+      });
+
+      expect(wrapper.vm.hasErrors).toBeTruthy();
+    });
+
+    it('hasErrors is true when both files have errors', async () => {
+      const uploaders = wrapper.findAllComponents(FileUploader);
+      await uploaders[0].vm.$emit('file-error', {
+        type: 'parse',
+        message: 'Error 1',
+      });
+      await uploaders[1].vm.$emit('file-error', {
+        type: 'size',
+        message: 'Error 2',
+      });
+
+      expect(wrapper.vm.hasErrors).toBeTruthy();
+    });
+
+    it('file1SizeKB returns 0 when file1 is null', () => {
+      expect(wrapper.vm.file1SizeKB).toBe(0);
+    });
+
+    it('file1SizeKB returns correct value when file1 is loaded', async () => {
+      const uploaders = wrapper.findAllComponents(FileUploader);
+      await uploaders[0].vm.$emit('file-loaded', mockFile1Data);
+
+      expect(wrapper.vm.file1SizeKB).toBe(2);
+    });
+
+    it('file2SizeKB returns 0 when file2 is null', () => {
+      expect(wrapper.vm.file2SizeKB).toBe(0);
+    });
+
+    it('file2SizeKB returns correct value when file2 is loaded', async () => {
+      const uploaders = wrapper.findAllComponents(FileUploader);
+      await uploaders[1].vm.$emit('file-loaded', mockFile2Data);
+
+      expect(wrapper.vm.file2SizeKB).toBe(4);
+    });
+  });
+
+  describe('Comparison View Integration', () => {
+    it('shows ComparisonView when both files uploaded', async () => {
+      const uploaders = wrapper.findAllComponents(FileUploader);
+      await uploaders[0].vm.$emit('file-loaded', mockFile1Data);
+      await uploaders[1].vm.$emit('file-loaded', mockFile2Data);
+      await wrapper.vm.$nextTick();
+
+      const comparison = wrapper.findComponent(ComparisonView);
+      expect(comparison.exists()).toBe(true);
+    });
+
+    it('passes file1 prop to ComparisonView', async () => {
+      const uploaders = wrapper.findAllComponents(FileUploader);
+      await uploaders[0].vm.$emit('file-loaded', mockFile1Data);
+      await uploaders[1].vm.$emit('file-loaded', mockFile2Data);
+      await wrapper.vm.$nextTick();
+
+      const comparison = wrapper.findComponent(ComparisonView);
+      expect(comparison.props('file1')).toEqual(mockFile1Data);
+    });
+
+    it('passes file2 prop to ComparisonView', async () => {
+      const uploaders = wrapper.findAllComponents(FileUploader);
+      await uploaders[0].vm.$emit('file-loaded', mockFile1Data);
+      await uploaders[1].vm.$emit('file-loaded', mockFile2Data);
+      await wrapper.vm.$nextTick();
+
+      const comparison = wrapper.findComponent(ComparisonView);
+      expect(comparison.props('file2')).toEqual(mockFile2Data);
+    });
+
+    it('passes empty diffResults to ComparisonView', async () => {
+      const uploaders = wrapper.findAllComponents(FileUploader);
+      await uploaders[0].vm.$emit('file-loaded', mockFile1Data);
+      await uploaders[1].vm.$emit('file-loaded', mockFile2Data);
+      await wrapper.vm.$nextTick();
+
+      const comparison = wrapper.findComponent(ComparisonView);
+      expect(comparison.props('diffResults')).toEqual([]);
+    });
+
+    it('hides placeholder note when both files uploaded', async () => {
+      const uploaders = wrapper.findAllComponents(FileUploader);
+      await uploaders[0].vm.$emit('file-loaded', mockFile1Data);
+      await uploaders[1].vm.$emit('file-loaded', mockFile2Data);
+      await wrapper.vm.$nextTick();
+
+      const placeholder = wrapper.find('.placeholder-note');
+      expect(placeholder.exists()).toBe(false);
+    });
+  });
+
+  describe('Edit Controls Integration', () => {
+    it('shows EditControls when both files uploaded', async () => {
+      const uploaders = wrapper.findAllComponents(FileUploader);
+      await uploaders[0].vm.$emit('file-loaded', mockFile1Data);
+      await uploaders[1].vm.$emit('file-loaded', mockFile2Data);
+      await wrapper.vm.$nextTick();
+
+      const controls = wrapper.findComponent(EditControls);
+      expect(controls.exists()).toBe(true);
+    });
+
+    it('passes fileName prop to EditControls', async () => {
+      const uploaders = wrapper.findAllComponents(FileUploader);
+      await uploaders[0].vm.$emit('file-loaded', mockFile1Data);
+      await uploaders[1].vm.$emit('file-loaded', mockFile2Data);
+      await wrapper.vm.$nextTick();
+
+      const controls = wrapper.findComponent(EditControls);
+      expect(controls.props('fileName')).toBe('file.json');
+    });
+
+    it('passes modified prop as false to EditControls', async () => {
+      const uploaders = wrapper.findAllComponents(FileUploader);
+      await uploaders[0].vm.$emit('file-loaded', mockFile1Data);
+      await uploaders[1].vm.$emit('file-loaded', mockFile2Data);
+      await wrapper.vm.$nextTick();
+
+      const controls = wrapper.findComponent(EditControls);
+      expect(controls.props('modified')).toBe(false);
+    });
+  });
+
+  describe('Layout and Styling', () => {
+    it('has correct page structure', () => {
+      expect(wrapper.find('.index-page').exists()).toBe(true);
+      expect(wrapper.find('.page-header').exists()).toBe(true);
+      expect(wrapper.find('.page-content').exists()).toBe(true);
+      expect(wrapper.find('.upload-section').exists()).toBe(true);
+    });
+
+    it('upload section has two upload groups', () => {
+      const groups = wrapper.findAll('.upload-group');
+      expect(groups).toHaveLength(2);
+    });
+
+    it('displays success icon for uploaded files', async () => {
+      const uploaders = wrapper.findAllComponents(FileUploader);
+      await uploaders[0].vm.$emit('file-loaded', mockFile1Data);
+      await wrapper.vm.$nextTick();
+
+      const icon = wrapper.find('.file-status__icon');
+      expect(icon.exists()).toBe(true);
+    });
+
+    it('shows comparison section only when files are loaded', async () => {
+      expect(wrapper.find('.comparison-section').exists()).toBe(false);
+
+      const uploaders = wrapper.findAllComponents(FileUploader);
+      await uploaders[0].vm.$emit('file-loaded', mockFile1Data);
+      await uploaders[1].vm.$emit('file-loaded', mockFile2Data);
+      await wrapper.vm.$nextTick();
+
+      expect(wrapper.find('.comparison-section').exists()).toBe(true);
+    });
+
+    it('shows controls section only when files are loaded', async () => {
+      expect(wrapper.find('.controls-section').exists()).toBe(false);
+
+      const uploaders = wrapper.findAllComponents(FileUploader);
+      await uploaders[0].vm.$emit('file-loaded', mockFile1Data);
+      await uploaders[1].vm.$emit('file-loaded', mockFile2Data);
+      await wrapper.vm.$nextTick();
+
+      expect(wrapper.find('.controls-section').exists()).toBe(true);
+    });
+  });
+
+  describe('Edge Cases', () => {
+    it('handles file replacement for file 1', async () => {
+      const uploaders = wrapper.findAllComponents(FileUploader);
+      await uploaders[0].vm.$emit('file-loaded', mockFile1Data);
+
+      const newFileData = { ...mockFile1Data, fileName: 'updated.json' };
+      await uploaders[0].vm.$emit('file-loaded', newFileData);
+
+      expect(wrapper.vm.file1).toEqual(newFileData);
+    });
+
+    it('handles file replacement for file 2', async () => {
+      const uploaders = wrapper.findAllComponents(FileUploader);
+      await uploaders[1].vm.$emit('file-loaded', mockFile2Data);
+
+      const newFileData = { ...mockFile2Data, fileName: 'updated2.json' };
+      await uploaders[1].vm.$emit('file-loaded', newFileData);
+
+      expect(wrapper.vm.file2).toEqual(newFileData);
+    });
+
+    it('handles zero file size', async () => {
+      const zeroSizeFile = { ...mockFile1Data, fileSize: 0 };
+      const uploaders = wrapper.findAllComponents(FileUploader);
+      await uploaders[0].vm.$emit('file-loaded', zeroSizeFile);
+
+      expect(wrapper.vm.file1SizeKB).toBe(0);
+    });
+
+    it('handles large file size', async () => {
+      const largeFile = { ...mockFile1Data, fileSize: 1048576 }; // 1MB
+      const uploaders = wrapper.findAllComponents(FileUploader);
+      await uploaders[0].vm.$emit('file-loaded', largeFile);
+
+      expect(wrapper.vm.file1SizeKB).toBe(1024);
+    });
+
+    it('does not show placeholder when files have errors', async () => {
+      const uploaders = wrapper.findAllComponents(FileUploader);
+      await uploaders[0].vm.$emit('file-error', {
+        type: 'parse',
+        message: 'Error',
+      });
+      await wrapper.vm.$nextTick();
+
+      const placeholder = wrapper.find('.placeholder-note');
+      expect(placeholder.exists()).toBe(false);
+    });
+  });
+
+  describe('Accessibility', () => {
+    it('has proper heading hierarchy', () => {
+      const h1 = wrapper.find('h1');
+      expect(h1.exists()).toBe(true);
+      expect(h1.text()).toBe('JSON l10n Diff Tool');
+    });
+
+    it('has descriptive placeholder text', () => {
+      const placeholder = wrapper.find('.placeholder-note');
+      expect(placeholder.text()).toContain(
+        'Upload two JSON files to start comparing'
+      );
+      expect(placeholder.text()).toContain(
+        'Drag and drop or click to browse for files'
+      );
+    });
+
+    it('file status has proper semantic structure', async () => {
+      const uploaders = wrapper.findAllComponents(FileUploader);
+      await uploaders[0].vm.$emit('file-loaded', mockFile1Data);
+      await wrapper.vm.$nextTick();
+
+      const fileStatus = wrapper.find('.file-status');
+      expect(fileStatus.exists()).toBe(true);
+      expect(fileStatus.find('.file-status__text').exists()).toBe(true);
+      expect(fileStatus.find('.file-status__details').exists()).toBe(true);
+    });
+  });
+});

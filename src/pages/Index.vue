@@ -15,6 +15,7 @@ import { ref, computed } from 'vue';
 import FileUploader from '@/components/FileUploader.vue';
 import ComparisonView from '@/components/ComparisonView.vue';
 import EditControls from '@/components/EditControls.vue';
+import { bytesToKB } from '@/utils/fileSize.js';
 
 // File state
 const file1 = ref(null);
@@ -25,6 +26,20 @@ const file2Error = ref(null);
 // Computed
 const hasFiles = computed(() => file1.value && file2.value);
 const hasErrors = computed(() => file1Error.value || file2Error.value);
+
+/**
+ * Get formatted file size in KB
+ * @param {Ref} fileRef - File ref to get size from
+ * @returns {ComputedRef<number>} - Formatted file size in KB
+ */
+const getFileSizeKB = (fileRef) => {
+  return computed(() => {
+    return fileRef.value ? bytesToKB(fileRef.value.fileSize) : 0;
+  });
+};
+
+const file1SizeKB = getFileSizeKB(file1);
+const file2SizeKB = getFileSizeKB(file2);
 
 /**
  * Handle file 1 loaded successfully
@@ -98,10 +113,9 @@ const handleFile2Error = (errorData) => {
             </svg>
             <div class="file-status__info">
               <span class="file-status__text">{{ file1.fileName }}</span>
-              <span class="file-status__details"
-                >{{ file1.keyCount }} keys •
-                {{ (file1.fileSize / 1024).toFixed(2) }} KB</span
-              >
+              <span class="file-status__details">
+                {{ file1.keyCount }} keys • {{ file1SizeKB }} KB
+              </span>
             </div>
           </div>
         </div>
@@ -131,10 +145,9 @@ const handleFile2Error = (errorData) => {
             </svg>
             <div class="file-status__info">
               <span class="file-status__text">{{ file2.fileName }}</span>
-              <span class="file-status__details"
-                >{{ file2.keyCount }} keys •
-                {{ (file2.fileSize / 1024).toFixed(2) }} KB</span
-              >
+              <span class="file-status__details">
+                {{ file2.keyCount }} keys • {{ file2SizeKB }} KB
+              </span>
             </div>
           </div>
         </div>
