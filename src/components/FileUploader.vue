@@ -13,7 +13,7 @@
 import { ref, computed } from 'vue';
 import { useJsonParser } from '@/composables/useJsonParser.js';
 import { MAX_FILE_SIZE, MAX_FILE_SIZE_MB } from '@/constants/fileUpload.js';
-import { bytesToMB } from '@/utils/fileSize.js';
+import { bytesToMB, bytesToKB } from '@/utils/fileSize.js';
 
 // eslint-disable-next-line no-unused-vars
 const props = defineProps({
@@ -42,6 +42,7 @@ const generateFileInputId = () => {
 
 // State
 const selectedFile = ref(null);
+const parsedData = ref(null);
 const errorMessage = ref('');
 const errorType = ref(''); // 'size', 'parse', or ''
 const fileInputId = ref(generateFileInputId());
@@ -50,6 +51,17 @@ const isValidating = ref(false);
 // Computed
 const hasError = computed(() => !!errorMessage.value);
 const hasFile = computed(() => !!selectedFile.value && !hasError.value);
+
+// Computed for file info display
+const fileSizeKB = computed(() => {
+  if (!parsedData.value) return 0;
+  return bytesToKB(parsedData.value.fileSize, 1);
+});
+
+const keyCount = computed(() => {
+  if (!parsedData.value) return 0;
+  return parsedData.value.keyCount || 0;
+});
 
 /**
  * Validate file size
@@ -88,11 +100,12 @@ const handleFile = async (file) => {
   // Validate and parse JSON
   isValidating.value = true;
   try {
-    const parsedData = await parseFile(file);
+    const data = await parseFile(file);
     // File is valid
+    parsedData.value = data;
     errorMessage.value = '';
     errorType.value = '';
-    emit('file-loaded', parsedData);
+    emit('file-loaded', data);
   } catch (error) {
     // JSON parsing/validation error
     errorMessage.value = error.message;
@@ -135,7 +148,7 @@ const triggerFileInput = () => {
     <button
       type="button"
       class="file-uploader__button"
-      :class="{ 'has-error': hasError }"
+      :class="{ 'has-error': hasError, 'has-file': hasFile && !hasError }"
       @click="triggerFileInput"
     >
       <svg
@@ -199,7 +212,10 @@ const triggerFileInput = () => {
         Validating...
       </span>
       <span v-else class="file-uploader__text">
-        {{ selectedFile.name }}
+        <span class="file-uploader__filename">{{ selectedFile.name }}</span>
+        <span class="file-uploader__details"
+          >{{ keyCount }} keys • {{ fileSizeKB }} KB</span
+        >
       </span>
     </button>
 
@@ -271,6 +287,11 @@ const triggerFileInput = () => {
   outline-offset: 2px;
 }
 
+.file-uploader__button.has-file {
+  background-color: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
 .file-uploader__button.has-error {
   border-color: var(--error-color, #ef4444);
 }
@@ -304,6 +325,20 @@ const triggerFileInput = () => {
   flex: 1;
   text-align: left;
   color: #000;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.file-uploader__filename {
+  font-weight: 500;
+  color: var(--success-color, #10b981);
+}
+
+.file-uploader__details {
+  font-size: 0.75rem;
+  color: rgba(0, 0, 0, 0.6);
+  font-weight: 400;
 }
 
 .file-uploader__error {

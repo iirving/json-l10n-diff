@@ -98,29 +98,6 @@ const handleAddKeyToFile2 = ({ keyPath, value }) => {
                 @file-loaded="handleFile1Loaded"
                 @file-error="handleFile1Error"
               />
-              <div
-                v-if="file1 && !file1Error"
-                class="file-status file-status--success"
-              >
-                <svg
-                  class="file-status__icon"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-                <div class="file-status__info">
-                  <span class="file-status__text">File 1 loaded</span>
-                  <span class="file-status__details">Ready for comparison</span>
-                </div>
-              </div>
 
               <div v-if="file1Error" class="file-status file-status--error">
                 <svg
@@ -152,29 +129,6 @@ const handleAddKeyToFile2 = ({ keyPath, value }) => {
                 @file-loaded="handleFile2Loaded"
                 @file-error="handleFile2Error"
               />
-              <div
-                v-if="file2 && !file2Error"
-                class="file-status file-status--success"
-              >
-                <svg
-                  class="file-status__icon"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-                <div class="file-status__info">
-                  <span class="file-status__text">File 2 loaded</span>
-                  <span class="file-status__details">Ready for comparison</span>
-                </div>
-              </div>
 
               <div v-if="file2Error" class="file-status file-status--error">
                 <svg
@@ -375,6 +329,8 @@ const handleAddKeyToFile2 = ({ keyPath, value }) => {
 .file-status--success {
   background-color: rgba(16, 185, 129, 0.1);
   border: 1px solid rgba(16, 185, 129, 0.3);
+  flex-direction: column;
+  gap: var(--spacing-xs, 0.25rem);
 }
 
 .file-status--error {
@@ -394,9 +350,6 @@ const handleAddKeyToFile2 = ({ keyPath, value }) => {
 }
 
 .file-status__info {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xs, 0.25rem);
   flex: 1;
 }
 
