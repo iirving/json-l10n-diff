@@ -99,7 +99,7 @@ describe('TreeNode', () => {
       });
 
       const content = depthWrapper.find('.tree-node-content');
-      expect(content.attributes('style')).toContain('padding-left: 48px');
+      expect(content.attributes('style')).toContain('padding-left: 12px');
     });
   });
 
