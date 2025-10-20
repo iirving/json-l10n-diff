@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, onMounted, provide } from 'vue';
-import TreeNode from './TreeNode.vue';
+import TreeNode from '@/components/TreeNode.vue';
 
 /**
  * TreeViewer Component

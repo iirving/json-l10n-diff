@@ -9,7 +9,7 @@
  * - Save and prettify functionality
  */
 
-import TreeViewer from './TreeViewer.vue';
+import TreeViewer from '@/components/TreeViewer.vue';
 
 const props = defineProps({
   file1: {

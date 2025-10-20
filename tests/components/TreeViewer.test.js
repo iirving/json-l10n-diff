@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
-import TreeViewer from '../../src/components/TreeViewer.vue';
+import TreeViewer from '@/components/TreeViewer.vue';
 
 describe('TreeViewer', () => {
   let wrapper;
