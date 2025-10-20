@@ -41,7 +41,6 @@ const generateFileInputId = () => {
 };
 
 // State
-const isDragOver = ref(false);
 const selectedFile = ref(null);
 const errorMessage = ref('');
 const errorType = ref(''); // 'size', 'parse', or ''
@@ -116,44 +115,6 @@ const handleFileInputChange = (event) => {
 };
 
 /**
- * Handle drag enter event
- * @param {DragEvent} event - Drag event
- */
-const handleDragEnter = (event) => {
-  event.preventDefault();
-  isDragOver.value = true;
-};
-
-/**
- * Handle drag leave event
- */
-const handleDragLeave = () => {
-  isDragOver.value = false;
-};
-
-/**
- * Handle drag over event
- * @param {DragEvent} event - Drag event
- */
-const handleDragOver = (event) => {
-  event.preventDefault();
-};
-
-/**
- * Handle drop event
- * @param {DragEvent} event - Drop event
- */
-const handleDrop = (event) => {
-  event.preventDefault();
-  isDragOver.value = false;
-
-  const file = event.dataTransfer?.files?.[0];
-  if (file) {
-    handleFile(file);
-  }
-};
-
-/**
  * Trigger file input click
  */
 const triggerFileInput = () => {
@@ -163,98 +124,84 @@ const triggerFileInput = () => {
 
 <template>
   <div class="file-uploader">
-    <label :for="fileInputId" class="file-uploader__label">
-      {{ label }}
-    </label>
+    <input
+      :id="fileInputId"
+      type="file"
+      :accept="accept"
+      class="file-uploader__input"
+      @change="handleFileInputChange"
+    />
 
-    <div
-      class="file-uploader__drop-zone"
-      :class="{ 'drag-over': isDragOver, 'has-error': hasError }"
-      data-testid="drop-zone"
-      role="button"
-      tabindex="0"
-      :aria-label="`${label} - Drag and drop or click to upload`"
+    <button
+      type="button"
+      class="file-uploader__button"
+      :class="{ 'has-error': hasError }"
       @click="triggerFileInput"
-      @dragenter="handleDragEnter"
-      @dragleave="handleDragLeave"
-      @dragover="handleDragOver"
-      @drop="handleDrop"
-      @keydown.enter="triggerFileInput"
-      @keydown.space.prevent="triggerFileInput"
     >
-      <input
-        :id="fileInputId"
-        type="file"
-        :accept="accept"
-        class="file-uploader__input"
-        @change="handleFileInputChange"
-      />
+      <svg
+        v-if="!hasFile && !isValidating"
+        class="file-uploader__icon"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+        />
+      </svg>
 
-      <div v-if="!hasFile && !isValidating" class="file-uploader__instructions">
-        <svg
-          class="file-uploader__icon"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
+      <svg
+        v-else-if="isValidating"
+        class="file-uploader__icon file-uploader__icon--spinner"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <circle
+          class="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
           stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-          />
-        </svg>
-        <p class="file-uploader__text">
-          <span class="file-uploader__text--primary"
-            >Drag and drop your file here</span
-          >
-          <span class="file-uploader__text--secondary">or click to browse</span>
-        </p>
-      </div>
+          stroke-width="4"
+        ></circle>
+        <path
+          class="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+        ></path>
+      </svg>
 
-      <div v-else-if="isValidating" class="file-uploader__validating">
-        <svg
-          class="file-uploader__icon file-uploader__icon--spinner"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <circle
-            class="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            stroke-width="4"
-          ></circle>
-          <path
-            class="opacity-75"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-          ></path>
-        </svg>
-        <p class="file-uploader__validating-text">Validating JSON...</p>
-      </div>
+      <svg
+        v-else
+        class="file-uploader__icon file-uploader__icon--success"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+        />
+      </svg>
 
-      <div v-else class="file-uploader__file-info">
-        <svg
-          class="file-uploader__icon file-uploader__icon--success"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-          />
-        </svg>
-        <p class="file-uploader__filename">{{ selectedFile.name }}</p>
-      </div>
-    </div>
+      <span v-if="!hasFile && !isValidating" class="file-uploader__text">
+        {{ label }}
+      </span>
+      <span v-else-if="isValidating" class="file-uploader__text">
+        Validating...
+      </span>
+      <span v-else class="file-uploader__text">
+        {{ selectedFile.name }}
+      </span>
+    </button>
 
     <div
       v-if="hasError"
@@ -294,59 +241,45 @@ const triggerFileInput = () => {
   width: 100%;
 }
 
-.file-uploader__label {
-  display: block;
-  margin-bottom: var(--spacing-sm, 0.5rem);
-  font-weight: 600;
-  color: var(--text-primary, #fff);
-  font-size: 0.875rem;
-}
-
 .file-uploader__input {
   display: none;
 }
 
-.file-uploader__drop-zone {
-  border: 2px dashed var(--border-color, rgba(255, 255, 255, 0.3));
+.file-uploader__button {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm, 0.5rem);
+  width: 100%;
+  padding: var(--spacing-md, 1rem);
+  border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: var(--radius-md, 0.5rem);
-  padding: var(--spacing-xl, 2rem);
-  text-align: center;
+  background: #ffffff;
   cursor: pointer;
   transition: all 0.2s ease;
-  background-color: var(--bg-secondary, rgba(255, 255, 255, 0.05));
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #000;
 }
 
-.file-uploader__drop-zone:hover {
+.file-uploader__button:hover {
   border-color: var(--primary-color, #646cff);
-  background-color: var(--bg-hover, rgba(100, 108, 255, 0.1));
+  background-color: rgba(100, 108, 255, 0.05);
 }
 
-.file-uploader__drop-zone:focus {
+.file-uploader__button:focus {
   outline: 2px solid var(--primary-color, #646cff);
   outline-offset: 2px;
 }
 
-.file-uploader__drop-zone.drag-over {
-  border-color: var(--primary-color, #646cff);
-  background-color: var(--bg-hover, rgba(100, 108, 255, 0.2));
-  transform: scale(1.02);
-}
-
-.file-uploader__drop-zone.has-error {
+.file-uploader__button.has-error {
   border-color: var(--error-color, #ef4444);
 }
 
-.file-uploader__instructions {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--spacing-md, 1rem);
-}
-
 .file-uploader__icon {
-  width: 48px;
-  height: 48px;
-  color: var(--text-secondary, rgba(255, 255, 255, 0.6));
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: rgba(0, 0, 0, 0.6);
 }
 
 .file-uploader__icon--success {
@@ -354,8 +287,6 @@ const triggerFileInput = () => {
 }
 
 .file-uploader__icon--spinner {
-  width: 48px;
-  height: 48px;
   color: var(--primary-color, #646cff);
   animation: spin 1s linear infinite;
 }
@@ -370,49 +301,9 @@ const triggerFileInput = () => {
 }
 
 .file-uploader__text {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xs, 0.25rem);
-  margin: 0;
-}
-
-.file-uploader__text--primary {
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--text-primary, #fff);
-}
-
-.file-uploader__text--secondary {
-  font-size: 0.875rem;
-  color: var(--text-secondary, rgba(255, 255, 255, 0.6));
-}
-
-.file-uploader__validating {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--spacing-sm, 0.5rem);
-}
-
-.file-uploader__validating-text {
-  margin: 0;
-  font-size: 0.875rem;
-  color: var(--text-secondary, rgba(255, 255, 255, 0.6));
-}
-
-.file-uploader__file-info {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--spacing-sm, 0.5rem);
-}
-
-.file-uploader__filename {
-  margin: 0;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--success-color, #10b981);
-  word-break: break-all;
+  flex: 1;
+  text-align: left;
+  color: #000;
 }
 
 .file-uploader__error {
