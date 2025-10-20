@@ -29,8 +29,9 @@ const clearData = () => {
  * Handle file 1 loaded
  */
 const handleFile1Loaded = (parsedData) => {
-  file1.value = parsedData.content;
+  file1.value = parsedData.data;
   file1Error.value = null;
+  console.warn('File 1 loaded:', parsedData.data);
 };
 
 /**
@@ -45,8 +46,9 @@ const handleFile1Error = (errorData) => {
  * Handle file 2 loaded
  */
 const handleFile2Loaded = (parsedData) => {
-  file2.value = parsedData.content;
+  file2.value = parsedData.data;
   file2Error.value = null;
+  console.warn('File 2 loaded:', parsedData.data);
 };
 
 /**

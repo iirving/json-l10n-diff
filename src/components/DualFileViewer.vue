@@ -18,11 +18,11 @@ import DualTreeNode from '@/components/DualTreeNode.vue';
 const props = defineProps({
   file1: {
     type: Object,
-    default: null,
+    default: () => null,
   },
   file2: {
     type: Object,
-    default: null,
+    default: () => null,
   },
 });
 
@@ -34,6 +34,20 @@ const emit = defineEmits([
 
 const expandedNodes = ref(new Set());
 const { compareFiles } = useJsonDiff();
+
+// Check if files are loaded
+const hasFiles = computed(() => {
+  const has = !!(props.file1 || props.file2);
+  console.warn(
+    'DualFileViewer - hasFiles:',
+    has,
+    'file1:',
+    props.file1,
+    'file2:',
+    props.file2
+  );
+  return has;
+});
 
 // Calculate diff results
 const diffResults = computed(() => {
@@ -121,7 +135,7 @@ const treeStructure = computed(() => {
     return nodes;
   };
 
-  return buildTree(props.file1, props.file2);
+  return buildTree(props.file1 || {}, props.file2 || {});
 });
 
 /**
@@ -199,8 +213,12 @@ defineExpose({
 
 <template>
   <div class="dual-file-viewer">
-    <div v-if="!file1 && !file2" class="empty-state">
+    <div v-if="!hasFiles" class="empty-state">
       <p>No files loaded</p>
+    </div>
+
+    <div v-else-if="treeStructure.length === 0" class="empty-state">
+      <p>No data to display</p>
     </div>
 
     <div v-else class="viewer-container">
