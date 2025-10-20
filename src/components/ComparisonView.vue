@@ -41,6 +41,7 @@ const emit = defineEmits([
  * Handle save request
  * Emits save-requested event with both file contents
  */
+// eslint-disable-next-line no-unused-vars
 function handleSave() {
   if (!props.file1 && !props.file2) {
     return;
@@ -56,6 +57,7 @@ function handleSave() {
  * Handle prettify request
  * @param {string} fileId - Identifier for the file to prettify ('file1' or 'file2')
  */
+// eslint-disable-next-line no-unused-vars
 function handlePrettify(fileId) {
   emit('prettify-requested', { fileId });
 }
