@@ -12,6 +12,7 @@
 
 import { ref, computed } from 'vue';
 import { useJsonParser } from '@/composables/useJsonParser.js';
+import { MAX_FILE_SIZE, MAX_FILE_SIZE_MB } from '@/constants/fileUpload.js';
 
 // eslint-disable-next-line no-unused-vars
 const props = defineProps({
@@ -29,9 +30,6 @@ const emit = defineEmits(['file-loaded', 'file-error']);
 
 // JSON Parser
 const { parseFile } = useJsonParser();
-
-// Constants
-const MAX_FILE_SIZE = 1 * 1024 * 1024; // 1MB in bytes
 
 /**
  * Generate a unique file input ID
@@ -61,7 +59,7 @@ const hasFile = computed(() => !!selectedFile.value && !hasError.value);
 const validateFileSize = (file) => {
   if (file.size > MAX_FILE_SIZE) {
     const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
-    errorMessage.value = `File size (${fileSizeMB}MB) exceeds the maximum allowed size of 10MB`;
+    errorMessage.value = `File size (${fileSizeMB}MB) exceeds the maximum allowed size of ${MAX_FILE_SIZE_MB}MB`;
     errorType.value = 'size';
     emit('file-error', { type: 'size', message: errorMessage.value, file });
     return false;

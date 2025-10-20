@@ -94,7 +94,7 @@ describe('FileUploader', () => {
       expect(emittedData).toHaveProperty('fileName', 'test.json');
     });
 
-    it('should emit file-error event when file exceeds 10MB', async () => {
+    it('should emit file-error event when file exceeds maximum size', async () => {
       const largeContent = 'x'.repeat(11 * 1024 * 1024); // 11MB
       const file = new File([largeContent], 'large.json', {
         type: 'application/json',
@@ -113,7 +113,7 @@ describe('FileUploader', () => {
       expect(wrapper.emitted('file-error')).toBeTruthy();
       const errorData = wrapper.emitted('file-error')[0][0];
       expect(errorData.type).toBe('size');
-      expect(errorData.message).toContain('10MB');
+      expect(errorData.message).toContain('1MB');
     });
 
     it('should not emit events when no file is selected', async () => {
@@ -198,7 +198,7 @@ describe('FileUploader', () => {
       expect(emittedData).toHaveProperty('fileName', 'dropped.json');
     });
 
-    it('should emit file-error event when dropped file exceeds 10MB', async () => {
+    it('should emit file-error event when dropped file exceeds maximum size', async () => {
       const largeContent = 'x'.repeat(11 * 1024 * 1024); // 11MB
       const file = new File([largeContent], 'large-dropped.json', {
         type: 'application/json',
@@ -216,7 +216,7 @@ describe('FileUploader', () => {
       expect(wrapper.emitted('file-error')).toBeTruthy();
       const errorData = wrapper.emitted('file-error')[0][0];
       expect(errorData.type).toBe('size');
-      expect(errorData.message).toContain('10MB');
+      expect(errorData.message).toContain('1MB');
     });
 
     it('should prevent default behavior on dragover', async () => {
@@ -375,7 +375,7 @@ describe('FileUploader', () => {
 
       const errorElement = wrapper.find('[data-testid="error-message"]');
       expect(errorElement.exists()).toBe(true);
-      expect(errorElement.text()).toContain('10MB');
+      expect(errorElement.text()).toContain('1MB');
     });
 
     it('should clear error message when valid file is selected', async () => {
