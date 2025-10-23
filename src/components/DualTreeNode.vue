@@ -21,6 +21,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  expandedNodes: {
+    type: Set,
+    default: () => new Set(),
+  },
 });
 
 const emit = defineEmits(['toggle', 'add-to-file1', 'add-to-file2']);
@@ -141,7 +145,8 @@ const handleAddToFile2 = () => {
         :key="child.keyPath"
         :node="child"
         :depth="depth + 1"
-        :is-expanded="$parent.isExpanded(child.keyPath)"
+        :is-expanded="expandedNodes.has(child.keyPath)"
+        :expanded-nodes="expandedNodes"
         @toggle="(keyPath) => $emit('toggle', keyPath)"
         @add-to-file1="
           (keyPath, value) => $emit('add-to-file1', keyPath, value)

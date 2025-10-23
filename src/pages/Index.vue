@@ -6,7 +6,7 @@
  */
 
 import { ref } from 'vue';
-import DualFileViewer from '@/components/DualFileViewer.vue';
+import ComparisonView from '@/components/ComparisonView.vue';
 import FileUploader from '@/components/FileUploader.vue';
 
 // File state
@@ -134,9 +134,9 @@ const handleAddKeyToFile2 = ({ keyPath, value }) => {
         </div>
       </section>
 
-      <!-- Dual File Viewer -->
+      <!-- Comparison View -->
       <section class="viewer-section">
-        <DualFileViewer
+        <ComparisonView
           :file1="file1"
           :file2="file2"
           @add-key-to-file1="handleAddKeyToFile1"

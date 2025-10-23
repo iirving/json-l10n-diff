@@ -242,6 +242,7 @@ defineExpose({
           :node="node"
           :depth="0"
           :is-expanded="isExpanded(node.keyPath)"
+          :expanded-nodes="expandedNodes"
           @toggle="toggleNode"
           @add-to-file1="handleAddToFile1"
           @add-to-file2="handleAddToFile2"

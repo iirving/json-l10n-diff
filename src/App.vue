@@ -12,7 +12,6 @@
 import { ref, computed } from 'vue';
 import Index from '@/pages/Index.vue';
 import About from '@/pages/About.vue';
-import DualViewerDemo from '@/pages/DualViewerDemo.vue';
 
 // Simple hash-based routing
 const currentRoute = ref(window.location.hash.slice(1) || '/');
@@ -27,8 +26,6 @@ const currentComponent = computed(() => {
   switch (currentRoute.value) {
     case '/about':
       return About;
-    case '/dual-viewer':
-      return DualViewerDemo;
     case '/':
     default:
       return Index;
@@ -61,13 +58,6 @@ const isActive = (path) => {
           @click.prevent="navigate('/')"
         >
           Home
-        </a>
-        <a
-          href="#/dual-viewer"
-          :class="{ active: isActive('/dual-viewer') }"
-          @click.prevent="navigate('/dual-viewer')"
-        >
-          Dual Viewer
         </a>
         <a
           href="#/about"
