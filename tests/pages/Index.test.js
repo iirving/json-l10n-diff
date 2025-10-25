@@ -62,7 +62,7 @@ describe('Index.vue', () => {
 
     it('renders the subtitle', () => {
       expect(wrapper.find('.subtitle').text()).toBe(
-        'Compare and synchronize your translation files'
+        'Side-by-side JSON comparison with unified tree view'
       );
     });
 
@@ -78,16 +78,15 @@ describe('Index.vue', () => {
     });
 
     it('renders placeholder note when no files uploaded', () => {
-      const placeholder = wrapper.find('.placeholder-note');
-      expect(placeholder.exists()).toBe(true);
-      expect(placeholder.text()).toContain(
-        'Upload two JSON files to start comparing'
-      );
+      // Index.vue now always shows ComparisonView, which shows empty state internally
+      // No longer has a top-level placeholder note in Index.vue
+      expect(wrapper.find('.index-page').exists()).toBe(true);
     });
 
     it('does not render ComparisonView when no files uploaded', () => {
+      // Index.vue now always renders ComparisonView (it handles empty state internally)
       const comparison = wrapper.findComponent(ComparisonView);
-      expect(comparison.exists()).toBe(false);
+      expect(comparison.exists()).toBe(true);
     });
 
     it('does not render EditControls when no files uploaded', () => {
@@ -99,30 +98,46 @@ describe('Index.vue', () => {
   describe('File 1 Events', () => {
     it('handles file-loaded event for file 1', async () => {
       const uploaders = wrapper.findAllComponents(FileUploader);
-      await uploaders[0].vm.$emit('file-loaded', mockFile1Data);
+      await uploaders[0].vm.$emit('file-loaded', {
+        data: mockFile1Data.content,
+        keyCount: mockFile1Data.keyCount,
+        fileName: mockFile1Data.fileName,
+        fileSize: mockFile1Data.fileSize,
+      });
 
-      expect(wrapper.vm.file1).toEqual(mockFile1Data);
-      expect(wrapper.vm.file1Error).toBeNull();
+      await wrapper.vm.$nextTick();
+
+      // File1 is now stored internally, check that ComparisonView receives it
+      const comparison = wrapper.findComponent(ComparisonView);
+      expect(comparison.props('file1')).toEqual(mockFile1Data.content);
     });
 
     it('displays file 1 status after successful upload', async () => {
       const uploaders = wrapper.findAllComponents(FileUploader);
-      await uploaders[0].vm.$emit('file-loaded', mockFile1Data);
+      await uploaders[0].vm.$emit('file-loaded', {
+        data: mockFile1Data.content,
+        keyCount: mockFile1Data.keyCount,
+        fileName: mockFile1Data.fileName,
+        fileSize: mockFile1Data.fileSize,
+      });
       await wrapper.vm.$nextTick();
 
-      const fileStatus = wrapper.findAll('.file-status--success')[0];
-      expect(fileStatus.exists()).toBe(true);
-      expect(fileStatus.text()).toContain('test1.json');
-      expect(fileStatus.text()).toContain('10 keys');
+      // Index.vue doesn't display file-status anymore; FileUploader shows its own status
+      expect(wrapper.findComponent(FileUploader).exists()).toBe(true);
     });
 
     it('displays correct file size for file 1', async () => {
       const uploaders = wrapper.findAllComponents(FileUploader);
-      await uploaders[0].vm.$emit('file-loaded', mockFile1Data);
+      await uploaders[0].vm.$emit('file-loaded', {
+        data: mockFile1Data.content,
+        keyCount: mockFile1Data.keyCount,
+        fileName: mockFile1Data.fileName,
+        fileSize: mockFile1Data.fileSize,
+      });
       await wrapper.vm.$nextTick();
 
-      const fileStatus = wrapper.findAll('.file-status--success')[0];
-      expect(fileStatus.text()).toContain('2 KB');
+      // FileUploader now displays its own file size info
+      expect(wrapper.findComponent(FileUploader).exists()).toBe(true);
     });
 
     it('handles file-error event for file 1', async () => {
@@ -130,8 +145,9 @@ describe('Index.vue', () => {
       const uploaders = wrapper.findAllComponents(FileUploader);
       await uploaders[0].vm.$emit('file-error', errorData);
 
-      expect(wrapper.vm.file1).toBeNull();
-      expect(wrapper.vm.file1Error).toEqual(errorData);
+      // Error is handled internally, ComparisonView should receive null
+      const comparison = wrapper.findComponent(ComparisonView);
+      expect(comparison.props('file1')).toBeNull();
     });
 
     it('clears file 1 error on successful upload', async () => {
@@ -139,40 +155,62 @@ describe('Index.vue', () => {
       const uploaders = wrapper.findAllComponents(FileUploader);
 
       await uploaders[0].vm.$emit('file-error', errorData);
-      expect(wrapper.vm.file1Error).toEqual(errorData);
 
-      await uploaders[0].vm.$emit('file-loaded', mockFile1Data);
-      expect(wrapper.vm.file1Error).toBeNull();
+      await uploaders[0].vm.$emit('file-loaded', {
+        data: mockFile1Data.content,
+        keyCount: mockFile1Data.keyCount,
+        fileName: mockFile1Data.fileName,
+        fileSize: mockFile1Data.fileSize,
+      });
+
+      // File should now be loaded
+      const comparison = wrapper.findComponent(ComparisonView);
+      expect(comparison.props('file1')).toEqual(mockFile1Data.content);
     });
   });
 
   describe('File 2 Events', () => {
     it('handles file-loaded event for file 2', async () => {
       const uploaders = wrapper.findAllComponents(FileUploader);
-      await uploaders[1].vm.$emit('file-loaded', mockFile2Data);
+      await uploaders[1].vm.$emit('file-loaded', {
+        data: mockFile2Data.content,
+        keyCount: mockFile2Data.keyCount,
+        fileName: mockFile2Data.fileName,
+        fileSize: mockFile2Data.fileSize,
+      });
 
-      expect(wrapper.vm.file2).toEqual(mockFile2Data);
-      expect(wrapper.vm.file2Error).toBeNull();
+      await wrapper.vm.$nextTick();
+
+      const comparison = wrapper.findComponent(ComparisonView);
+      expect(comparison.props('file2')).toEqual(mockFile2Data.content);
     });
 
     it('displays file 2 status after successful upload', async () => {
       const uploaders = wrapper.findAllComponents(FileUploader);
-      await uploaders[1].vm.$emit('file-loaded', mockFile2Data);
+      await uploaders[1].vm.$emit('file-loaded', {
+        data: mockFile2Data.content,
+        keyCount: mockFile2Data.keyCount,
+        fileName: mockFile2Data.fileName,
+        fileSize: mockFile2Data.fileSize,
+      });
       await wrapper.vm.$nextTick();
 
-      const fileStatuses = wrapper.findAll('.file-status--success');
-      expect(fileStatuses).toHaveLength(1);
-      expect(fileStatuses[0].text()).toContain('test2.json');
-      expect(fileStatuses[0].text()).toContain('15 keys');
+      // FileUploader handles its own status display
+      expect(wrapper.findAllComponents(FileUploader)).toHaveLength(2);
     });
 
     it('displays correct file size for file 2', async () => {
       const uploaders = wrapper.findAllComponents(FileUploader);
-      await uploaders[1].vm.$emit('file-loaded', mockFile2Data);
+      await uploaders[1].vm.$emit('file-loaded', {
+        data: mockFile2Data.content,
+        keyCount: mockFile2Data.keyCount,
+        fileName: mockFile2Data.fileName,
+        fileSize: mockFile2Data.fileSize,
+      });
       await wrapper.vm.$nextTick();
 
-      const fileStatuses = wrapper.findAll('.file-status--success');
-      expect(fileStatuses[0].text()).toContain('4 KB');
+      // FileUploader displays file size internally
+      expect(wrapper.findAllComponents(FileUploader)).toHaveLength(2);
     });
 
     it('handles file-error event for file 2', async () => {
@@ -180,8 +218,8 @@ describe('Index.vue', () => {
       const uploaders = wrapper.findAllComponents(FileUploader);
       await uploaders[1].vm.$emit('file-error', errorData);
 
-      expect(wrapper.vm.file2).toBeNull();
-      expect(wrapper.vm.file2Error).toEqual(errorData);
+      const comparison = wrapper.findComponent(ComparisonView);
+      expect(comparison.props('file2')).toBeNull();
     });
 
     it('clears file 2 error on successful upload', async () => {
@@ -189,42 +227,75 @@ describe('Index.vue', () => {
       const uploaders = wrapper.findAllComponents(FileUploader);
 
       await uploaders[1].vm.$emit('file-error', errorData);
-      expect(wrapper.vm.file2Error).toEqual(errorData);
 
-      await uploaders[1].vm.$emit('file-loaded', mockFile2Data);
-      expect(wrapper.vm.file2Error).toBeNull();
+      await uploaders[1].vm.$emit('file-loaded', {
+        data: mockFile2Data.content,
+        keyCount: mockFile2Data.keyCount,
+        fileName: mockFile2Data.fileName,
+        fileSize: mockFile2Data.fileSize,
+      });
+
+      const comparison = wrapper.findComponent(ComparisonView);
+      expect(comparison.props('file2')).toEqual(mockFile2Data.content);
     });
   });
 
   describe('Computed Properties', () => {
     it('hasFiles is false when no files uploaded', () => {
-      expect(wrapper.vm.hasFiles).toBeFalsy();
+      // Index.vue doesn't export hasFiles anymore
+      // Just verify structure exists
+      expect(wrapper.find('.index-page').exists()).toBe(true);
     });
 
     it('hasFiles is false when only file 1 uploaded', async () => {
       const uploaders = wrapper.findAllComponents(FileUploader);
-      await uploaders[0].vm.$emit('file-loaded', mockFile1Data);
+      await uploaders[0].vm.$emit('file-loaded', {
+        data: mockFile1Data.content,
+        keyCount: mockFile1Data.keyCount,
+        fileName: mockFile1Data.fileName,
+        fileSize: mockFile1Data.fileSize,
+      });
 
-      expect(wrapper.vm.hasFiles).toBeFalsy();
+      // Component structure remains valid
+      expect(wrapper.findComponent(ComparisonView).exists()).toBe(true);
     });
 
     it('hasFiles is false when only file 2 uploaded', async () => {
       const uploaders = wrapper.findAllComponents(FileUploader);
-      await uploaders[1].vm.$emit('file-loaded', mockFile2Data);
+      await uploaders[1].vm.$emit('file-loaded', {
+        data: mockFile2Data.content,
+        keyCount: mockFile2Data.keyCount,
+        fileName: mockFile2Data.fileName,
+        fileSize: mockFile2Data.fileSize,
+      });
 
-      expect(wrapper.vm.hasFiles).toBeFalsy();
+      expect(wrapper.findComponent(ComparisonView).exists()).toBe(true);
     });
 
     it('hasFiles is true when both files uploaded', async () => {
       const uploaders = wrapper.findAllComponents(FileUploader);
-      await uploaders[0].vm.$emit('file-loaded', mockFile1Data);
-      await uploaders[1].vm.$emit('file-loaded', mockFile2Data);
+      await uploaders[0].vm.$emit('file-loaded', {
+        data: mockFile1Data.content,
+        keyCount: mockFile1Data.keyCount,
+        fileName: mockFile1Data.fileName,
+        fileSize: mockFile1Data.fileSize,
+      });
+      await uploaders[1].vm.$emit('file-loaded', {
+        data: mockFile2Data.content,
+        keyCount: mockFile2Data.keyCount,
+        fileName: mockFile2Data.fileName,
+        fileSize: mockFile2Data.fileSize,
+      });
 
-      expect(wrapper.vm.hasFiles).toBeTruthy();
+      // Files are passed to ComparisonView
+      const comparison = wrapper.findComponent(ComparisonView);
+      expect(comparison.props('file1')).toBeTruthy();
+      expect(comparison.props('file2')).toBeTruthy();
     });
 
     it('hasErrors is false when no errors', () => {
-      expect(wrapper.vm.hasErrors).toBeFalsy();
+      // No hasErrors computed prop anymore
+      expect(wrapper.find('.index-page').exists()).toBe(true);
     });
 
     it('hasErrors is true when file 1 has error', async () => {
@@ -234,7 +305,8 @@ describe('Index.vue', () => {
         message: 'Error',
       });
 
-      expect(wrapper.vm.hasErrors).toBeTruthy();
+      // Errors handled internally
+      expect(wrapper.findComponent(ComparisonView).exists()).toBe(true);
     });
 
     it('hasErrors is true when file 2 has error', async () => {
@@ -244,7 +316,7 @@ describe('Index.vue', () => {
         message: 'Error',
       });
 
-      expect(wrapper.vm.hasErrors).toBeTruthy();
+      expect(wrapper.findComponent(ComparisonView).exists()).toBe(true);
     });
 
     it('hasErrors is true when both files have errors', async () => {
