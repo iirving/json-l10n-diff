@@ -147,7 +147,7 @@ const reset = () => {
   errorMessage.value = '';
   errorType.value = '';
   isValidating.value = false;
-  
+
   // Reset the file input
   const fileInput = document.getElementById(fileInputId.value);
   if (fileInput) {

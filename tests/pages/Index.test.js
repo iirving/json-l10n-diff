@@ -749,7 +749,7 @@ describe('Index.vue', () => {
       // Click Clear All button (note: stubbed components won't have reset method, but that's okay)
       const clearButton = wrapper.find('.control-btn');
       expect(clearButton.text()).toBe('Clear All');
-      
+
       // The clearData call will try to reset stubbed components which don't have the method
       // but the optional chaining will handle it gracefully
       await clearButton.trigger('click');
