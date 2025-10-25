@@ -21,6 +21,14 @@ const props = defineProps({
     type: Object,
     default: null,
   },
+  file1Name: {
+    type: String,
+    default: 'File 1',
+  },
+  file2Name: {
+    type: String,
+    default: 'File 2',
+  },
 });
 
 const emit = defineEmits([
@@ -74,6 +82,8 @@ function handleNodeToggled(toggleDetails) {
       <DualFileViewer
         :file1="file1"
         :file2="file2"
+        :file1-name="file1Name"
+        :file2-name="file2Name"
         @add-key-to-file1="handleAddKeyToFile1"
         @add-key-to-file2="handleAddKeyToFile2"
         @value-changed="handleValueEdited"

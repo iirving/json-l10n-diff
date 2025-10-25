@@ -24,6 +24,14 @@ const props = defineProps({
     type: Object,
     default: () => null,
   },
+  file1Name: {
+    type: String,
+    default: 'File 1',
+  },
+  file2Name: {
+    type: String,
+    default: 'File 2',
+  },
 });
 
 const emit = defineEmits([
@@ -229,8 +237,8 @@ defineExpose({
           <button class="action-btn" @click="collapseAll">Collapse All</button>
         </div>
         <div class="file-labels">
-          <div class="label-file1">File 1</div>
-          <div class="label-file2">File 2</div>
+          <div class="label-file1">{{ file1Name }}</div>
+          <div class="label-file2">{{ file2Name }}</div>
         </div>
       </div>
 
