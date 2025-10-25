@@ -7,11 +7,30 @@
  */
 
 import { computed } from 'vue';
+import { formatValue } from '@/composables/useValueFormatter.js';
+import {
+  DIFFERENT,
+  MISSING_LEFT,
+  MISSING_RIGHT,
+  isValidDiffStatus,
+} from '@/constants/diffStatus.js';
 
 const props = defineProps({
   node: {
     type: Object,
     required: true,
+    validator: (value) => {
+      // Validate that node has required properties
+      if (!value.keyPath || typeof value.keyPath !== 'string') {
+        return false;
+      }
+      // Validate status if present
+      if (value.status && !isValidDiffStatus(value.status)) {
+        console.warn(`Invalid status: ${value.status}`);
+        return false;
+      }
+      return true;
+    },
   },
   depth: {
     type: Number,
@@ -30,27 +49,15 @@ const props = defineProps({
 const emit = defineEmits(['toggle', 'add-to-file1', 'add-to-file2']);
 
 /**
- * Format value for display
- */
-const formatValue = (value) => {
-  if (value === null) return 'null';
-  if (value === undefined) return '—';
-  if (typeof value === 'string') return `"${value}"`;
-  if (Array.isArray(value)) return JSON.stringify(value);
-  if (typeof value === 'object') return '{...}';
-  return String(value);
-};
-
-/**
  * Get background color based on status
  */
 const getRowColor = computed(() => {
   switch (props.node.status) {
-    case 'different':
+    case DIFFERENT:
       return '#fff9c4'; // Yellow for different values
-    case 'missing-right':
+    case MISSING_RIGHT:
       return '#ffebee'; // Light red for missing in file2
-    case 'missing-left':
+    case MISSING_LEFT:
       return '#e3f2fd'; // Light blue for missing in file1 (temporary)
     default:
       return 'transparent';

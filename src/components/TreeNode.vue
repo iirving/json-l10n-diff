@@ -1,5 +1,6 @@
 <script setup>
 import { computed, inject } from 'vue';
+import { formatValue } from '@/composables/useValueFormatter.js';
 
 /**
  * TreeNode Component (Recursive)
@@ -48,15 +49,6 @@ const isObject = (val) => {
 const isParent = computed(() => isObject(props.value));
 const isExpanded = computed(() => isExpandedFn(props.keyPath));
 const diffStatus = computed(() => getDiffStatusFn(props.keyPath));
-
-const formatValue = (val) => {
-  if (val === null) return 'null';
-  if (val === undefined) return 'undefined';
-  if (typeof val === 'string') return `"${val}"`;
-  if (Array.isArray(val)) return JSON.stringify(val);
-  if (typeof val === 'object') return '{...}';
-  return String(val);
-};
 
 const buildKeyPath = (parentPath, key) => {
   return parentPath ? `${parentPath}.${key}` : key;

@@ -10,6 +10,12 @@
  * - Edit value functionality
  */
 
+import {
+  MISSING_LEFT,
+  MISSING_RIGHT,
+  DIFF_STATUSES,
+} from '@/constants/diffStatus.js';
+
 const props = defineProps({
   keyPath: {
     type: String,
@@ -26,10 +32,7 @@ const props = defineProps({
   status: {
     type: String,
     required: true,
-    validator: (value) =>
-      ['missing-left', 'missing-right', 'identical', 'different'].includes(
-        value
-      ),
+    validator: (value) => DIFF_STATUSES.includes(value),
   },
 });
 
@@ -62,9 +65,9 @@ const formatValue = (value) => {
  * Handle add key button click
  */
 const handleAddKey = () => {
-  const targetFile = props.status === 'missing-left' ? 'file1' : 'file2';
+  const targetFile = props.status === MISSING_LEFT ? 'file1' : 'file2';
   const value =
-    props.status === 'missing-left' ? props.rightValue : props.leftValue;
+    props.status === MISSING_LEFT ? props.rightValue : props.leftValue;
 
   emit('add-key', {
     keyPath: props.keyPath,
@@ -86,7 +89,7 @@ const handleEditValue = () => {
  * Check if add button should be shown
  */
 const showAddButton = () => {
-  return props.status === 'missing-left' || props.status === 'missing-right';
+  return props.status === MISSING_LEFT || props.status === MISSING_RIGHT;
 };
 </script>
 
