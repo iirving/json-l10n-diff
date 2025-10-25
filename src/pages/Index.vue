@@ -3,58 +3,76 @@
  * Index.vue - Main Application Page
  *
  * Purpose: Compare two JSON files side-by-side with unified tree view
+ * T021: Integration with Pinia stores and file upload workflow
  */
 
-import { ref } from 'vue';
+import { computed } from 'vue';
+import { useFileStore } from '@/stores/useFileStore.js';
 import ComparisonView from '@/components/ComparisonView.vue';
 import FileUploader from '@/components/FileUploader.vue';
 
-// File state
-const file1 = ref(null);
-const file2 = ref(null);
-const file1Error = ref(null);
-const file2Error = ref(null);
+// Use Pinia store for file state management
+const fileStore = useFileStore();
+
+// Computed properties from store
+const file1 = computed(() => fileStore.file1?.data || null);
+const file2 = computed(() => fileStore.file2?.data || null);
 
 /**
- * Clear data
+ * Clear data - reset store
  */
 const clearData = () => {
-  file1.value = null;
-  file2.value = null;
-  file1Error.value = null;
-  file2Error.value = null;
+  fileStore.reset();
 };
 
 /**
  * Handle file 1 loaded
+ * Sets file in store and triggers comparison if both files loaded
  */
 const handleFile1Loaded = (parsedData) => {
-  file1.value = parsedData.data;
-  file1Error.value = null;
+  fileStore.setFile1(parsedData);
+  
+  // Auto-run comparison if both files are now loaded
+  if (fileStore.hasFiles) {
+    try {
+      fileStore.runComparison();
+    } catch (error) {
+      console.error('Comparison failed:', error);
+    }
+  }
 };
 
 /**
  * Handle file 1 error
  */
 const handleFile1Error = (errorData) => {
-  file1.value = null;
-  file1Error.value = errorData;
+  fileStore.setFile1(null);
+  console.error('File 1 error:', errorData);
 };
 
 /**
  * Handle file 2 loaded
+ * Sets file in store and triggers comparison if both files loaded
  */
 const handleFile2Loaded = (parsedData) => {
-  file2.value = parsedData.data;
-  file2Error.value = null;
+  fileStore.setFile2(parsedData);
+  
+  // Auto-run comparison if both files are now loaded
+  if (fileStore.hasFiles) {
+    try {
+      fileStore.runComparison();
+    } catch (error) {
+      console.error('Comparison failed:', error);
+    }
+  }
 };
 
 /**
  * Handle file 2 error
  */
 const handleFile2Error = (errorData) => {
-  file2.value = null;
-  file2Error.value = errorData;
+  fileStore.setFile2(null);
+  console.error('File 2 error:', errorData);
 };
 
 /**

@@ -5,6 +5,7 @@
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
+import { createPinia, setActivePinia } from 'pinia';
 import Index from '@/pages/Index.vue';
 import FileUploader from '@/components/FileUploader.vue';
 import ComparisonView from '@/components/ComparisonView.vue';
@@ -42,6 +43,9 @@ describe('Index.vue', () => {
   };
 
   beforeEach(() => {
+    // Initialize Pinia before each test
+    setActivePinia(createPinia());
+    
     wrapper = mount(Index, {
       global: {
         stubs: {
