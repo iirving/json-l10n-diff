@@ -45,7 +45,7 @@ describe('Index.vue', () => {
   beforeEach(() => {
     // Initialize Pinia before each test
     setActivePinia(createPinia());
-    
+
     wrapper = mount(Index, {
       global: {
         stubs: {
@@ -721,6 +721,173 @@ describe('Index.vue', () => {
 
       // FileUploader has its own internal structure
       expect(wrapper.findComponent(FileUploader).exists()).toBe(true);
+    });
+  });
+
+  describe('Clear All Functionality', () => {
+    it('clears both files and resets store when Clear All is clicked', async () => {
+      // Upload both files first
+      const uploaders = wrapper.findAllComponents(FileUploader);
+      await uploaders[0].vm.$emit('file-loaded', {
+        data: mockFile1Data.content,
+        keyCount: mockFile1Data.keyCount,
+        fileName: mockFile1Data.fileName,
+        fileSize: mockFile1Data.fileSize,
+      });
+      await uploaders[1].vm.$emit('file-loaded', {
+        data: mockFile2Data.content,
+        keyCount: mockFile2Data.keyCount,
+        fileName: mockFile2Data.fileName,
+        fileSize: mockFile2Data.fileSize,
+      });
+      await wrapper.vm.$nextTick();
+
+      // Verify files are loaded
+      expect(wrapper.vm.file1).toEqual(mockFile1Data.content);
+      expect(wrapper.vm.file2).toEqual(mockFile2Data.content);
+
+      // Click Clear All button (note: stubbed components won't have reset method, but that's okay)
+      const clearButton = wrapper.find('.control-btn');
+      expect(clearButton.text()).toBe('Clear All');
+      
+      // The clearData call will try to reset stubbed components which don't have the method
+      // but the optional chaining will handle it gracefully
+      await clearButton.trigger('click');
+      await wrapper.vm.$nextTick();
+
+      // Verify store is cleared
+      expect(wrapper.vm.file1).toBeNull();
+      expect(wrapper.vm.file2).toBeNull();
+    });
+
+    it('resets FileUploader components when Clear All is clicked', async () => {
+      // Mount with real FileUploader components (not stubbed)
+      setActivePinia(createPinia());
+      const wrapperWithRealComponents = mount(Index, {
+        global: {
+          stubs: {
+            ComparisonView: true,
+            EditControls: true,
+          },
+        },
+      });
+
+      // Get uploaders
+      const uploaders =
+        wrapperWithRealComponents.findAllComponents(FileUploader);
+
+      // Create mock File objects
+      const file1 = new File(['{"key1": "value1"}'], 'test1.json', {
+        type: 'application/json',
+      });
+      const file2 = new File(['{"key2": "value2"}'], 'test2.json', {
+        type: 'application/json',
+      });
+
+      // Trigger file selection on both uploaders
+      const input1 = uploaders[0].find('input[type="file"]');
+      const input2 = uploaders[1].find('input[type="file"]');
+
+      Object.defineProperty(input1.element, 'files', {
+        value: [file1],
+        writable: false,
+      });
+      Object.defineProperty(input2.element, 'files', {
+        value: [file2],
+        writable: false,
+      });
+
+      await input1.trigger('change');
+      await input2.trigger('change');
+
+      // Wait for file parsing
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      await wrapperWithRealComponents.vm.$nextTick();
+
+      // Verify files are loaded in uploaders
+      expect(uploaders[0].vm.selectedFile).toBeTruthy();
+      expect(uploaders[1].vm.selectedFile).toBeTruthy();
+
+      // Click Clear All button
+      const clearButton = wrapperWithRealComponents.find('.control-btn');
+      await clearButton.trigger('click');
+      await wrapperWithRealComponents.vm.$nextTick();
+
+      // Verify FileUploader components are reset
+      expect(uploaders[0].vm.selectedFile).toBeNull();
+      expect(uploaders[1].vm.selectedFile).toBeNull();
+      expect(uploaders[0].vm.parsedData).toBeNull();
+      expect(uploaders[1].vm.parsedData).toBeNull();
+      expect(uploaders[0].vm.errorMessage).toBe('');
+      expect(uploaders[1].vm.errorMessage).toBe('');
+
+      wrapperWithRealComponents.unmount();
+    });
+
+    it('clears comparison results when Clear All is clicked', async () => {
+      // Upload both files to trigger comparison
+      const uploaders = wrapper.findAllComponents(FileUploader);
+      await uploaders[0].vm.$emit('file-loaded', {
+        data: mockFile1Data.content,
+        keyCount: mockFile1Data.keyCount,
+        fileName: mockFile1Data.fileName,
+        fileSize: mockFile1Data.fileSize,
+      });
+      await uploaders[1].vm.$emit('file-loaded', {
+        data: mockFile2Data.content,
+        keyCount: mockFile2Data.keyCount,
+        fileName: mockFile2Data.fileName,
+        fileSize: mockFile2Data.fileSize,
+      });
+      await wrapper.vm.$nextTick();
+
+      // Verify comparison was run (files are loaded)
+      expect(wrapper.vm.file1).toEqual(mockFile1Data.content);
+      expect(wrapper.vm.file2).toEqual(mockFile2Data.content);
+
+      // Click Clear All
+      const clearButton = wrapper.find('.control-btn');
+      await clearButton.trigger('click');
+      await wrapper.vm.$nextTick();
+
+      // Verify everything is cleared
+      expect(wrapper.vm.file1).toBeNull();
+      expect(wrapper.vm.file2).toBeNull();
+      expect(wrapper.findComponent(ComparisonView).exists()).toBe(true); // Component still exists but with null props
+    });
+
+    it('Clear All button is always visible', () => {
+      const clearButton = wrapper.find('.control-btn');
+      expect(clearButton.exists()).toBe(true);
+      expect(clearButton.text()).toBe('Clear All');
+    });
+
+    it('can upload files again after clearing', async () => {
+      // Upload files
+      const uploaders = wrapper.findAllComponents(FileUploader);
+      await uploaders[0].vm.$emit('file-loaded', {
+        data: mockFile1Data.content,
+        keyCount: mockFile1Data.keyCount,
+        fileName: mockFile1Data.fileName,
+        fileSize: mockFile1Data.fileSize,
+      });
+      await wrapper.vm.$nextTick();
+      expect(wrapper.vm.file1).toEqual(mockFile1Data.content);
+
+      // Clear
+      await wrapper.find('.control-btn').trigger('click');
+      await wrapper.vm.$nextTick();
+      expect(wrapper.vm.file1).toBeNull();
+
+      // Upload again
+      await uploaders[0].vm.$emit('file-loaded', {
+        data: mockFile2Data.content,
+        keyCount: mockFile2Data.keyCount,
+        fileName: mockFile2Data.fileName,
+        fileSize: mockFile2Data.fileSize,
+      });
+      await wrapper.vm.$nextTick();
+      expect(wrapper.vm.file1).toEqual(mockFile2Data.content);
     });
   });
 });

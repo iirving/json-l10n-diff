@@ -136,6 +136,29 @@ const handleFileInputChange = (event) => {
 const triggerFileInput = () => {
   document.getElementById(fileInputId.value)?.click();
 };
+
+/**
+ * Reset the uploader to initial state
+ * Clears file, parsed data, and errors
+ */
+const reset = () => {
+  selectedFile.value = null;
+  parsedData.value = null;
+  errorMessage.value = '';
+  errorType.value = '';
+  isValidating.value = false;
+  
+  // Reset the file input
+  const fileInput = document.getElementById(fileInputId.value);
+  if (fileInput) {
+    fileInput.value = '';
+  }
+};
+
+// Expose reset method to parent components
+defineExpose({
+  reset,
+});
 </script>
 
 <template>

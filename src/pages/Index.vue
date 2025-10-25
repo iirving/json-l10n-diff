@@ -6,7 +6,7 @@
  * T021: Integration with Pinia stores and file upload workflow
  */
 
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useFileStore } from '@/stores/useFileStore.js';
 import ComparisonView from '@/components/ComparisonView.vue';
 import FileUploader from '@/components/FileUploader.vue';
@@ -14,15 +14,27 @@ import FileUploader from '@/components/FileUploader.vue';
 // Use Pinia store for file state management
 const fileStore = useFileStore();
 
+// Refs to FileUploader components
+const fileUploader1 = ref(null);
+const fileUploader2 = ref(null);
+
 // Computed properties from store
 const file1 = computed(() => fileStore.file1?.data || null);
 const file2 = computed(() => fileStore.file2?.data || null);
 
 /**
- * Clear data - reset store
+ * Clear data - reset store and file uploaders
  */
 const clearData = () => {
   fileStore.reset();
+
+  // Reset both file uploaders if they have the reset method
+  if (fileUploader1.value && typeof fileUploader1.value.reset === 'function') {
+    fileUploader1.value.reset();
+  }
+  if (fileUploader2.value && typeof fileUploader2.value.reset === 'function') {
+    fileUploader2.value.reset();
+  }
 };
 
 /**
@@ -31,7 +43,7 @@ const clearData = () => {
  */
 const handleFile1Loaded = (parsedData) => {
   fileStore.setFile1(parsedData);
-  
+
   // Auto-run comparison if both files are now loaded
   if (fileStore.hasFiles) {
     try {
@@ -56,7 +68,7 @@ const handleFile1Error = (errorData) => {
  */
 const handleFile2Loaded = (parsedData) => {
   fileStore.setFile2(parsedData);
-  
+
   // Auto-run comparison if both files are now loaded
   if (fileStore.hasFiles) {
     try {
@@ -112,6 +124,7 @@ const handleAddKeyToFile2 = ({ keyPath, value }) => {
           <div class="upload-row">
             <div class="upload-group">
               <FileUploader
+                ref="fileUploader1"
                 label="Upload File 1"
                 @file-loaded="handleFile1Loaded"
                 @file-error="handleFile1Error"
@@ -120,6 +133,7 @@ const handleAddKeyToFile2 = ({ keyPath, value }) => {
 
             <div class="upload-group">
               <FileUploader
+                ref="fileUploader2"
                 label="Upload File 2"
                 @file-loaded="handleFile2Loaded"
                 @file-error="handleFile2Error"
