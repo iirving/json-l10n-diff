@@ -2,79 +2,113 @@
 /**
  * Index.vue - Main Application Page
  *
- * Purpose: Main page for JSON i18n comparison tool
- * Features (to be implemented):
- * - Two FileUploader instances (for file1 and file2)
- * - ComparisonView component
- * - Integration with Pinia stores (useFileStore, useTierStore, useEditStore)
- * - Wire up file-loaded handlers to trigger comparison
- * - Handle edit events and save operations
+ * Purpose: Compare two JSON files side-by-side with unified tree view
+ * T021: Integration with Pinia stores and file upload workflow
+ * Uses storeToRefs for cleaner component code
  */
 
 import { ref, computed } from 'vue';
-import FileUploader from '@/components/FileUploader.vue';
+import { storeToRefs } from 'pinia';
+import { useFileStore } from '@/stores/useFileStore.js';
 import ComparisonView from '@/components/ComparisonView.vue';
-import EditControls from '@/components/EditControls.vue';
-import { bytesToKB } from '@/utils/fileSize.js';
+import FileUploader from '@/components/FileUploader.vue';
 
-// File state
-const file1 = ref(null);
-const file2 = ref(null);
-const file1Error = ref(null);
-const file2Error = ref(null);
+// Get Pinia store instance
+const fileStore = useFileStore();
 
-// Computed
-const hasFiles = computed(() => file1.value && file2.value);
-const hasErrors = computed(() => file1Error.value || file2Error.value);
+// Destructure reactive STATE and GETTERS with storeToRefs
+const { hasFiles } = storeToRefs(fileStore);
+
+// Destructure ACTIONS normally (they don't lose reactivity)
+const { setFile1, setFile2, runComparison, reset } = fileStore;
+
+// Extract just the data from file objects for ComparisonView
+const file1 = computed(() => fileStore.file1?.data || null);
+const file2 = computed(() => fileStore.file2?.data || null);
+
+// Refs to FileUploader components
+const fileUploader1 = ref(null);
+const fileUploader2 = ref(null);
 
 /**
- * Get formatted file size in KB
- * @param {Ref} fileRef - File ref to get size from
- * @returns {ComputedRef<number>} - Formatted file size in KB
+ * Clear data - reset store and file uploaders
  */
-const getFileSizeKB = (fileRef) => {
-  return computed(() => {
-    return fileRef.value ? bytesToKB(fileRef.value.fileSize) : 0;
-  });
+const clearData = () => {
+  reset();
+
+  // Reset both file uploaders if they have the reset method
+  if (fileUploader1.value && typeof fileUploader1.value.reset === 'function') {
+    fileUploader1.value.reset();
+  }
+  if (fileUploader2.value && typeof fileUploader2.value.reset === 'function') {
+    fileUploader2.value.reset();
+  }
 };
 
-const file1SizeKB = getFileSizeKB(file1);
-const file2SizeKB = getFileSizeKB(file2);
-
 /**
- * Handle file 1 loaded successfully
- * @param {Object} parsedData - Parsed file data
+ * Handle file 1 loaded
+ * Sets file in store and triggers comparison if both files loaded
  */
 const handleFile1Loaded = (parsedData) => {
-  file1.value = parsedData;
-  file1Error.value = null;
+  setFile1(parsedData);
+
+  // Auto-run comparison if both files are now loaded
+  if (hasFiles.value) {
+    try {
+      runComparison();
+    } catch (error) {
+      console.error('Comparison failed:', error);
+    }
+  }
 };
 
 /**
  * Handle file 1 error
- * @param {Object} errorData - Error information
  */
 const handleFile1Error = (errorData) => {
-  file1.value = null;
-  file1Error.value = errorData;
+  setFile1(null);
+  console.error('File 1 error:', errorData);
 };
 
 /**
- * Handle file 2 loaded successfully
- * @param {Object} parsedData - Parsed file data
+ * Handle file 2 loaded
+ * Sets file in store and triggers comparison if both files loaded
  */
 const handleFile2Loaded = (parsedData) => {
-  file2.value = parsedData;
-  file2Error.value = null;
+  setFile2(parsedData);
+
+  // Auto-run comparison if both files are now loaded
+  if (hasFiles.value) {
+    try {
+      runComparison();
+    } catch (error) {
+      console.error('Comparison failed:', error);
+    }
+  }
 };
 
 /**
  * Handle file 2 error
- * @param {Object} errorData - Error information
  */
 const handleFile2Error = (errorData) => {
-  file2.value = null;
-  file2Error.value = errorData;
+  setFile2(null);
+  console.error('File 2 error:', errorData);
+};
+
+/**
+ * Handle add key to file1
+ */
+const handleAddKeyToFile1 = ({ keyPath, value }) => {
+  // In a real implementation, this would update the file1 data
+  alert(`Add key "${keyPath}" to File 1 with value: ${JSON.stringify(value)}`);
+};
+
+/**
+ * Handle add key to file2
+ */
+const handleAddKeyToFile2 = ({ keyPath, value }) => {
+  // In a real implementation, this would update the file2 data
+  alert(`Add key "${keyPath}" to File 2 with value: ${JSON.stringify(value)}`);
 };
 </script>
 
@@ -82,133 +116,137 @@ const handleFile2Error = (errorData) => {
   <div class="index-page">
     <header class="page-header">
       <h1>JSON l10n Diff Tool</h1>
-      <p class="subtitle">Compare and synchronize your translation files</p>
+      <p class="subtitle">
+        Side-by-side JSON comparison with unified tree view
+      </p>
     </header>
 
     <main class="page-content">
-      <section class="upload-section">
-        <div class="upload-group">
-          <FileUploader
-            label="Upload File 1"
-            @file-loaded="handleFile1Loaded"
-            @file-error="handleFile1Error"
-          />
-          <div
-            v-if="file1 && !file1Error"
-            class="file-status file-status--success"
-          >
-            <svg
-              class="file-status__icon"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <div class="file-status__info">
-              <span class="file-status__text">{{ file1.fileName }}</span>
-              <span class="file-status__details">
-                {{ file1.keyCount }} keys • {{ file1SizeKB }} KB
-              </span>
-            </div>
-          </div>
+      <!-- Controls -->
+      <section class="controls-section">
+        <div class="button-group">
+          <button class="control-btn" @click="clearData">Clear All</button>
         </div>
-        <div class="upload-group">
-          <FileUploader
-            label="Upload File 2"
-            @file-loaded="handleFile2Loaded"
-            @file-error="handleFile2Error"
-          />
-          <div
-            v-if="file2 && !file2Error"
-            class="file-status file-status--success"
-          >
-            <svg
-              class="file-status__icon"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+
+        <div class="upload-section">
+          <div class="upload-row">
+            <div class="upload-group">
+              <FileUploader
+                ref="fileUploader1"
+                label="Upload File 1"
+                @file-loaded="handleFile1Loaded"
+                @file-error="handleFile1Error"
               />
-            </svg>
-            <div class="file-status__info">
-              <span class="file-status__text">{{ file2.fileName }}</span>
-              <span class="file-status__details">
-                {{ file2.keyCount }} keys • {{ file2SizeKB }} KB
-              </span>
+            </div>
+
+            <div class="upload-group">
+              <FileUploader
+                ref="fileUploader2"
+                label="Upload File 2"
+                @file-loaded="handleFile2Loaded"
+                @file-error="handleFile2Error"
+              />
             </div>
           </div>
         </div>
       </section>
 
-      <section v-if="hasFiles" class="comparison-section">
-        <ComparisonView :file1="file1" :file2="file2" :diff-results="[]" />
+      <!-- Legend -->
+      <section class="legend-section">
+        <h3>Legend:</h3>
+        <div class="legend-items">
+          <div class="legend-item">
+            <span class="legend-color legend-different"></span>
+            <span>Different Values (Yellow)</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-color legend-missing-right"></span>
+            <span>Missing in File 2 (Light Red)</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-color legend-missing-left"></span>
+            <span>Missing in File 1 / Temporary (Light Blue)</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-color legend-identical"></span>
+            <span>Identical Values</span>
+          </div>
+        </div>
       </section>
 
-      <section v-if="hasFiles" class="controls-section">
-        <EditControls file-name="file.json" :modified="false" />
+      <!-- Comparison View -->
+      <section class="viewer-section">
+        <ComparisonView
+          :file1="file1"
+          :file2="file2"
+          :file1-name="fileStore.file1?.fileName || 'File 1'"
+          :file2-name="fileStore.file2?.fileName || 'File 2'"
+          @add-key-to-file1="handleAddKeyToFile1"
+          @add-key-to-file2="handleAddKeyToFile2"
+        />
       </section>
 
-      <div v-if="!hasFiles && !hasErrors" class="placeholder-note">
-        <svg
-          class="placeholder-note__icon"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-          />
-        </svg>
-        <p class="placeholder-note__text">
-          Upload two JSON files to start comparing
-        </p>
-        <p class="placeholder-note__subtext">
-          Drag and drop or click to browse for files
-        </p>
-      </div>
+      <!-- Instructions -->
+      <section class="instructions-section">
+        <h3>Features:</h3>
+        <ul>
+          <li>
+            <strong>Unified Tree Structure:</strong> Uses File 1's keys as the
+            primary structure
+          </li>
+          <li>
+            <strong>Side-by-side Values:</strong> Shows values from both files
+            for each key
+          </li>
+          <li>
+            <strong>Color-coded Differences:</strong>
+            <ul>
+              <li>Yellow highlight = Different values</li>
+              <li>Light red = Missing in File 2</li>
+              <li>Light blue = Missing in File 1 (temporary keys)</li>
+            </ul>
+          </li>
+          <li>
+            <strong>Add Missing Keys:</strong> Click "+ Add" button to add
+            missing keys to either file
+          </li>
+          <li>
+            <strong>Temporary Keys:</strong> Keys that exist in File 2 but not
+            in File 1 are shown with "(temp)" badge
+          </li>
+          <li>
+            <strong>Expand/Collapse:</strong> Click arrows to expand/collapse
+            nested objects
+          </li>
+          <li>
+            <strong>Expand All / Collapse All:</strong> Buttons at the top for
+            bulk operations
+          </li>
+        </ul>
+      </section>
     </main>
   </div>
 </template>
 
 <style scoped>
 .index-page {
-  flex: 1;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: var(--bg-secondary);
 }
 
 .page-header {
   padding: var(--spacing-xl) var(--spacing-lg);
   text-align: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  background: linear-gradient(
-    135deg,
-    rgba(100, 108, 255, 0.1) 0%,
-    rgba(100, 108, 255, 0.05) 100%
-  );
+  background: var(--gradient-header);
+  border-bottom: 1px solid var(--border-medium);
 }
 
 .page-header h1 {
   margin: 0;
   font-size: 2.5rem;
-  background: linear-gradient(135deg, #646cff 0%, #8b5cf6 100%);
+  background: var(--gradient-primary);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -216,35 +254,53 @@ const handleFile2Error = (errorData) => {
 
 .subtitle {
   margin: var(--spacing-sm) 0 0 0;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--color-text-tertiary);
   font-size: 1.125rem;
 }
 
 .page-content {
   flex: 1;
   padding: var(--spacing-lg);
-  max-width: 1400px;
+  max-width: 1600px;
   width: 100%;
   margin: 0 auto;
-}
-
-.upload-section {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--spacing-lg);
-  margin-bottom: var(--spacing-xl);
-}
-
-.comparison-section {
-  margin-bottom: var(--spacing-lg);
 }
 
 .controls-section {
   margin-bottom: var(--spacing-lg);
 }
 
-.tier-section {
-  margin-bottom: var(--spacing-lg);
+.button-group {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+}
+
+.control-btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-dark);
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.control-btn:hover {
+  background: var(--bg-tertiary);
+}
+
+.upload-section {
+  background: var(--bg-primary);
+  padding: var(--spacing-md);
+  border-radius: 0.5rem;
+  border: 1px solid var(--border-medium);
+}
+
+.upload-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-lg);
 }
 
 .upload-group {
@@ -263,84 +319,145 @@ const handleFile2Error = (errorData) => {
 }
 
 .file-status--success {
-  background-color: rgba(16, 185, 129, 0.1);
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  background-color: var(--bg-success);
+  border: 1px solid var(--border-success);
+  flex-direction: column;
+  gap: var(--spacing-xs, 0.25rem);
+}
+
+.file-status--error {
+  background-color: var(--bg-error);
+  border: 1px solid var(--border-error);
 }
 
 .file-status__icon {
   width: 20px;
   height: 20px;
   flex-shrink: 0;
-  color: var(--success-color, #10b981);
+  color: var(--color-success-alt);
+}
+
+.file-status--error .file-status__icon {
+  color: var(--color-error);
 }
 
 .file-status__info {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xs, 0.25rem);
   flex: 1;
 }
 
 .file-status__text {
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--success-color, #10b981);
+  color: var(--color-success-alt);
+}
+
+.file-status--error .file-status__text {
+  color: var(--color-error);
 }
 
 .file-status__details {
   font-size: 0.75rem;
-  color: var(--success-color, #10b981);
+  color: var(--color-success-alt);
 }
 
-.placeholder-note {
+.file-status--error .file-status__details {
+  color: var(--color-error);
+}
+
+.legend-section {
+  background: var(--bg-primary);
+  padding: var(--spacing-md);
+  border-radius: 0.5rem;
+  border: 1px solid var(--border-medium);
+  margin-bottom: var(--spacing-lg);
+}
+
+.legend-section h3 {
+  margin: 0 0 var(--spacing-sm) 0;
+  font-size: 1rem;
+}
+
+.legend-items {
   display: flex;
-  flex-direction: column;
+  gap: var(--spacing-lg);
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
   align-items: center;
-  gap: var(--spacing-md);
-  padding: var(--spacing-xl) var(--spacing-md);
-  border-radius: var(--radius-md);
-  background-color: rgba(100, 108, 255, 0.05);
-  border: 2px dashed rgba(100, 108, 255, 0.3);
-  text-align: center;
-  margin-top: var(--spacing-xl);
+  gap: var(--spacing-xs);
 }
 
-.placeholder-note__icon {
-  width: 64px;
-  height: 64px;
-  color: rgba(100, 108, 255, 0.5);
+.legend-color {
+  width: 32px;
+  height: 20px;
+  border: 1px solid var(--border-dark);
+  border-radius: 0.25rem;
 }
 
-.placeholder-note__text {
+.legend-different {
+  background: var(--bg-identical-alt);
+}
+
+.legend-missing-right {
+  background: var(--bg-missing-alt);
+}
+
+.legend-missing-left {
+  background: var(--bg-different-alt);
+}
+
+.legend-identical {
+  background: transparent;
+}
+
+.viewer-section {
+  margin-bottom: var(--spacing-lg);
+  height: 600px;
+}
+
+.instructions-section {
+  background: var(--bg-primary);
+  padding: var(--spacing-md);
+  border-radius: 0.5rem;
+  border: 1px solid var(--border-medium);
+}
+
+.instructions-section h3 {
+  margin: 0 0 var(--spacing-sm) 0;
+  font-size: 1rem;
+}
+
+.instructions-section ul {
   margin: 0;
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 1.125rem;
-  font-weight: 500;
+  padding-left: var(--spacing-lg);
 }
 
-.placeholder-note__subtext {
-  margin: 0;
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 0.875rem;
+.instructions-section li {
+  margin-bottom: var(--spacing-xs);
 }
 
-/* Responsive Design */
+.instructions-section ul ul {
+  margin-top: var(--spacing-xs);
+}
+
 @media (max-width: 768px) {
-  .upload-section {
-    grid-template-columns: 1fr;
-    gap: var(--spacing-md);
-  }
-
   .page-header h1 {
     font-size: 2rem;
   }
 
-  .subtitle {
-    font-size: 1rem;
+  .upload-row {
+    grid-template-columns: 1fr;
   }
 
-  .page-content {
-    padding: var(--spacing-md);
+  .legend-items {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  .viewer-section {
+    height: 400px;
   }
 }
 </style>

@@ -2,15 +2,16 @@
 /**
  * ComparisonView Component
  *
- * Purpose: Side-by-side comparison of two JSON files
+ * Purpose: Unified tree comparison of two JSON files
  * Features:
- * - Two TreeViewer instances side-by-side
- * - Event forwarding from TreeViewers
- * - Save and prettify functionality
+ * - Single unified tree with side-by-side values
+ * - DualFileViewer for merged key structure
+ * - Event forwarding and save/prettify functionality
  */
 
-import TreeViewer from '@/components/TreeViewer.vue';
+import DualFileViewer from '@/components/DualFileViewer.vue';
 
+// eslint-disable-next-line no-unused-vars
 const props = defineProps({
   file1: {
     type: Object,
@@ -20,59 +21,50 @@ const props = defineProps({
     type: Object,
     default: null,
   },
-  diffResults: {
-    type: Array,
-    default: () => [],
+  file1Name: {
+    type: String,
+    default: 'File 1',
   },
-  editable: {
-    type: Boolean,
-    default: false,
+  file2Name: {
+    type: String,
+    default: 'File 2',
   },
 });
 
 const emit = defineEmits([
-  'save-requested',
-  'prettify-requested',
-  'edit-made',
+  'add-key-to-file1',
+  'add-key-to-file2',
+  'value-changed',
   'node-toggled',
 ]);
 
 /**
- * Handle save request
- * Emits save-requested event with both file contents
- */
-// eslint-disable-next-line no-unused-vars
-function handleSave() {
-  if (!props.file1 && !props.file2) {
-    return;
-  }
-
-  emit('save-requested', {
-    file1: props.file1,
-    file2: props.file2,
-  });
-}
-
-/**
- * Handle prettify request
- * @param {string} fileId - Identifier for the file to prettify ('file1' or 'file2')
- */
-// eslint-disable-next-line no-unused-vars
-function handlePrettify(fileId) {
-  emit('prettify-requested', { fileId });
-}
-
-/**
- * Handle value edit from TreeViewer
- * @param {object} editDetails - Edit details from TreeViewer
+ * Handle value edit from DualFileViewer
+ * @param {object} editDetails - Edit details from DualFileViewer
  */
 function handleValueEdited(editDetails) {
-  emit('edit-made', editDetails);
+  emit('value-changed', editDetails);
 }
 
 /**
- * Handle node toggle from TreeViewer
- * @param {object} toggleDetails - Toggle details from TreeViewer
+ * Handle add key request from DualFileViewer
+ * @param {object} addKeyDetails - Add key details
+ */
+function handleAddKeyToFile1(addKeyDetails) {
+  emit('add-key-to-file1', addKeyDetails);
+}
+
+/**
+ * Handle add key request from DualFileViewer
+ * @param {object} addKeyDetails - Add key details
+ */
+function handleAddKeyToFile2(addKeyDetails) {
+  emit('add-key-to-file2', addKeyDetails);
+}
+
+/**
+ * Handle node toggle from DualFileViewer
+ * @param {object} toggleDetails - Toggle details from DualFileViewer
  */
 function handleNodeToggled(toggleDetails) {
   // Forward the event (can be used for synchronization features)
@@ -87,29 +79,16 @@ function handleNodeToggled(toggleDetails) {
     </div>
 
     <div v-else class="comparison-container">
-      <div class="file-pane" aria-label="File 1 view">
-        <div class="file-label">File 1</div>
-        <TreeViewer
-          :content="file1 || {}"
-          :diff-results="diffResults"
-          :editable="editable"
-          file-id="file1"
-          @value-edited="handleValueEdited"
-          @node-toggled="handleNodeToggled"
-        />
-      </div>
-
-      <div class="file-pane" aria-label="File 2 view">
-        <div class="file-label">File 2</div>
-        <TreeViewer
-          :content="file2 || {}"
-          :diff-results="diffResults"
-          :editable="editable"
-          file-id="file2"
-          @value-edited="handleValueEdited"
-          @node-toggled="handleNodeToggled"
-        />
-      </div>
+      <DualFileViewer
+        :file1="file1"
+        :file2="file2"
+        :file1-name="file1Name"
+        :file2-name="file2Name"
+        @add-key-to-file1="handleAddKeyToFile1"
+        @add-key-to-file2="handleAddKeyToFile2"
+        @value-changed="handleValueEdited"
+        @node-toggled="handleNodeToggled"
+      />
     </div>
   </div>
 </template>
@@ -127,31 +106,13 @@ function handleNodeToggled(toggleDetails) {
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: rgba(0, 0, 0, 0.4);
+  color: var(--color-text-muted);
 }
 
 .comparison-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  height: 100%;
-  overflow: hidden;
-}
-
-.file-pane {
   display: flex;
   flex-direction: column;
+  height: 100%;
   overflow: hidden;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  border-radius: 0.25rem;
-  background: #ffffff;
-}
-
-.file-label {
-  padding: 0.75rem 1rem;
-  font-weight: 600;
-  color: #000000;
-  background: #f5f5f5;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 </style>

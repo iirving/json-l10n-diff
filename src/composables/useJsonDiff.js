@@ -1,3 +1,10 @@
+import {
+  MISSING_LEFT,
+  MISSING_RIGHT,
+  IDENTICAL,
+  DIFFERENT,
+} from '@/constants/diffStatus.js';
+
 /**
  * Composable for comparing two JSON objects and generating diff results
  * Provides methods to compare files and return comparison results
@@ -37,7 +44,7 @@ export const useJsonDiff = () => {
       if (!keys1.has(key)) {
         results.push({
           keyPath,
-          status: 'missing-left',
+          status: MISSING_LEFT,
           leftValue: undefined,
           rightValue: value2,
         });
@@ -48,7 +55,7 @@ export const useJsonDiff = () => {
       if (!keys2.has(key)) {
         results.push({
           keyPath,
-          status: 'missing-right',
+          status: MISSING_RIGHT,
           leftValue: value1,
           rightValue: undefined,
         });
@@ -73,14 +80,14 @@ export const useJsonDiff = () => {
       if (JSON.stringify(value1) === JSON.stringify(value2)) {
         results.push({
           keyPath,
-          status: 'identical',
+          status: IDENTICAL,
           leftValue: value1,
           rightValue: value2,
         });
       } else {
         results.push({
           keyPath,
-          status: 'different',
+          status: DIFFERENT,
           leftValue: value1,
           rightValue: value2,
         });

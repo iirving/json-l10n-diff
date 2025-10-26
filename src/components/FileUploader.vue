@@ -13,7 +13,7 @@
 import { ref, computed } from 'vue';
 import { useJsonParser } from '@/composables/useJsonParser.js';
 import { MAX_FILE_SIZE, MAX_FILE_SIZE_MB } from '@/constants/fileUpload.js';
-import { bytesToMB } from '@/utils/fileSize.js';
+import { bytesToMB, bytesToKB } from '@/utils/fileSize.js';
 
 // eslint-disable-next-line no-unused-vars
 const props = defineProps({
@@ -41,8 +41,8 @@ const generateFileInputId = () => {
 };
 
 // State
-const isDragOver = ref(false);
 const selectedFile = ref(null);
+const parsedData = ref(null);
 const errorMessage = ref('');
 const errorType = ref(''); // 'size', 'parse', or ''
 const fileInputId = ref(generateFileInputId());
@@ -51,6 +51,20 @@ const isValidating = ref(false);
 // Computed
 const hasError = computed(() => !!errorMessage.value);
 const hasFile = computed(() => !!selectedFile.value && !hasError.value);
+const hasNoError = computed(
+  () => !hasFile.value && !isValidating.value && !hasError.value
+);
+
+// Computed for file info display
+const fileSizeKB = computed(() => {
+  if (!parsedData.value) return 0;
+  return bytesToKB(parsedData.value.fileSize, 1);
+});
+
+const keyCount = computed(() => {
+  if (!parsedData.value) return 0;
+  return parsedData.value.keyCount || 0;
+});
 
 /**
  * Validate file size
@@ -89,11 +103,12 @@ const handleFile = async (file) => {
   // Validate and parse JSON
   isValidating.value = true;
   try {
-    const parsedData = await parseFile(file);
+    const data = await parseFile(file);
     // File is valid
+    parsedData.value = data;
     errorMessage.value = '';
     errorType.value = '';
-    emit('file-loaded', parsedData);
+    emit('file-loaded', data);
   } catch (error) {
     // JSON parsing/validation error
     errorMessage.value = error.message;
@@ -116,176 +131,141 @@ const handleFileInputChange = (event) => {
 };
 
 /**
- * Handle drag enter event
- * @param {DragEvent} event - Drag event
- */
-const handleDragEnter = (event) => {
-  event.preventDefault();
-  isDragOver.value = true;
-};
-
-/**
- * Handle drag leave event
- */
-const handleDragLeave = () => {
-  isDragOver.value = false;
-};
-
-/**
- * Handle drag over event
- * @param {DragEvent} event - Drag event
- */
-const handleDragOver = (event) => {
-  event.preventDefault();
-};
-
-/**
- * Handle drop event
- * @param {DragEvent} event - Drop event
- */
-const handleDrop = (event) => {
-  event.preventDefault();
-  isDragOver.value = false;
-
-  const file = event.dataTransfer?.files?.[0];
-  if (file) {
-    handleFile(file);
-  }
-};
-
-/**
  * Trigger file input click
  */
 const triggerFileInput = () => {
   document.getElementById(fileInputId.value)?.click();
 };
+
+/**
+ * Reset the uploader to initial state
+ * Clears file, parsed data, and errors
+ */
+const reset = () => {
+  selectedFile.value = null;
+  parsedData.value = null;
+  errorMessage.value = '';
+  errorType.value = '';
+  isValidating.value = false;
+
+  // Reset the file input
+  const fileInput = document.getElementById(fileInputId.value);
+  if (fileInput) {
+    fileInput.value = '';
+  }
+};
+
+// Expose reset method to parent components
+defineExpose({
+  reset,
+});
 </script>
 
 <template>
   <div class="file-uploader">
-    <label :for="fileInputId" class="file-uploader__label">
-      {{ label }}
-    </label>
+    <input
+      :id="fileInputId"
+      type="file"
+      :accept="accept"
+      class="file-uploader__input"
+      @change="handleFileInputChange"
+    />
 
-    <div
-      class="file-uploader__drop-zone"
-      :class="{ 'drag-over': isDragOver, 'has-error': hasError }"
-      data-testid="drop-zone"
-      role="button"
-      tabindex="0"
-      :aria-label="`${label} - Drag and drop or click to upload`"
+    <button
+      type="button"
+      class="file-uploader__button"
+      :class="{ 'has-error': hasError, 'has-file': hasFile && !hasError }"
       @click="triggerFileInput"
-      @dragenter="handleDragEnter"
-      @dragleave="handleDragLeave"
-      @dragover="handleDragOver"
-      @drop="handleDrop"
-      @keydown.enter="triggerFileInput"
-      @keydown.space.prevent="triggerFileInput"
     >
-      <input
-        :id="fileInputId"
-        type="file"
-        :accept="accept"
-        class="file-uploader__input"
-        @change="handleFileInputChange"
-      />
+      <svg
+        v-if="hasNoError"
+        class="file-uploader__icon"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+        />
+      </svg>
 
-      <div v-if="!hasFile && !isValidating" class="file-uploader__instructions">
-        <svg
-          class="file-uploader__icon"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
+      <svg
+        v-else-if="hasError"
+        class="file-uploader__icon file-uploader__icon--error"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+        />
+      </svg>
+
+      <svg
+        v-else-if="isValidating"
+        class="file-uploader__icon file-uploader__icon--spinner"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <circle
+          class="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
           stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-          />
-        </svg>
-        <p class="file-uploader__text">
-          <span class="file-uploader__text--primary"
-            >Drag and drop your file here</span
-          >
-          <span class="file-uploader__text--secondary">or click to browse</span>
-        </p>
-      </div>
+          stroke-width="4"
+        ></circle>
+        <path
+          class="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+        ></path>
+      </svg>
 
-      <div v-else-if="isValidating" class="file-uploader__validating">
-        <svg
-          class="file-uploader__icon file-uploader__icon--spinner"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <circle
-            class="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            stroke-width="4"
-          ></circle>
-          <path
-            class="opacity-75"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-          ></path>
-        </svg>
-        <p class="file-uploader__validating-text">Validating JSON...</p>
-      </div>
+      <svg
+        v-else
+        class="file-uploader__icon file-uploader__icon--success"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+        />
+      </svg>
 
-      <div v-else class="file-uploader__file-info">
-        <svg
-          class="file-uploader__icon file-uploader__icon--success"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-          />
-        </svg>
-        <p class="file-uploader__filename">{{ selectedFile.name }}</p>
-      </div>
-    </div>
-
-    <div
-      v-if="hasError"
-      class="file-uploader__error"
-      data-testid="error-message"
-      role="alert"
-    >
-      <div class="file-uploader__error-header">
-        <svg
-          class="file-uploader__error-icon"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-          />
-        </svg>
+      <span v-if="hasNoError" class="file-uploader__text">
+        {{ label }}
+      </span>
+      <span v-else-if="hasError" class="file-uploader__text">
         <span class="file-uploader__error-type">
           {{ errorType === 'size' ? 'File Size Error' : 'JSON Parsing Error' }}
         </span>
-      </div>
-      <p class="file-uploader__error-message">{{ errorMessage }}</p>
-      <p v-if="selectedFile" class="file-uploader__error-filename">
-        File: {{ selectedFile.name }}
-      </p>
-    </div>
+        <span class="file-uploader__error-message">{{ errorMessage }}</span>
+      </span>
+      <span v-else-if="isValidating" class="file-uploader__text">
+        Validating...
+      </span>
+      <span v-else class="file-uploader__text">
+        <span class="file-uploader__filename">{{ selectedFile.name }}</span>
+        <span class="file-uploader__details"
+          >{{ keyCount }} keys • {{ fileSizeKB }} KB</span
+        >
+      </span>
+    </button>
   </div>
 </template>
 
@@ -294,59 +274,51 @@ const triggerFileInput = () => {
   width: 100%;
 }
 
-.file-uploader__label {
-  display: block;
-  margin-bottom: var(--spacing-sm, 0.5rem);
-  font-weight: 600;
-  color: var(--text-primary, #fff);
-  font-size: 0.875rem;
-}
-
 .file-uploader__input {
   display: none;
 }
 
-.file-uploader__drop-zone {
-  border: 2px dashed var(--border-color, rgba(255, 255, 255, 0.3));
+.file-uploader__button {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm, 0.5rem);
+  width: 100%;
+  padding: var(--spacing-md, 1rem);
+  border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: var(--radius-md, 0.5rem);
-  padding: var(--spacing-xl, 2rem);
-  text-align: center;
+  background: #ffffff;
   cursor: pointer;
   transition: all 0.2s ease;
-  background-color: var(--bg-secondary, rgba(255, 255, 255, 0.05));
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #000;
 }
 
-.file-uploader__drop-zone:hover {
+.file-uploader__button:hover {
   border-color: var(--primary-color, #646cff);
-  background-color: var(--bg-hover, rgba(100, 108, 255, 0.1));
+  background-color: rgba(100, 108, 255, 0.05);
 }
 
-.file-uploader__drop-zone:focus {
+.file-uploader__button:focus {
   outline: 2px solid var(--primary-color, #646cff);
   outline-offset: 2px;
 }
 
-.file-uploader__drop-zone.drag-over {
-  border-color: var(--primary-color, #646cff);
-  background-color: var(--bg-hover, rgba(100, 108, 255, 0.2));
-  transform: scale(1.02);
+.file-uploader__button.has-file {
+  background-color: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
-.file-uploader__drop-zone.has-error {
-  border-color: var(--error-color, #ef4444);
-}
-
-.file-uploader__instructions {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--spacing-md, 1rem);
+.file-uploader__button.has-error {
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
 .file-uploader__icon {
-  width: 48px;
-  height: 48px;
-  color: var(--text-secondary, rgba(255, 255, 255, 0.6));
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: rgba(0, 0, 0, 0.6);
 }
 
 .file-uploader__icon--success {
@@ -354,8 +326,6 @@ const triggerFileInput = () => {
 }
 
 .file-uploader__icon--spinner {
-  width: 48px;
-  height: 48px;
   color: var(--primary-color, #646cff);
   animation: spin 1s linear infinite;
 }
@@ -370,89 +340,48 @@ const triggerFileInput = () => {
 }
 
 .file-uploader__text {
+  flex: 1;
+  text-align: left;
+  color: #000;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xs, 0.25rem);
-  margin: 0;
-}
-
-.file-uploader__text--primary {
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--text-primary, #fff);
-}
-
-.file-uploader__text--secondary {
-  font-size: 0.875rem;
-  color: var(--text-secondary, rgba(255, 255, 255, 0.6));
-}
-
-.file-uploader__validating {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--spacing-sm, 0.5rem);
-}
-
-.file-uploader__validating-text {
-  margin: 0;
-  font-size: 0.875rem;
-  color: var(--text-secondary, rgba(255, 255, 255, 0.6));
-}
-
-.file-uploader__file-info {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--spacing-sm, 0.5rem);
+  gap: 0.25rem;
 }
 
 .file-uploader__filename {
-  margin: 0;
-  font-size: 0.875rem;
   font-weight: 500;
-  color: var(--text-primary, #fff);
-  word-break: break-all;
+  color: var(--success-color, #10b981);
 }
 
-.file-uploader__error {
-  margin-top: var(--spacing-sm, 0.5rem);
-  padding: var(--spacing-md, 1rem);
-  background-color: var(--error-bg, rgba(239, 68, 68, 0.1));
-  border: 1px solid var(--error-color, #ef4444);
-  border-radius: var(--radius-sm, 0.25rem);
+.file-uploader__icon--success {
+  color: var(--success-color, #10b981);
+}
+
+.file-uploader__icon--error {
   color: var(--error-color, #ef4444);
-  font-size: 0.875rem;
 }
 
-.file-uploader__error-header {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs, 0.25rem);
-  margin-bottom: var(--spacing-xs, 0.25rem);
+.file-uploader__icon--spinner {
+  color: var(--primary-color, #646cff);
+  animation: spin 1s linear infinite;
 }
 
-.file-uploader__error-icon {
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
+.file-uploader__details {
+  font-size: 0.75rem;
+  color: rgba(0, 0, 0, 0.6);
+  font-weight: 400;
 }
 
 .file-uploader__error-type {
   font-weight: 600;
   font-size: 0.875rem;
+  color: var(--error-color, #ef4444);
 }
 
 .file-uploader__error-message {
-  margin: var(--spacing-xs, 0.25rem) 0;
-  font-size: 0.875rem;
-  line-height: 1.5;
-}
-
-.file-uploader__error-filename {
-  margin: var(--spacing-xs, 0.25rem) 0 0 0;
   font-size: 0.75rem;
-  opacity: 0.8;
-  font-style: italic;
+  color: var(--error-color, #ef4444);
+  font-weight: 400;
+  line-height: 1.4;
 }
 </style>
