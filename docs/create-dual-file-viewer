@@ -4,7 +4,7 @@ _ made from one or more components
 
 - takes a input 2 json files
 - the keys of the first file is used to build the basic tree structure
-- for each key the values of both of the valuifes of each of the two files
+- for each key the values of both of the values of each of the two files
 - if the value of the second file is different mark it as yellow
 - if a key is missing in the second file made that visible and have a way to add it to the second file.
 - if the first file is missing a key that exists in the second file, show a tempoary key and have a way to add it to the first file.
