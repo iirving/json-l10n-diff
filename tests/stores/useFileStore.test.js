@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { createPinia, setActivePinia } from 'pinia';
-import { useFileStore } from '../../src/stores/useFileStore.js';
+import { useFileStore } from '@/stores/useFileStore.js';
 
 // Mock useJsonDiff composable
-vi.mock('../../src/composables/useJsonDiff.js', () => ({
+vi.mock('@/composables/useJsonDiff.js', () => ({
   useJsonDiff: () => ({
     compareFiles: vi.fn((file1Data, file2Data) => {
       // Simple mock comparison logic

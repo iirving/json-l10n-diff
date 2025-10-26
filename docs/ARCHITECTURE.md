@@ -333,7 +333,7 @@ Download modified JSON
 - **Parsing**: <500ms for 1000-key JSON
 - **Comparison**: <2s for 1000-key diff
 - **Rendering**: <100ms UI response time
-- **File Size**: Support up to 10MB JSON files
+- **File Size**: Support up to 1MB JSON files
 
 ### Optimization Strategies
 
@@ -367,8 +367,8 @@ Since this is a client-side app:
 ```javascript
 // Validate file before processing
 function validateFile(file) {
-  // Check file size (max 10MB)
-  if (file.size > 10 * 1024 * 1024) {
+  // Check file size (max 1MB)
+  if (file.size > 1 * 1024 * 1024) {
     throw new Error('File too large');
   }
 

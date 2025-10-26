@@ -1,0 +1,10 @@
+{
+  "app": {
+    "title": "JSON i18n Diff Tool,
+    "description": "Compare translation files"
+  },
+  "navigation": {
+    "home": "Home",
+    "about": "About"
+  }
+}

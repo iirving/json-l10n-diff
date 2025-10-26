@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { createPinia, setActivePinia } from 'pinia';
-import { useEditStore } from '../../src/stores/useEditStore.js';
+import { useEditStore } from '@/stores/useEditStore.js';
 
 describe('useEditStore', () => {
   let store;

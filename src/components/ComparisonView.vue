@@ -1,15 +1,18 @@
 <script setup>
 /**
- * ComparisonView Component (Placeholder)
+ * ComparisonView Component
  *
- * Purpose: Side-by-side comparison of two JSON files
- * Features (to be implemented):
- * - Two TreeViewer instances side-by-side
- * - Synchronized scrolling
- * - Display diff results with color coding
+ * Purpose: Unified tree comparison of two JSON files
+ * Features:
+ * - Single unified tree with side-by-side values
+ * - DualFileViewer for merged key structure
+ * - Event forwarding and save/prettify functionality
  */
 
-defineProps({
+import DualFileViewer from '@/components/DualFileViewer.vue';
+
+// eslint-disable-next-line no-unused-vars
+const props = defineProps({
   file1: {
     type: Object,
     default: null,
@@ -18,36 +21,98 @@ defineProps({
     type: Object,
     default: null,
   },
-  diffResults: {
-    type: Array,
-    default: () => [],
+  file1Name: {
+    type: String,
+    default: 'File 1',
+  },
+  file2Name: {
+    type: String,
+    default: 'File 2',
   },
 });
 
-defineEmits(['save-requested', 'prettify-requested', 'edit-made']);
+const emit = defineEmits([
+  'add-key-to-file1',
+  'add-key-to-file2',
+  'value-changed',
+  'node-toggled',
+]);
+
+/**
+ * Handle value edit from DualFileViewer
+ * @param {object} editDetails - Edit details from DualFileViewer
+ */
+function handleValueEdited(editDetails) {
+  emit('value-changed', editDetails);
+}
+
+/**
+ * Handle add key request from DualFileViewer
+ * @param {object} addKeyDetails - Add key details
+ */
+function handleAddKeyToFile1(addKeyDetails) {
+  emit('add-key-to-file1', addKeyDetails);
+}
+
+/**
+ * Handle add key request from DualFileViewer
+ * @param {object} addKeyDetails - Add key details
+ */
+function handleAddKeyToFile2(addKeyDetails) {
+  emit('add-key-to-file2', addKeyDetails);
+}
+
+/**
+ * Handle node toggle from DualFileViewer
+ * @param {object} toggleDetails - Toggle details from DualFileViewer
+ */
+function handleNodeToggled(toggleDetails) {
+  // Forward the event (can be used for synchronization features)
+  emit('node-toggled', toggleDetails);
+}
 </script>
 
 <template>
   <div class="comparison-view">
-    <div class="comparison-panel">
-      <div class="comparison-panel-header">File 1</div>
-      <p class="placeholder-note">
-        ComparisonView placeholder - to be implemented in Phase 3
-      </p>
+    <div v-if="!file1 && !file2" class="empty-state">
+      <p>No files loaded</p>
     </div>
-    <div class="comparison-panel">
-      <div class="comparison-panel-header">File 2</div>
-      <p class="placeholder-note">
-        ComparisonView placeholder - to be implemented in Phase 3
-      </p>
+
+    <div v-else class="comparison-container">
+      <DualFileViewer
+        :file1="file1"
+        :file2="file2"
+        :file1-name="file1Name"
+        :file2-name="file2Name"
+        @add-key-to-file1="handleAddKeyToFile1"
+        @add-key-to-file2="handleAddKeyToFile2"
+        @value-changed="handleValueEdited"
+        @node-toggled="handleNodeToggled"
+      />
     </div>
   </div>
 </template>
 
 <style scoped>
-.placeholder-note {
-  font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.5);
-  font-style: italic;
+.comparison-view {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--color-text-muted);
+}
+
+.comparison-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
 }
 </style>

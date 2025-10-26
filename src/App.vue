@@ -10,8 +10,8 @@
  */
 
 import { ref, computed } from 'vue';
-import Index from './pages/Index.vue';
-import About from './pages/About.vue';
+import Index from '@/pages/Index.vue';
+import About from '@/pages/About.vue';
 
 // Simple hash-based routing
 const currentRoute = ref(window.location.hash.slice(1) || '/');

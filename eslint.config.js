@@ -5,7 +5,13 @@ import configPrettier from 'eslint-config-prettier';
 export default [
   // Ignore patterns
   {
-    ignores: ['dist/**', 'coverage/**', 'node_modules/**', '*.config.js'],
+    ignores: [
+      'dist/**',
+      'coverage/**',
+      'node_modules/**',
+      '*.config.js',
+      'data/broken/**',
+    ],
   },
 
   // Vue files

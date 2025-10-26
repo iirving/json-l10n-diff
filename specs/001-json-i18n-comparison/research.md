@@ -88,14 +88,14 @@ TreeViewer (root)
 **Rationale**:
 
 - No dependency needed - File API widely supported
-- Can validate file size before reading (10 MB limit)
+- Can validate file size before reading (1 MB limit)
 - Can provide line-number error messages using JSON.parse error position
 - Drag-and-drop enhances UX without additional libraries
 
 **Validation Flow**:
 
 ```
-1. Check file size <= 10 MB (reject immediately if over)
+1. Check file size <= 1 MB (reject immediately if over)
 2. Check file extension is .json (warn if not, allow override)
 3. Read file content using FileReader API
 4. Parse with JSON.parse wrapped in try-catch
@@ -107,13 +107,13 @@ TreeViewer (root)
 
 **Error Message Examples** (per constitution's specific error requirement):
 
-- "File exceeds 10 MB limit. Current size: 12.3 MB. Please reduce file size."
+- "File exceeds 1 MB limit. Current size: 1.2 MB. Please reduce file size."
 - "Invalid JSON at line 42: Unexpected token '}'. Check for missing comma or bracket."
 - "File exceeds Free tier limit of 20 keys. Current: 35 keys. Upgrade to Medium tier."
 
 **Alternatives Considered**:
 
-- **FileReader with progress events**: Deferred - not needed for <10 MB files
+- **FileReader with progress events**: Deferred - not needed for <1 MB files
 - **Web Workers for parsing**: Deferred - unlikely to block UI for target file sizes
 - **Streaming JSON parser**: Rejected - adds complexity, not needed for size constraints
 
