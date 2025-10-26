@@ -54,11 +54,11 @@ const emit = defineEmits(['toggle', 'add-to-file1', 'add-to-file2']);
 const getRowColor = computed(() => {
   switch (props.node.status) {
     case DIFFERENT:
-      return '#fff9c4'; // Yellow for different values
+      return 'var(--bg-identical-alt)'; // Yellow for different values
     case MISSING_RIGHT:
-      return '#ffebee'; // Light red for missing in file2
+      return 'var(--bg-missing-alt)'; // Light red for missing in file2
     case MISSING_LEFT:
-      return '#e3f2fd'; // Light blue for missing in file1 (temporary)
+      return 'var(--bg-different-alt)'; // Light blue for missing in file1 (temporary)
     default:
       return 'transparent';
   }
@@ -177,7 +177,7 @@ const handleAddToFile2 = () => {
   align-items: center;
   min-height: 28px;
   padding: 0.25rem 0.5rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid var(--border-light);
   transition: background-color 0.2s;
 }
 
@@ -189,7 +189,7 @@ const handleAddToFile2 = () => {
   width: 20px;
   cursor: pointer;
   user-select: none;
-  color: #666;
+  color: var(--color-text-dark-secondary);
   font-size: 0.75rem;
   display: inline-flex;
   align-items: center;
@@ -197,7 +197,7 @@ const handleAddToFile2 = () => {
 }
 
 .expand-icon:hover {
-  color: #000;
+  color: var(--color-text-dark);
 }
 
 .expand-icon-placeholder {
@@ -207,21 +207,21 @@ const handleAddToFile2 = () => {
 
 .node-key {
   font-weight: 600;
-  color: #000000;
+  color: var(--color-text-dark);
   margin-right: 1rem;
   min-width: 150px;
   flex-shrink: 0;
 }
 
 .node-key.temporary {
-  color: #1976d2;
+  color: var(--color-info-alt);
   font-style: italic;
 }
 
 .temporary-badge {
   font-size: 0.75rem;
   font-weight: normal;
-  color: #1976d2;
+  color: var(--color-info-alt);
   margin-left: 0.25rem;
 }
 
@@ -241,27 +241,27 @@ const handleAddToFile2 = () => {
 }
 
 .file1-value {
-  background: rgba(0, 0, 0, 0.02);
+  background: var(--bg-overlay-light);
 }
 
 .file2-value {
-  background: rgba(0, 0, 0, 0.02);
+  background: var(--bg-overlay-light);
 }
 
 .value-cell span {
-  color: #0066cc;
+  color: var(--color-link);
   word-break: break-word;
 }
 
 .missing-indicator {
-  color: rgba(0, 0, 0, 0.3);
+  color: var(--color-text-disabled);
   font-style: italic;
 }
 
 .add-btn {
   padding: 0.125rem 0.5rem;
   font-size: 0.75rem;
-  background: #4caf50;
+  background: var(--color-success-dark);
   color: white;
   border: none;
   border-radius: 0.25rem;
@@ -270,7 +270,7 @@ const handleAddToFile2 = () => {
 }
 
 .add-btn:hover {
-  background: #45a049;
+  background: var(--color-success-darker);
   transform: scale(1.05);
 }
 </style>

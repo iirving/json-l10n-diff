@@ -44,18 +44,7 @@ const expandedNodes = ref(new Set());
 const { compareFiles } = useJsonDiff();
 
 // Check if files are loaded
-const hasFiles = computed(() => {
-  const has = !!(props.file1 || props.file2);
-  console.warn(
-    'DualFileViewer - hasFiles:',
-    has,
-    'file1:',
-    props.file1,
-    'file2:',
-    props.file2
-  );
-  return has;
-});
+const hasFiles = computed(() => !!(props.file1 || props.file2));
 
 // Calculate diff results
 const diffResults = computed(() => {
@@ -266,8 +255,8 @@ defineExpose({
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-dark);
   border-radius: 0.25rem;
 }
 
@@ -276,7 +265,7 @@ defineExpose({
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: rgba(0, 0, 0, 0.4);
+  color: var(--color-text-muted);
 }
 
 .viewer-container {
@@ -287,8 +276,8 @@ defineExpose({
 }
 
 .viewer-header {
-  background: #f5f5f5;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-medium);
   padding: 0.75rem 1rem;
 }
 
@@ -301,15 +290,15 @@ defineExpose({
 .action-btn {
   padding: 0.25rem 0.75rem;
   font-size: 0.875rem;
-  background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-dark);
   border-radius: 0.25rem;
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .action-btn:hover {
-  background: #e8e8e8;
+  background: var(--bg-quaternary);
 }
 
 .file-labels {
@@ -317,14 +306,14 @@ defineExpose({
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
   font-weight: 600;
-  color: #000000;
+  color: var(--color-text-dark);
 }
 
 .label-file1,
 .label-file2 {
   padding: 0.5rem;
-  background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-medium);
   border-radius: 0.25rem;
   text-align: center;
 }

@@ -106,7 +106,7 @@ function handleNodeToggled(toggleDetails) {
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: rgba(0, 0, 0, 0.4);
+  color: var(--color-text-muted);
 }
 
 .comparison-container {

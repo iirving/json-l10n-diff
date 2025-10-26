@@ -4,29 +4,37 @@
  *
  * Purpose: Compare two JSON files side-by-side with unified tree view
  * T021: Integration with Pinia stores and file upload workflow
+ * Uses storeToRefs for cleaner component code
  */
 
-import { computed, ref } from 'vue';
+import { ref, computed } from 'vue';
+import { storeToRefs } from 'pinia';
 import { useFileStore } from '@/stores/useFileStore.js';
 import ComparisonView from '@/components/ComparisonView.vue';
 import FileUploader from '@/components/FileUploader.vue';
 
-// Use Pinia store for file state management
+// Get Pinia store instance
 const fileStore = useFileStore();
+
+// Destructure reactive STATE and GETTERS with storeToRefs
+const { hasFiles } = storeToRefs(fileStore);
+
+// Destructure ACTIONS normally (they don't lose reactivity)
+const { setFile1, setFile2, runComparison, reset } = fileStore;
+
+// Extract just the data from file objects for ComparisonView
+const file1 = computed(() => fileStore.file1?.data || null);
+const file2 = computed(() => fileStore.file2?.data || null);
 
 // Refs to FileUploader components
 const fileUploader1 = ref(null);
 const fileUploader2 = ref(null);
 
-// Computed properties from store
-const file1 = computed(() => fileStore.file1?.data || null);
-const file2 = computed(() => fileStore.file2?.data || null);
-
 /**
  * Clear data - reset store and file uploaders
  */
 const clearData = () => {
-  fileStore.reset();
+  reset();
 
   // Reset both file uploaders if they have the reset method
   if (fileUploader1.value && typeof fileUploader1.value.reset === 'function') {
@@ -42,12 +50,12 @@ const clearData = () => {
  * Sets file in store and triggers comparison if both files loaded
  */
 const handleFile1Loaded = (parsedData) => {
-  fileStore.setFile1(parsedData);
+  setFile1(parsedData);
 
   // Auto-run comparison if both files are now loaded
-  if (fileStore.hasFiles) {
+  if (hasFiles.value) {
     try {
-      fileStore.runComparison();
+      runComparison();
     } catch (error) {
       console.error('Comparison failed:', error);
     }
@@ -58,7 +66,7 @@ const handleFile1Loaded = (parsedData) => {
  * Handle file 1 error
  */
 const handleFile1Error = (errorData) => {
-  fileStore.setFile1(null);
+  setFile1(null);
   console.error('File 1 error:', errorData);
 };
 
@@ -67,12 +75,12 @@ const handleFile1Error = (errorData) => {
  * Sets file in store and triggers comparison if both files loaded
  */
 const handleFile2Loaded = (parsedData) => {
-  fileStore.setFile2(parsedData);
+  setFile2(parsedData);
 
   // Auto-run comparison if both files are now loaded
-  if (fileStore.hasFiles) {
+  if (hasFiles.value) {
     try {
-      fileStore.runComparison();
+      runComparison();
     } catch (error) {
       console.error('Comparison failed:', error);
     }
@@ -83,7 +91,7 @@ const handleFile2Loaded = (parsedData) => {
  * Handle file 2 error
  */
 const handleFile2Error = (errorData) => {
-  fileStore.setFile2(null);
+  setFile2(null);
   console.error('File 2 error:', errorData);
 };
 
@@ -148,19 +156,19 @@ const handleAddKeyToFile2 = ({ keyPath, value }) => {
         <h3>Legend:</h3>
         <div class="legend-items">
           <div class="legend-item">
-            <span class="legend-color" style="background: #fff9c4"></span>
+            <span class="legend-color legend-different"></span>
             <span>Different Values (Yellow)</span>
           </div>
           <div class="legend-item">
-            <span class="legend-color" style="background: #ffebee"></span>
+            <span class="legend-color legend-missing-right"></span>
             <span>Missing in File 2 (Light Red)</span>
           </div>
           <div class="legend-item">
-            <span class="legend-color" style="background: #e3f2fd"></span>
+            <span class="legend-color legend-missing-left"></span>
             <span>Missing in File 1 / Temporary (Light Blue)</span>
           </div>
           <div class="legend-item">
-            <span class="legend-color" style="background: transparent"></span>
+            <span class="legend-color legend-identical"></span>
             <span>Identical Values</span>
           </div>
         </div>
@@ -225,24 +233,20 @@ const handleAddKeyToFile2 = ({ keyPath, value }) => {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #fafafa;
+  background: var(--bg-secondary);
 }
 
 .page-header {
   padding: var(--spacing-xl) var(--spacing-lg);
   text-align: center;
-  background: linear-gradient(
-    135deg,
-    rgba(100, 108, 255, 0.1) 0%,
-    rgba(100, 108, 255, 0.05) 100%
-  );
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  background: var(--gradient-header);
+  border-bottom: 1px solid var(--border-medium);
 }
 
 .page-header h1 {
   margin: 0;
   font-size: 2.5rem;
-  background: linear-gradient(135deg, #646cff 0%, #8b5cf6 100%);
+  background: var(--gradient-primary);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -250,7 +254,7 @@ const handleAddKeyToFile2 = ({ keyPath, value }) => {
 
 .subtitle {
   margin: var(--spacing-sm) 0 0 0;
-  color: rgba(0, 0, 0, 0.6);
+  color: var(--color-text-tertiary);
   font-size: 1.125rem;
 }
 
@@ -275,22 +279,22 @@ const handleAddKeyToFile2 = ({ keyPath, value }) => {
 .control-btn {
   padding: 0.5rem 1rem;
   font-size: 0.875rem;
-  background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-dark);
   border-radius: 0.25rem;
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .control-btn:hover {
-  background: #f5f5f5;
+  background: var(--bg-tertiary);
 }
 
 .upload-section {
-  background: #ffffff;
+  background: var(--bg-primary);
   padding: var(--spacing-md);
   border-radius: 0.5rem;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-medium);
 }
 
 .upload-row {
@@ -315,26 +319,26 @@ const handleAddKeyToFile2 = ({ keyPath, value }) => {
 }
 
 .file-status--success {
-  background-color: rgba(16, 185, 129, 0.1);
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  background-color: var(--bg-success);
+  border: 1px solid var(--border-success);
   flex-direction: column;
   gap: var(--spacing-xs, 0.25rem);
 }
 
 .file-status--error {
-  background-color: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.3);
+  background-color: var(--bg-error);
+  border: 1px solid var(--border-error);
 }
 
 .file-status__icon {
   width: 20px;
   height: 20px;
   flex-shrink: 0;
-  color: var(--success-color, #10b981);
+  color: var(--color-success-alt);
 }
 
 .file-status--error .file-status__icon {
-  color: var(--error-color, #ef4444);
+  color: var(--color-error);
 }
 
 .file-status__info {
@@ -344,27 +348,27 @@ const handleAddKeyToFile2 = ({ keyPath, value }) => {
 .file-status__text {
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--success-color, #10b981);
+  color: var(--color-success-alt);
 }
 
 .file-status--error .file-status__text {
-  color: var(--error-color, #ef4444);
+  color: var(--color-error);
 }
 
 .file-status__details {
   font-size: 0.75rem;
-  color: var(--success-color, #10b981);
+  color: var(--color-success-alt);
 }
 
 .file-status--error .file-status__details {
-  color: var(--error-color, #ef4444);
+  color: var(--color-error);
 }
 
 .legend-section {
-  background: #ffffff;
+  background: var(--bg-primary);
   padding: var(--spacing-md);
   border-radius: 0.5rem;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-medium);
   margin-bottom: var(--spacing-lg);
 }
 
@@ -388,8 +392,24 @@ const handleAddKeyToFile2 = ({ keyPath, value }) => {
 .legend-color {
   width: 32px;
   height: 20px;
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-dark);
   border-radius: 0.25rem;
+}
+
+.legend-different {
+  background: var(--bg-identical-alt);
+}
+
+.legend-missing-right {
+  background: var(--bg-missing-alt);
+}
+
+.legend-missing-left {
+  background: var(--bg-different-alt);
+}
+
+.legend-identical {
+  background: transparent;
 }
 
 .viewer-section {
@@ -398,10 +418,10 @@ const handleAddKeyToFile2 = ({ keyPath, value }) => {
 }
 
 .instructions-section {
-  background: #ffffff;
+  background: var(--bg-primary);
   padding: var(--spacing-md);
   border-radius: 0.5rem;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-medium);
 }
 
 .instructions-section h3 {

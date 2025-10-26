@@ -1,146 +1,187 @@
 import { defineStore } from 'pinia';
+import { ref, computed, shallowRef } from 'vue';
 import { useJsonDiff } from '@/composables/useJsonDiff.js';
 
 /**
  * Pinia store for managing file state and comparison results
  * Handles file1, file2, and their comparison diff results
+ * Uses Composition API setup syntax for better consistency and flexibility
  */
-export const useFileStore = defineStore('file', {
-  state: () => ({
-    /**
-     * First file data and metadata
-     * @type {Object|null}
-     */
-    file1: null,
+export const useFileStore = defineStore('file', () => {
+  // ==========================================
+  // State
+  // ==========================================
 
-    /**
-     * Second file data and metadata
-     * @type {Object|null}
-     */
-    file2: null,
+  /**
+   * First file data and metadata
+   * Using shallowRef for large objects to optimize performance
+   * @type {import('vue').ShallowRef<Object|null>}
+   */
+  const file1 = shallowRef(null);
 
-    /**
-     * Comparison results array
-     * @type {Array<Object>|null}
-     */
-    diffResults: null,
+  /**
+   * Second file data and metadata
+   * Using shallowRef for large objects to optimize performance
+   * @type {import('vue').ShallowRef<Object|null>}
+   */
+  const file2 = shallowRef(null);
 
-    /**
-     * Loading state
-     * @type {boolean}
-     */
-    isLoading: false,
+  /**
+   * Comparison results array
+   * Using shallowRef for large arrays to optimize performance
+   * @type {import('vue').ShallowRef<Array<Object>|null>}
+   */
+  const diffResults = shallowRef(null);
 
-    /**
-     * Error state
-     * @type {string|null}
-     */
-    error: null,
-  }),
+  /**
+   * Loading state
+   * @type {import('vue').Ref<boolean>}
+   */
+  const isLoading = ref(false);
 
-  getters: {
-    /**
-     * Check if both files are loaded
-     * @returns {boolean}
-     */
-    hasFiles: (state) => state.file1 !== null && state.file2 !== null,
+  /**
+   * Error state
+   * @type {import('vue').Ref<string|null>}
+   */
+  const error = ref(null);
 
-    /**
-     * Check if comparison has been run
-     * @returns {boolean}
-     */
-    hasComparison: (state) => state.diffResults !== null,
+  // ==========================================
+  // Getters (Computed)
+  // ==========================================
 
-    /**
-     * Get total keys in file1
-     * @returns {number}
-     */
-    file1KeyCount: (state) => (state.file1 ? state.file1.keyCount || 0 : 0),
+  /**
+   * Check if both files are loaded
+   * @returns {boolean}
+   */
+  const hasFiles = computed(() => file1.value !== null && file2.value !== null);
 
-    /**
-     * Get total keys in file2
-     * @returns {number}
-     */
-    file2KeyCount: (state) => (state.file2 ? state.file2.keyCount || 0 : 0),
-  },
+  /**
+   * Check if comparison has been run
+   * @returns {boolean}
+   */
+  const hasComparison = computed(() => diffResults.value !== null);
 
-  actions: {
-    /**
-     * Set file1 data
-     *
-     * @param {Object} fileData - Parsed file data with metadata
-     * @example
-     * setFile1({ data: {...}, keyCount: 10, fileName: 'en.json' })
-     */
-    setFile1(fileData) {
-      this.file1 = fileData;
-      this.error = null;
-      // Clear diff results when file changes
-      this.diffResults = null;
-    },
+  /**
+   * Get total keys in file1
+   * @returns {number}
+   */
+  const file1KeyCount = computed(() =>
+    file1.value ? file1.value.keyCount || 0 : 0
+  );
 
-    /**
-     * Set file2 data
-     *
-     * @param {Object} fileData - Parsed file data with metadata
-     * @example
-     * setFile2({ data: {...}, keyCount: 15, fileName: 'fr.json' })
-     */
-    setFile2(fileData) {
-      this.file2 = fileData;
-      this.error = null;
-      // Clear diff results when file changes
-      this.diffResults = null;
-    },
+  /**
+   * Get total keys in file2
+   * @returns {number}
+   */
+  const file2KeyCount = computed(() =>
+    file2.value ? file2.value.keyCount || 0 : 0
+  );
 
-    /**
-     * Run comparison between file1 and file2
-     * Uses useJsonDiff composable to generate diff results
-     *
-     * @returns {Array<Object>} Comparison results
-     * @throws {Error} If files are not loaded
-     */
-    runComparison() {
-      if (!this.file1 || !this.file2) {
-        this.error = 'Both files must be loaded before running comparison';
-        throw new Error(this.error);
-      }
+  // ==========================================
+  // Actions (Functions)
+  // ==========================================
 
-      try {
-        this.isLoading = true;
-        this.error = null;
+  /**
+   * Set file1 data
+   *
+   * @param {Object} fileData - Parsed file data with metadata
+   * @example
+   * setFile1({ data: {...}, keyCount: 10, fileName: 'en.json' })
+   */
+  function setFile1(fileData) {
+    file1.value = fileData;
+    error.value = null;
+    // Clear diff results when file changes
+    diffResults.value = null;
+  }
 
-        const { compareFiles } = useJsonDiff();
-        this.diffResults = compareFiles(this.file1.data, this.file2.data);
+  /**
+   * Set file2 data
+   *
+   * @param {Object} fileData - Parsed file data with metadata
+   * @example
+   * setFile2({ data: {...}, keyCount: 15, fileName: 'fr.json' })
+   */
+  function setFile2(fileData) {
+    file2.value = fileData;
+    error.value = null;
+    // Clear diff results when file changes
+    diffResults.value = null;
+  }
 
-        return this.diffResults;
-      } catch (error) {
-        this.error = error.message || 'Failed to run comparison';
-        throw error;
-      } finally {
-        this.isLoading = false;
-      }
-    },
+  /**
+   * Run comparison between file1 and file2
+   * Uses useJsonDiff composable to generate diff results
+   *
+   * @returns {Array<Object>} Comparison results
+   * @throws {Error} If files are not loaded
+   */
+  function runComparison() {
+    if (!file1.value || !file2.value) {
+      error.value = 'Both files must be loaded before running comparison';
+      throw new Error(error.value);
+    }
 
-    /**
-     * Reset all state to initial values
-     * Clears files, comparison results, and errors
-     */
-    reset() {
-      this.file1 = null;
-      this.file2 = null;
-      this.diffResults = null;
-      this.isLoading = false;
-      this.error = null;
-    },
+    try {
+      isLoading.value = true;
+      error.value = null;
 
-    /**
-     * Clear only comparison results
-     * Keeps file data intact
-     */
-    clearComparison() {
-      this.diffResults = null;
-      this.error = null;
-    },
-  },
+      const { compareFiles } = useJsonDiff();
+      diffResults.value = compareFiles(file1.value.data, file2.value.data);
+
+      return diffResults.value;
+    } catch (err) {
+      error.value = err.message || 'Failed to run comparison';
+      throw err;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  /**
+   * Reset all state to initial values
+   * Clears files, comparison results, and errors
+   */
+  function reset() {
+    file1.value = null;
+    file2.value = null;
+    diffResults.value = null;
+    isLoading.value = false;
+    error.value = null;
+  }
+
+  /**
+   * Clear only comparison results
+   * Keeps file data intact
+   */
+  function clearComparison() {
+    diffResults.value = null;
+    error.value = null;
+  }
+
+  // ==========================================
+  // Return public API
+  // ==========================================
+
+  return {
+    // State
+    file1,
+    file2,
+    diffResults,
+    isLoading,
+    error,
+
+    // Getters
+    hasFiles,
+    hasComparison,
+    file1KeyCount,
+    file2KeyCount,
+
+    // Actions
+    setFile1,
+    setFile2,
+    runComparison,
+    reset,
+    clearComparison,
+  };
 });
