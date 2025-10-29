@@ -16,9 +16,10 @@ const languages = {
 };
 
 const switchLanguage = (lang) => {
-  locale.value = lang;
+  const sanitizedLang = sanitizeLocale(lang);
+  locale.value = sanitizedLang;
   // Save to localStorage
-  localStorage.setItem('locale', sanitizeLocale(lang));
+  localStorage.setItem('locale', sanitizedLang);
 };
 </script>
 
