@@ -1,16 +1,18 @@
 import { t } from '@/i18n/index.js';
 import { validateJson } from '@/utils/jsonValidator.js';
 import { countKeys } from '@/utils/keyCounter.js';
+import { sanitizeObjectKeys } from '@/utils/sanitize.js';
 
 /**
  * Composable for parsing and validating JSON files
  * Provides methods to parse files, validate JSON, and extract error information
+ * Includes input sanitization to prevent prototype pollution attacks
  *
  * @returns {Object} JSON parser methods
  */
 export const useJsonParser = () => {
   /**
-   * Parse a file and return its JSON content
+   * Parse a file and return its JSON content with sanitization
    *
    * @param {File} file - The file to parse
    * @returns {Promise<Object>} Parsed JSON object with metadata
@@ -46,7 +48,11 @@ export const useJsonParser = () => {
         }
 
         try {
-          const data = JSON.parse(content);
+          const rawData = JSON.parse(content);
+
+          // Sanitize object keys to prevent prototype pollution
+          const data = sanitizeObjectKeys(rawData);
+
           const keyCount = countKeys(data);
 
           resolve({
