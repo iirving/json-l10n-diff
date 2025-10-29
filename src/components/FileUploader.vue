@@ -99,9 +99,6 @@ const validateFileSize = (file) => {
 const handleFile = async (file) => {
   if (!file) return;
 
-  // Sanitize file name for security
-  const sanitizedFileName = sanitizeFileName(file.name);
-
   // Clear previous error
   errorMessage.value = '';
   errorType.value = '';
@@ -117,8 +114,8 @@ const handleFile = async (file) => {
   isValidating.value = true;
   try {
     const data = await parseFile(file);
-    // Store sanitized file name
-    data.fileName = sanitizedFileName;
+    // Sanitize file name for security after successful parsing
+    data.fileName = sanitizeFileName(data.fileName);
     // File is valid
     parsedData.value = data;
     errorMessage.value = '';
