@@ -8,6 +8,7 @@ import { mount } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
 import ComparisonView from '@/components/ComparisonView.vue';
 import DualFileViewer from '@/components/DualFileViewer.vue';
+import { mockFile1, mockFile2 } from '../fixtures/mockFiles.js';
 
 // Create i18n instance for tests
 const i18n = createI18n({
@@ -29,27 +30,6 @@ const i18n = createI18n({
 
 describe('ComparisonView', () => {
   let wrapper;
-
-  const mockFile1 = {
-    app: {
-      title: 'My App',
-      description: 'A test app',
-    },
-    nav: {
-      home: 'Home',
-    },
-  };
-
-  const mockFile2 = {
-    app: {
-      title: 'Mon App',
-      description: 'Une app de test',
-      welcome: 'Bienvenue',
-    },
-    nav: {
-      home: 'Accueil',
-    },
-  };
 
   // Helper function to mount with i18n
   const mountComparisonView = (options = {}) => {
