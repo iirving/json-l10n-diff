@@ -105,7 +105,7 @@ const handleFile2Error = (errorData) => {
  */
 const handleAddKeyToFile1 = ({ keyPath, value }) => {
   // In a real implementation, this would update the file1 data
-  alert(`Add key "${keyPath}" to File 1 with value: ${JSON.stringify(value)}`);
+  alert(t('actions.addKeyToFile1', { keyPath, value: JSON.stringify(value) }));
 };
 
 /**
@@ -113,7 +113,7 @@ const handleAddKeyToFile1 = ({ keyPath, value }) => {
  */
 const handleAddKeyToFile2 = ({ keyPath, value }) => {
   // In a real implementation, this would update the file2 data
-  alert(`Add key "${keyPath}" to File 2 with value: ${JSON.stringify(value)}`);
+  alert(t('actions.addKeyToFile2', { keyPath, value: JSON.stringify(value) }));
 };
 </script>
 

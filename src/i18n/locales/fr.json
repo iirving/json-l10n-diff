@@ -83,5 +83,17 @@
     "yes": "Oui",
     "no": "Non",
     "ok": "OK"
+  },
+  "actions": {
+    "addKeyToFile1": "Ajouter la clé \"{keyPath}\" au Fichier 1 avec la valeur : {value}",
+    "addKeyToFile2": "Ajouter la clé \"{keyPath}\" au Fichier 2 avec la valeur : {value}"
+  },
+  "errors": {
+    "bothFilesRequired": "Les deux fichiers doivent être chargés avant d'exécuter la comparaison",
+    "invalidFile": "Fichier invalide fourni",
+    "jsonValidationFailed": "Échec de la validation JSON : {error}",
+    "jsonValidationFailedLine": "Échec de la validation JSON : {error} à la ligne {line}",
+    "parseJsonFailed": "Échec de l'analyse JSON : {message}",
+    "readFileFailed": "Échec de la lecture du fichier"
   }
 }

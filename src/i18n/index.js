@@ -23,4 +23,14 @@ const i18n = createI18n({
   globalInjection: true, // Enable global $t() and $tc()
 });
 
+/**
+ * Helper function to get translations outside of components
+ * @param {string} key - Translation key
+ * @param {Object} params - Optional parameters for interpolation
+ * @returns {string} Translated string
+ */
+export const t = (key, params) => {
+  return i18n.global.t(key, params);
+};
+
 export default i18n;

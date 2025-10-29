@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref, computed, shallowRef } from 'vue';
+import { t } from '@/i18n/index.js';
 import { useJsonDiff } from '@/composables/useJsonDiff.js';
 
 /**
@@ -118,7 +119,7 @@ export const useFileStore = defineStore('file', () => {
    */
   function runComparison() {
     if (!file1.value || !file2.value) {
-      error.value = 'Both files must be loaded before running comparison';
+      error.value = t('errors.bothFilesRequired');
       throw new Error(error.value);
     }
 
