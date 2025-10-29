@@ -6,10 +6,14 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
+import { createTestI18n } from '../utils/i18nTestHelper.js';
 import Index from '@/pages/Index.vue';
 import FileUploader from '@/components/FileUploader.vue';
 import ComparisonView from '@/components/ComparisonView.vue';
 import EditControls from '@/components/EditControls.vue';
+
+// Create i18n instance for tests
+const i18n = createTestI18n();
 
 // Mock the file size utility
 vi.mock('@/utils/fileSize.js', () => ({
@@ -48,6 +52,7 @@ describe('Index.vue', () => {
 
     wrapper = mount(Index, {
       global: {
+        plugins: [i18n],
         stubs: {
           FileUploader: true,
           ComparisonView: true,
@@ -765,6 +770,7 @@ describe('Index.vue', () => {
       setActivePinia(createPinia());
       const wrapperWithRealComponents = mount(Index, {
         global: {
+          plugins: [i18n],
           stubs: {
             ComparisonView: true,
             EditControls: true,

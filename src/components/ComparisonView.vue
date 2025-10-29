@@ -7,9 +7,14 @@
  * - Single unified tree with side-by-side values
  * - DualFileViewer for merged key structure
  * - Event forwarding and save/prettify functionality
+ * - Internationalization support
  */
 
+import { useI18n } from 'vue-i18n';
 import DualFileViewer from '@/components/DualFileViewer.vue';
+
+// i18n
+const { t } = useI18n();
 
 // eslint-disable-next-line no-unused-vars
 const props = defineProps({
@@ -75,7 +80,7 @@ function handleNodeToggled(toggleDetails) {
 <template>
   <div class="comparison-view">
     <div v-if="!file1 && !file2" class="empty-state">
-      <p>No files loaded</p>
+      <p>{{ t('comparison.emptyState') }}</p>
     </div>
 
     <div v-else class="comparison-container">

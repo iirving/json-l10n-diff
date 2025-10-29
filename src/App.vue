@@ -7,11 +7,16 @@
  * - Navigation between Index and About pages
  * - Simple hash-based routing (no vue-router dependency)
  * - Responsive navigation bar
+ * - Language switcher for internationalization
  */
 
 import { ref, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import Index from '@/pages/Index.vue';
 import About from '@/pages/About.vue';
+import LanguageSwitcher from '@/components/LanguageSwitcher.vue';
+
+const { t } = useI18n();
 
 // Simple hash-based routing
 const currentRoute = ref(window.location.hash.slice(1) || '/');
@@ -48,7 +53,7 @@ const isActive = (path) => {
     <nav class="main-nav">
       <div class="nav-brand">
         <a href="#/" @click.prevent="navigate('/')">
-          <h1>JSON l10n Diff</h1>
+          <h1>{{ t('app.title') }}</h1>
         </a>
       </div>
       <div class="nav-links">
@@ -57,15 +62,16 @@ const isActive = (path) => {
           :class="{ active: isActive('/') }"
           @click.prevent="navigate('/')"
         >
-          Home
+          {{ t('nav.home') }}
         </a>
         <a
           href="#/about"
           :class="{ active: isActive('/about') }"
           @click.prevent="navigate('/about')"
         >
-          About
+          {{ t('nav.about') }}
         </a>
+        <LanguageSwitcher />
       </div>
     </nav>
 
