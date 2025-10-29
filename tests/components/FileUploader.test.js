@@ -1,25 +1,10 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
+import { createTestI18n } from '../utils/i18nTestHelper.js';
 import FileUploader from '@/components/FileUploader.vue';
 
 // Create i18n instance for tests
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: {
-    en: {
-      upload: {
-        error: 'Error loading file',
-        parseError: 'Failed to parse JSON',
-        keys: 'keys',
-      },
-      common: {
-        loading: 'Loading...',
-      },
-    },
-  },
-});
+const i18n = createTestI18n();
 
 // Mock the useJsonParser composable
 vi.mock('@/composables/useJsonParser.js', () => ({

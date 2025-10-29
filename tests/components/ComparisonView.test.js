@@ -5,28 +5,13 @@
 
 import { describe, it, expect, beforeEach } from 'vitest';
 import { mount } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
+import { createTestI18n } from '../utils/i18nTestHelper.js';
 import ComparisonView from '@/components/ComparisonView.vue';
 import DualFileViewer from '@/components/DualFileViewer.vue';
 import { mockFile1, mockFile2 } from '../fixtures/mockFiles.js';
 
 // Create i18n instance for tests
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: {
-    en: {
-      comparison: {
-        emptyState: 'Upload two JSON files to compare',
-        noResults: 'No comparison results yet',
-      },
-      controls: {
-        expandAll: 'Expand All',
-        collapseAll: 'Collapse All',
-      },
-    },
-  },
-});
+const i18n = createTestI18n();
 
 describe('ComparisonView', () => {
   let wrapper;
