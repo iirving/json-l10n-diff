@@ -7,6 +7,7 @@
  */
 
 import { createI18n } from 'vue-i18n';
+import { mount } from '@vue/test-utils';
 
 /**
  * Default English messages for testing
@@ -219,7 +220,6 @@ export const createMinimalI18n = (messages = {}) => {
  * });
  */
 export const mountWithI18n = (component, options = {}) => {
-  const { mount } = require('@vue/test-utils');
   const i18n = createTestI18n();
 
   return mount(component, {
