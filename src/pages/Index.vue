@@ -5,13 +5,18 @@
  * Purpose: Compare two JSON files side-by-side with unified tree view
  * T021: Integration with Pinia stores and file upload workflow
  * Uses storeToRefs for cleaner component code
+ * Uses vue-i18n for internationalization
  */
 
 import { ref, computed } from 'vue';
 import { storeToRefs } from 'pinia';
+import { useI18n } from 'vue-i18n';
 import { useFileStore } from '@/stores/useFileStore.js';
 import ComparisonView from '@/components/ComparisonView.vue';
 import FileUploader from '@/components/FileUploader.vue';
+
+// i18n
+const { t } = useI18n();
 
 // Get Pinia store instance
 const fileStore = useFileStore();
@@ -100,7 +105,7 @@ const handleFile2Error = (errorData) => {
  */
 const handleAddKeyToFile1 = ({ keyPath, value }) => {
   // In a real implementation, this would update the file1 data
-  alert(`Add key "${keyPath}" to File 1 with value: ${JSON.stringify(value)}`);
+  alert(t('actions.addKeyToFile1', { keyPath, value: JSON.stringify(value) }));
 };
 
 /**
@@ -108,16 +113,16 @@ const handleAddKeyToFile1 = ({ keyPath, value }) => {
  */
 const handleAddKeyToFile2 = ({ keyPath, value }) => {
   // In a real implementation, this would update the file2 data
-  alert(`Add key "${keyPath}" to File 2 with value: ${JSON.stringify(value)}`);
+  alert(t('actions.addKeyToFile2', { keyPath, value: JSON.stringify(value) }));
 };
 </script>
 
 <template>
   <div class="index-page">
     <header class="page-header">
-      <h1>JSON l10n Diff Tool</h1>
+      <h1>{{ t('app.title') }}</h1>
       <p class="subtitle">
-        Side-by-side JSON comparison with unified tree view
+        {{ t('app.subtitle') }}
       </p>
     </header>
 
@@ -125,7 +130,9 @@ const handleAddKeyToFile2 = ({ keyPath, value }) => {
       <!-- Controls -->
       <section class="controls-section">
         <div class="button-group">
-          <button class="control-btn" @click="clearData">Clear All</button>
+          <button class="control-btn" @click="clearData">
+            {{ t('controls.clearAll') }}
+          </button>
         </div>
 
         <div class="upload-section">
@@ -133,7 +140,7 @@ const handleAddKeyToFile2 = ({ keyPath, value }) => {
             <div class="upload-group">
               <FileUploader
                 ref="fileUploader1"
-                label="Upload File 1"
+                :label="t('upload.file1')"
                 @file-loaded="handleFile1Loaded"
                 @file-error="handleFile1Error"
               />
@@ -142,7 +149,7 @@ const handleAddKeyToFile2 = ({ keyPath, value }) => {
             <div class="upload-group">
               <FileUploader
                 ref="fileUploader2"
-                label="Upload File 2"
+                :label="t('upload.file2')"
                 @file-loaded="handleFile2Loaded"
                 @file-error="handleFile2Error"
               />
@@ -153,23 +160,23 @@ const handleAddKeyToFile2 = ({ keyPath, value }) => {
 
       <!-- Legend -->
       <section class="legend-section">
-        <h3>Legend:</h3>
+        <h3>{{ t('legend.title') }}</h3>
         <div class="legend-items">
           <div class="legend-item">
             <span class="legend-color legend-different"></span>
-            <span>Different Values (Yellow)</span>
+            <span>{{ t('legend.different') }}</span>
           </div>
           <div class="legend-item">
             <span class="legend-color legend-missing-right"></span>
-            <span>Missing in File 2 (Light Red)</span>
+            <span>{{ t('legend.missingRight') }}</span>
           </div>
           <div class="legend-item">
             <span class="legend-color legend-missing-left"></span>
-            <span>Missing in File 1 / Temporary (Light Blue)</span>
+            <span>{{ t('legend.missingLeft') }}</span>
           </div>
           <div class="legend-item">
             <span class="legend-color legend-identical"></span>
-            <span>Identical Values</span>
+            <span>{{ t('legend.identical') }}</span>
           </div>
         </div>
       </section>
@@ -188,39 +195,39 @@ const handleAddKeyToFile2 = ({ keyPath, value }) => {
 
       <!-- Instructions -->
       <section class="instructions-section">
-        <h3>Features:</h3>
+        <h3>{{ t('instructions.title') }}</h3>
         <ul>
           <li>
-            <strong>Unified Tree Structure:</strong> Uses File 1's keys as the
-            primary structure
+            <strong>{{ t('instructions.step1Title') }}</strong>
+            {{ t('instructions.step1') }}
           </li>
           <li>
-            <strong>Side-by-side Values:</strong> Shows values from both files
-            for each key
+            <strong>{{ t('instructions.step2Title') }}</strong>
+            {{ t('instructions.step2') }}
           </li>
           <li>
-            <strong>Color-coded Differences:</strong>
+            <strong>{{ t('instructions.step3Title') }}</strong>
             <ul>
-              <li>Yellow highlight = Different values</li>
-              <li>Light red = Missing in File 2</li>
-              <li>Light blue = Missing in File 1 (temporary keys)</li>
+              <li>{{ t('instructions.step3a') }}</li>
+              <li>{{ t('instructions.step3b') }}</li>
+              <li>{{ t('instructions.step3c') }}</li>
             </ul>
           </li>
           <li>
-            <strong>Add Missing Keys:</strong> Click "+ Add" button to add
-            missing keys to either file
+            <strong>{{ t('instructions.step4Title') }}</strong>
+            {{ t('instructions.step4') }}
           </li>
           <li>
-            <strong>Temporary Keys:</strong> Keys that exist in File 2 but not
-            in File 1 are shown with "(temp)" badge
+            <strong>{{ t('instructions.step5Title') }}</strong>
+            {{ t('instructions.step5') }}
           </li>
           <li>
-            <strong>Expand/Collapse:</strong> Click arrows to expand/collapse
-            nested objects
+            <strong>{{ t('instructions.step6Title') }}</strong>
+            {{ t('instructions.step6') }}
           </li>
           <li>
-            <strong>Expand All / Collapse All:</strong> Buttons at the top for
-            bulk operations
+            <strong>{{ t('instructions.step7Title') }}</strong>
+            {{ t('instructions.step7') }}
           </li>
         </ul>
       </section>

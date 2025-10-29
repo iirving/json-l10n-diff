@@ -6,14 +6,21 @@
  * Features:
  * - File input with drag-and-drop support
  * - Size validation (≤10MB)
+ * - Input sanitization for security
  * - Emit file-loaded/file-error events
  * - Visual feedback for drag state and errors
+ * - Internationalization support
  */
 
 import { ref, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useJsonParser } from '@/composables/useJsonParser.js';
 import { MAX_FILE_SIZE, MAX_FILE_SIZE_MB } from '@/constants/fileUpload.js';
 import { bytesToMB, bytesToKB } from '@/utils/fileSize.js';
+import { sanitizeFileName, sanitizeFileSize } from '@/utils/sanitize.js';
+
+// i18n
+const { t } = useI18n();
 
 // eslint-disable-next-line no-unused-vars
 const props = defineProps({
@@ -67,12 +74,15 @@ const keyCount = computed(() => {
 });
 
 /**
- * Validate file size
+ * Validate file size with sanitization
  * @param {File} file - File to validate
  * @returns {boolean} - True if valid, false otherwise
  */
 const validateFileSize = (file) => {
-  if (file.size > MAX_FILE_SIZE) {
+  // Sanitize and validate file size
+  const sizeValidation = sanitizeFileSize(file.size, MAX_FILE_SIZE);
+
+  if (!sizeValidation.valid) {
     const fileSizeMB = bytesToMB(file.size);
     errorMessage.value = `File size (${fileSizeMB}MB) exceeds the maximum allowed size of ${MAX_FILE_SIZE_MB}MB`;
     errorType.value = 'size';
@@ -83,7 +93,7 @@ const validateFileSize = (file) => {
 };
 
 /**
- * Handle file selection/upload
+ * Handle file selection/upload with input sanitization
  * @param {File} file - Selected file
  */
 const handleFile = async (file) => {
@@ -104,6 +114,8 @@ const handleFile = async (file) => {
   isValidating.value = true;
   try {
     const data = await parseFile(file);
+    // Sanitize file name for security after successful parsing
+    data.fileName = sanitizeFileName(data.fileName);
     // File is valid
     parsedData.value = data;
     errorMessage.value = '';
@@ -252,17 +264,19 @@ defineExpose({
       </span>
       <span v-else-if="hasError" class="file-uploader__text">
         <span class="file-uploader__error-type">
-          {{ errorType === 'size' ? 'File Size Error' : 'JSON Parsing Error' }}
+          {{
+            errorType === 'size' ? t('upload.error') : t('upload.parseError')
+          }}
         </span>
         <span class="file-uploader__error-message">{{ errorMessage }}</span>
       </span>
       <span v-else-if="isValidating" class="file-uploader__text">
-        Validating...
+        {{ t('common.loading') }}
       </span>
       <span v-else class="file-uploader__text">
         <span class="file-uploader__filename">{{ selectedFile.name }}</span>
         <span class="file-uploader__details"
-          >{{ keyCount }} keys • {{ fileSizeKB }} KB</span
+          >{{ keyCount }} {{ t('upload.keys') }} • {{ fileSizeKB }} KB</span
         >
       </span>
     </button>

@@ -9,11 +9,16 @@
  * - Highlights differences (yellow for different values)
  * - Shows missing keys with "Add" button
  * - Shows temporary keys from file2 that are missing in file1
+ * - Internationalization support
  */
 
 import { ref, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useJsonDiff } from '@/composables/useJsonDiff.js';
 import DualTreeNode from '@/components/DualTreeNode.vue';
+
+// i18n
+const { t } = useI18n();
 
 const props = defineProps({
   file1: {
@@ -211,19 +216,23 @@ defineExpose({
 <template>
   <div class="dual-file-viewer">
     <div v-if="!hasFiles" class="empty-state">
-      <p>No files loaded</p>
+      <p>{{ t('comparison.emptyState') }}</p>
     </div>
 
     <div v-else-if="treeStructure.length === 0" class="empty-state">
-      <p>No data to display</p>
+      <p>{{ t('comparison.noResults') }}</p>
     </div>
 
     <div v-else class="viewer-container">
       <!-- Header -->
       <div class="viewer-header">
         <div class="header-actions">
-          <button class="action-btn" @click="expandAll">Expand All</button>
-          <button class="action-btn" @click="collapseAll">Collapse All</button>
+          <button class="action-btn" @click="expandAll">
+            {{ t('controls.expandAll') }}
+          </button>
+          <button class="action-btn" @click="collapseAll">
+            {{ t('controls.collapseAll') }}
+          </button>
         </div>
         <div class="file-labels">
           <div class="label-file1">{{ file1Name }}</div>
