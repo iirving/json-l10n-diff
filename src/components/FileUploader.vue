@@ -8,12 +8,17 @@
  * - Size validation (≤10MB)
  * - Emit file-loaded/file-error events
  * - Visual feedback for drag state and errors
+ * - Internationalization support
  */
 
 import { ref, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useJsonParser } from '@/composables/useJsonParser.js';
 import { MAX_FILE_SIZE, MAX_FILE_SIZE_MB } from '@/constants/fileUpload.js';
 import { bytesToMB, bytesToKB } from '@/utils/fileSize.js';
+
+// i18n
+const { t } = useI18n();
 
 // eslint-disable-next-line no-unused-vars
 const props = defineProps({
@@ -252,17 +257,19 @@ defineExpose({
       </span>
       <span v-else-if="hasError" class="file-uploader__text">
         <span class="file-uploader__error-type">
-          {{ errorType === 'size' ? 'File Size Error' : 'JSON Parsing Error' }}
+          {{
+            errorType === 'size' ? t('upload.error') : t('upload.parseError')
+          }}
         </span>
         <span class="file-uploader__error-message">{{ errorMessage }}</span>
       </span>
       <span v-else-if="isValidating" class="file-uploader__text">
-        Validating...
+        {{ t('common.loading') }}
       </span>
       <span v-else class="file-uploader__text">
         <span class="file-uploader__filename">{{ selectedFile.name }}</span>
         <span class="file-uploader__details"
-          >{{ keyCount }} keys • {{ fileSizeKB }} KB</span
+          >{{ keyCount }} {{ t('upload.keys') }} • {{ fileSizeKB }} KB</span
         >
       </span>
     </button>

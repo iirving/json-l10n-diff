@@ -1,6 +1,25 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
+import { createI18n } from 'vue-i18n';
 import FileUploader from '@/components/FileUploader.vue';
+
+// Create i18n instance for tests
+const i18n = createI18n({
+  legacy: false,
+  locale: 'en',
+  messages: {
+    en: {
+      upload: {
+        error: 'Error loading file',
+        parseError: 'Failed to parse JSON',
+        keys: 'keys',
+      },
+      common: {
+        loading: 'Loading...',
+      },
+    },
+  },
+});
 
 // Mock the useJsonParser composable
 vi.mock('@/composables/useJsonParser.js', () => ({
@@ -38,6 +57,9 @@ describe('FileUploader', () => {
 
   beforeEach(() => {
     wrapper = mount(FileUploader, {
+      global: {
+        plugins: [i18n],
+      },
       props: {
         label: 'Upload File 1',
         accept: '.json',
@@ -287,12 +309,15 @@ describe('FileUploader', () => {
       await wrapper.vm.$nextTick();
 
       // Current component displays error inline in the button text
-      expect(wrapper.text()).toContain('File Size Error');
+      expect(wrapper.text()).toContain('Error loading file');
     });
 
     it('should clear error message when valid file is selected', async () => {
       // Create a fresh wrapper for this test to avoid property redefinition issues
       const testWrapper = mount(FileUploader, {
+        global: {
+          plugins: [i18n],
+        },
         props: {
           label: 'Upload File 1',
           accept: '.json',
@@ -316,10 +341,13 @@ describe('FileUploader', () => {
       await input1.trigger('change');
       await testWrapper.vm.$nextTick();
 
-      expect(testWrapper.text()).toContain('File Size Error');
+      expect(testWrapper.text()).toContain('Error loading file');
 
       // Create another fresh wrapper for the second file
       const testWrapper2 = mount(FileUploader, {
+        global: {
+          plugins: [i18n],
+        },
         props: {
           label: 'Upload File 1',
           accept: '.json',
@@ -346,25 +374,36 @@ describe('FileUploader', () => {
       await testWrapper2.vm.$nextTick();
 
       expect(testWrapper2.emitted('file-loaded')).toBeTruthy();
-      expect(testWrapper2.text()).not.toContain('File Size Error');
+      expect(testWrapper2.text()).not.toContain('Error loading file');
       expect(testWrapper2.text()).toContain('valid.json');
     });
   });
 
   describe('component props', () => {
     it('should use default label when not provided', () => {
-      const defaultWrapper = mount(FileUploader);
+      const defaultWrapper = mount(FileUploader, {
+        global: {
+          plugins: [i18n],
+        },
+      });
       expect(defaultWrapper.text()).toContain('Upload JSON File');
     });
 
     it('should use default accept when not provided', () => {
-      const defaultWrapper = mount(FileUploader);
+      const defaultWrapper = mount(FileUploader, {
+        global: {
+          plugins: [i18n],
+        },
+      });
       const input = defaultWrapper.find('input[type="file"]');
       expect(input.attributes('accept')).toBe('.json');
     });
 
     it('should accept custom file types via accept prop', () => {
       const customWrapper = mount(FileUploader, {
+        global: {
+          plugins: [i18n],
+        },
         props: {
           accept: '.json,.txt',
         },
@@ -433,6 +472,9 @@ describe('FileUploader', () => {
     it('should handle error recovery workflow', async () => {
       // Create a fresh wrapper for this test
       const testWrapper = mount(FileUploader, {
+        global: {
+          plugins: [i18n],
+        },
         props: {
           label: 'Upload File 1',
           accept: '.json',
@@ -458,10 +500,13 @@ describe('FileUploader', () => {
 
       expect(testWrapper.emitted('file-error')).toBeTruthy();
       // Current component displays error inline, not in a separate data-testid element
-      expect(testWrapper.text()).toContain('File Size Error');
+      expect(testWrapper.text()).toContain('Error loading file');
 
       // Create another fresh wrapper for the second upload
       const testWrapper2 = mount(FileUploader, {
+        global: {
+          plugins: [i18n],
+        },
         props: {
           label: 'Upload File 1',
           accept: '.json',

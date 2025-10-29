@@ -5,8 +5,27 @@
 
 import { describe, it, expect, beforeEach } from 'vitest';
 import { mount } from '@vue/test-utils';
+import { createI18n } from 'vue-i18n';
 import ComparisonView from '@/components/ComparisonView.vue';
 import DualFileViewer from '@/components/DualFileViewer.vue';
+
+// Create i18n instance for tests
+const i18n = createI18n({
+  legacy: false,
+  locale: 'en',
+  messages: {
+    en: {
+      comparison: {
+        emptyState: 'Upload two JSON files to compare',
+        noResults: 'No comparison results yet',
+      },
+      controls: {
+        expandAll: 'Expand All',
+        collapseAll: 'Collapse All',
+      },
+    },
+  },
+});
 
 describe('ComparisonView', () => {
   let wrapper;
@@ -32,8 +51,22 @@ describe('ComparisonView', () => {
     },
   };
 
+  // Helper function to mount with i18n
+  const mountComparisonView = (options = {}) => {
+    return mount(ComparisonView, {
+      global: {
+        plugins: [i18n],
+        stubs: {
+          DualFileViewer: true,
+        },
+        ...(options.global || {}),
+      },
+      ...options,
+    });
+  };
+
   beforeEach(() => {
-    wrapper = mount(ComparisonView, {
+    wrapper = mountComparisonView({
       props: {
         file1: mockFile1,
         file2: mockFile2,
@@ -63,7 +96,7 @@ describe('ComparisonView', () => {
 
   describe('Empty State', () => {
     it('renders empty state when no files are loaded', () => {
-      const emptyWrapper = mount(ComparisonView, {
+      const emptyWrapper = mountComparisonView({
         props: {
           file1: null,
           file2: null,
@@ -71,12 +104,12 @@ describe('ComparisonView', () => {
       });
       expect(emptyWrapper.find('.empty-state').exists()).toBe(true);
       expect(emptyWrapper.find('.empty-state p').text()).toBe(
-        'No files loaded'
+        'Upload two JSON files to compare'
       );
     });
 
     it('does not render DualFileViewer when no files are loaded', () => {
-      const emptyWrapper = mount(ComparisonView, {
+      const emptyWrapper = mountComparisonView({
         props: {
           file1: null,
           file2: null,
@@ -86,7 +119,7 @@ describe('ComparisonView', () => {
     });
 
     it('renders comparison when only file1 is present', () => {
-      const wrapper1 = mount(ComparisonView, {
+      const wrapper1 = mountComparisonView({
         props: {
           file1: mockFile1,
           file2: null,
@@ -97,7 +130,7 @@ describe('ComparisonView', () => {
     });
 
     it('renders comparison when only file2 is present', () => {
-      const wrapper2 = mount(ComparisonView, {
+      const wrapper2 = mountComparisonView({
         props: {
           file1: null,
           file2: mockFile2,
@@ -126,7 +159,7 @@ describe('ComparisonView', () => {
     });
 
     it('passes custom file names to DualFileViewer', () => {
-      const customWrapper = mount(ComparisonView, {
+      const customWrapper = mountComparisonView({
         props: {
           file1: mockFile1,
           file2: mockFile2,
@@ -243,7 +276,7 @@ describe('ComparisonView', () => {
     });
 
     it('shows comparison when files are added after being null', async () => {
-      const emptyWrapper = mount(ComparisonView, {
+      const emptyWrapper = mountComparisonView({
         props: {
           file1: null,
           file2: null,
@@ -269,7 +302,7 @@ describe('ComparisonView', () => {
     });
 
     it('applies empty-state class when no files', () => {
-      const emptyWrapper = mount(ComparisonView, {
+      const emptyWrapper = mountComparisonView({
         props: {
           file1: null,
           file2: null,
@@ -281,7 +314,7 @@ describe('ComparisonView', () => {
 
   describe('Edge Cases', () => {
     it('handles empty objects as files', () => {
-      const emptyWrapper = mount(ComparisonView, {
+      const emptyWrapper = mountComparisonView({
         props: {
           file1: {},
           file2: {},
@@ -303,7 +336,7 @@ describe('ComparisonView', () => {
           },
         },
       };
-      const deepWrapper = mount(ComparisonView, {
+      const deepWrapper = mountComparisonView({
         props: {
           file1: deepFile,
           file2: deepFile,
@@ -315,7 +348,7 @@ describe('ComparisonView', () => {
     it('handles files with different structures', () => {
       const file1 = { app: { title: 'Title' } };
       const file2 = { settings: { theme: 'dark' } };
-      const diffWrapper = mount(ComparisonView, {
+      const diffWrapper = mountComparisonView({
         props: {
           file1,
           file2,

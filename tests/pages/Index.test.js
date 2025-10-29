@@ -6,10 +6,65 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
+import { createI18n } from 'vue-i18n';
 import Index from '@/pages/Index.vue';
 import FileUploader from '@/components/FileUploader.vue';
 import ComparisonView from '@/components/ComparisonView.vue';
 import EditControls from '@/components/EditControls.vue';
+
+// Create i18n instance for tests
+const i18n = createI18n({
+  legacy: false,
+  locale: 'en',
+  messages: {
+    en: {
+      app: {
+        title: 'JSON l10n Diff Tool',
+        subtitle: 'Side-by-side JSON comparison with unified tree view',
+      },
+      upload: {
+        file1: 'Upload File 1',
+        file2: 'Upload File 2',
+        keys: 'keys',
+      },
+      controls: {
+        clearAll: 'Clear All',
+        expandAll: 'Expand All',
+        collapseAll: 'Collapse All',
+      },
+      legend: {
+        title: 'Legend:',
+        different: 'Different Values (Yellow)',
+        missingRight: 'Missing in File 2 (Light Red)',
+        missingLeft: 'Missing in File 1 / Temporary (Light Blue)',
+        identical: 'Identical Values',
+      },
+      instructions: {
+        title: 'Features:',
+        step1Title: 'Unified Tree Structure:',
+        step1: "Uses File 1's keys as the primary structure",
+        step2Title: 'Side-by-side Values:',
+        step2: 'Shows values from both files for each key',
+        step3Title: 'Color-coded Differences:',
+        step3a: 'Yellow highlight = Different values',
+        step3b: 'Light red = Missing in File 2',
+        step3c: 'Light blue = Missing in File 1 (temporary keys)',
+        step4Title: 'Add Missing Keys:',
+        step4: 'Click "+ Add" button to add missing keys to either file',
+        step5Title: 'Temporary Keys:',
+        step5:
+          'Keys that exist in File 2 but not in File 1 are shown with "(temp)" badge',
+        step6Title: 'Expand/Collapse:',
+        step6: 'Click arrows to expand/collapse nested objects',
+        step7Title: 'Expand All / Collapse All:',
+        step7: 'Buttons at the top for bulk operations',
+      },
+      common: {
+        loading: 'Loading...',
+      },
+    },
+  },
+});
 
 // Mock the file size utility
 vi.mock('@/utils/fileSize.js', () => ({
@@ -48,6 +103,7 @@ describe('Index.vue', () => {
 
     wrapper = mount(Index, {
       global: {
+        plugins: [i18n],
         stubs: {
           FileUploader: true,
           ComparisonView: true,
@@ -765,6 +821,7 @@ describe('Index.vue', () => {
       setActivePinia(createPinia());
       const wrapperWithRealComponents = mount(Index, {
         global: {
+          plugins: [i18n],
           stubs: {
             ComparisonView: true,
             EditControls: true,

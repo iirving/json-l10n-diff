@@ -1,0 +1,87 @@
+{
+  "app": {
+    "title": "JSON l10n Diff Tool",
+    "subtitle": "Side-by-side JSON comparison with unified tree view"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About"
+  },
+  "upload": {
+    "file1": "Upload File 1",
+    "file2": "Upload File 2",
+    "dragDrop": "Drag & drop a JSON file here, or click to select",
+    "selectFile": "Select JSON file",
+    "fileSelected": "File selected",
+    "fileLoaded": "{fileName} ({size} KB, {count} keys)",
+    "keys": "keys",
+    "error": "Error loading file",
+    "maxSize": "File size must be less than {size} MB",
+    "invalidJson": "Invalid JSON file",
+    "parseError": "Failed to parse JSON"
+  },
+  "controls": {
+    "clearAll": "Clear All",
+    "runComparison": "Run Comparison",
+    "expandAll": "Expand All",
+    "collapseAll": "Collapse All"
+  },
+  "legend": {
+    "title": "Legend:",
+    "different": "Different Values (Yellow)",
+    "missingRight": "Missing in File 2 (Light Red)",
+    "missingLeft": "Missing in File 1 / Temporary (Light Blue)",
+    "identical": "Identical Values"
+  },
+  "comparison": {
+    "emptyState": "Upload two JSON files to compare",
+    "noResults": "No comparison results yet"
+  },
+  "instructions": {
+    "title": "Features:",
+    "step1Title": "Unified Tree Structure:",
+    "step1": "Uses File 1's keys as the primary structure",
+    "step2Title": "Side-by-side Values:",
+    "step2": "Shows values from both files for each key",
+    "step3Title": "Color-coded Differences:",
+    "step3a": "Yellow highlight = Different values",
+    "step3b": "Light red = Missing in File 2",
+    "step3c": "Light blue = Missing in File 1 (temporary keys)",
+    "step4Title": "Add Missing Keys:",
+    "step4": "Click \"+ Add\" button to add missing keys to either file",
+    "step5Title": "Temporary Keys:",
+    "step5": "Keys that exist in File 2 but not in File 1 are shown with \"(temp)\" badge",
+    "step6Title": "Expand/Collapse:",
+    "step6": "Click arrows to expand/collapse nested objects",
+    "step7Title": "Expand All / Collapse All:",
+    "step7": "Buttons at the top for bulk operations"
+  },
+  "diff": {
+    "different": "Different",
+    "missing": "Missing",
+    "identical": "Identical",
+    "addToFile1": "Add to File 1",
+    "addToFile2": "Add to File 2"
+  },
+  "about": {
+    "title": "About JSON l10n Diff Tool",
+    "description": "A powerful tool for comparing and analyzing differences between JSON localization files.",
+    "features": "Features",
+    "feature1": "Side-by-side comparison of JSON files",
+    "feature2": "Visual highlighting of differences",
+    "feature3": "Easy identification of missing keys",
+    "feature4": "Support for nested JSON structures",
+    "version": "Version",
+    "license": "License",
+    "author": "Author"
+  },
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK"
+  }
+}
