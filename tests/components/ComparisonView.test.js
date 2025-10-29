@@ -40,27 +40,27 @@ describe('ComparisonView', () => {
   });
 
   describe('Component Rendering', () => {
-    it('renders the comparison view container', () => {
+    it('should render the comparison view container element', () => {
       expect(wrapper.find('.comparison-view').exists()).toBe(true);
     });
 
-    it('renders DualFileViewer component', () => {
+    it('should render DualFileViewer component when files are provided', () => {
       const dualViewer = wrapper.findComponent(DualFileViewer);
       expect(dualViewer.exists()).toBe(true);
     });
 
-    it('renders comparison container when files are present', () => {
+    it('should render comparison container when both files are present', () => {
       const container = wrapper.find('.comparison-container');
       expect(container.exists()).toBe(true);
     });
 
-    it('does not render empty state when files are present', () => {
+    it('should not render empty state message when files are present', () => {
       expect(wrapper.find('.empty-state').exists()).toBe(false);
     });
   });
 
   describe('Empty State', () => {
-    it('renders empty state when no files are loaded', () => {
+    it('should render empty state message when no files are loaded', () => {
       const emptyWrapper = mountComparisonView({
         props: {
           file1: null,
@@ -73,7 +73,7 @@ describe('ComparisonView', () => {
       );
     });
 
-    it('does not render DualFileViewer when no files are loaded', () => {
+    it('should not render DualFileViewer component when no files are loaded', () => {
       const emptyWrapper = mountComparisonView({
         props: {
           file1: null,
@@ -83,7 +83,7 @@ describe('ComparisonView', () => {
       expect(emptyWrapper.findComponent(DualFileViewer).exists()).toBe(false);
     });
 
-    it('renders comparison when only file1 is present', () => {
+    it('should render comparison view when only file1 is present', () => {
       const wrapper1 = mountComparisonView({
         props: {
           file1: mockFile1,
@@ -94,7 +94,7 @@ describe('ComparisonView', () => {
       expect(wrapper1.find('.empty-state').exists()).toBe(false);
     });
 
-    it('renders comparison when only file2 is present', () => {
+    it('should render comparison view when only file2 is present', () => {
       const wrapper2 = mountComparisonView({
         props: {
           file1: null,
@@ -107,23 +107,23 @@ describe('ComparisonView', () => {
   });
 
   describe('Props Handling', () => {
-    it('passes file1 prop to DualFileViewer', () => {
+    it('should pass file1 data as prop to DualFileViewer component', () => {
       const dualViewer = wrapper.findComponent(DualFileViewer);
       expect(dualViewer.props('file1')).toEqual(mockFile1);
     });
 
-    it('passes file2 prop to DualFileViewer', () => {
+    it('should pass file2 data as prop to DualFileViewer component', () => {
       const dualViewer = wrapper.findComponent(DualFileViewer);
       expect(dualViewer.props('file2')).toEqual(mockFile2);
     });
 
-    it('passes default file names to DualFileViewer', () => {
+    it('should pass default file names to DualFileViewer when not specified', () => {
       const dualViewer = wrapper.findComponent(DualFileViewer);
       expect(dualViewer.props('file1Name')).toBe('File 1');
       expect(dualViewer.props('file2Name')).toBe('File 2');
     });
 
-    it('passes custom file names to DualFileViewer', () => {
+    it('should pass custom file names to DualFileViewer when provided as props', () => {
       const customWrapper = mountComparisonView({
         props: {
           file1: mockFile1,
@@ -139,7 +139,7 @@ describe('ComparisonView', () => {
   });
 
   describe('Event Forwarding', () => {
-    it('forwards add-key-to-file1 event from DualFileViewer', async () => {
+    it('should forward add-key-to-file1 event from DualFileViewer to parent', async () => {
       const dualViewer = wrapper.findComponent(DualFileViewer);
       const addKeyDetails = { keyPath: 'app.welcome', value: 'Welcome' };
 
@@ -149,7 +149,7 @@ describe('ComparisonView', () => {
       expect(wrapper.emitted('add-key-to-file1')[0]).toEqual([addKeyDetails]);
     });
 
-    it('forwards add-key-to-file2 event from DualFileViewer', async () => {
+    it('should forward add-key-to-file2 event from DualFileViewer to parent', async () => {
       const dualViewer = wrapper.findComponent(DualFileViewer);
       const addKeyDetails = { keyPath: 'nav.about', value: 'À propos' };
 
@@ -159,7 +159,7 @@ describe('ComparisonView', () => {
       expect(wrapper.emitted('add-key-to-file2')[0]).toEqual([addKeyDetails]);
     });
 
-    it('forwards value-changed event from DualFileViewer', async () => {
+    it('should forward value-changed event from DualFileViewer to parent', async () => {
       const dualViewer = wrapper.findComponent(DualFileViewer);
       const editDetails = {
         keyPath: 'app.title',
@@ -173,7 +173,7 @@ describe('ComparisonView', () => {
       expect(wrapper.emitted('value-changed')[0]).toEqual([editDetails]);
     });
 
-    it('forwards node-toggled event from DualFileViewer', async () => {
+    it('should forward node-toggled event from DualFileViewer to parent', async () => {
       const dualViewer = wrapper.findComponent(DualFileViewer);
       const toggleDetails = { keyPath: 'app', expanded: true };
 
@@ -185,7 +185,7 @@ describe('ComparisonView', () => {
   });
 
   describe('Multiple Event Emissions', () => {
-    it('handles multiple add-key-to-file1 events', async () => {
+    it('should handle multiple add-key-to-file1 events in sequence', async () => {
       const dualViewer = wrapper.findComponent(DualFileViewer);
 
       await dualViewer.vm.$emit('add-key-to-file1', {
@@ -200,7 +200,7 @@ describe('ComparisonView', () => {
       expect(wrapper.emitted('add-key-to-file1')).toHaveLength(2);
     });
 
-    it('handles multiple value-changed events', async () => {
+    it('should handle multiple value-changed events in sequence', async () => {
       const dualViewer = wrapper.findComponent(DualFileViewer);
 
       await dualViewer.vm.$emit('value-changed', {
@@ -217,7 +217,7 @@ describe('ComparisonView', () => {
   });
 
   describe('Props Reactivity', () => {
-    it('updates DualFileViewer when file1 prop changes', async () => {
+    it('should update DualFileViewer when file1 prop changes', async () => {
       const newFile1 = { app: { title: 'New App' } };
       await wrapper.setProps({ file1: newFile1 });
 
@@ -225,7 +225,7 @@ describe('ComparisonView', () => {
       expect(dualViewer.props('file1')).toEqual(newFile1);
     });
 
-    it('updates DualFileViewer when file2 prop changes', async () => {
+    it('should update DualFileViewer when file2 prop changes', async () => {
       const newFile2 = { app: { title: 'Nouvelle App' } };
       await wrapper.setProps({ file2: newFile2 });
 
@@ -233,14 +233,14 @@ describe('ComparisonView', () => {
       expect(dualViewer.props('file2')).toEqual(newFile2);
     });
 
-    it('shows empty state when both files become null', async () => {
+    it('should display empty state when both file props become null', async () => {
       await wrapper.setProps({ file1: null, file2: null });
 
       expect(wrapper.find('.empty-state').exists()).toBe(true);
       expect(wrapper.find('.comparison-container').exists()).toBe(false);
     });
 
-    it('shows comparison when files are added after being null', async () => {
+    it('should display comparison view when files are provided after being null', async () => {
       const emptyWrapper = mountComparisonView({
         props: {
           file1: null,
@@ -256,17 +256,17 @@ describe('ComparisonView', () => {
   });
 
   describe('Styling', () => {
-    it('has correct CSS classes on main container', () => {
+    it('should apply correct CSS class to main container element', () => {
       const mainDiv = wrapper.find('.comparison-view');
       expect(mainDiv.exists()).toBe(true);
     });
 
-    it('has correct CSS classes on comparison container', () => {
+    it('should apply correct CSS class to comparison container element', () => {
       const container = wrapper.find('.comparison-container');
       expect(container.exists()).toBe(true);
     });
 
-    it('applies empty-state class when no files', () => {
+    it('should apply empty-state CSS class when no files are loaded', () => {
       const emptyWrapper = mountComparisonView({
         props: {
           file1: null,
