@@ -6,6 +6,7 @@
  */
 
 import { useI18n } from 'vue-i18n';
+import { sanitizeLocale } from '@/utils/sanitize.js';
 
 const { locale, availableLocales } = useI18n();
 
@@ -17,7 +18,7 @@ const languages = {
 const switchLanguage = (lang) => {
   locale.value = lang;
   // Save to localStorage
-  localStorage.setItem('locale', lang);
+  localStorage.setItem('locale', sanitizeLocale(lang));
 };
 </script>
 
