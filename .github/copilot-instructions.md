@@ -26,7 +26,7 @@ description: GitHub Copilot Guidelines for Vue
 
 - Include test cases for edge cases and error conditions
 
-- Make sure to always use Package.json scripts when running test
+- Make sure to always use package.json scripts when running test
 
 - Check test coverage, write test cases to get at least 80% of coverage
 
@@ -44,15 +44,15 @@ description: GitHub Copilot Guidelines for Vue
 
 - Avoid side effects in functions
 
-- use Prettier for code formatting, make sure new code is formatted according to Prettier rules
-- configure Prettier to use 2 spaces for indentation
-- configure Prettier to use single quotes for strings
-- configure Prettier to add a trailing comma in multi-line objects and arrays
-- configure Prettier to work with eslint
+- Use Prettier for code formatting, make sure new code is formatted according to Prettier rules
+- Configure Prettier to use 2 spaces for indentation
+- Configure Prettier to use single quotes for strings
+- Configure Prettier to add a trailing comma in multi-line objects and arrays
+- Configure Prettier to work with eslint
 
-- use ESLint for code linting, make sure new code follows ESLint rules for Vue3 projects
-- configure ESLint to use the Vue3 recommended ruleset
-- configure ESLint to work with Prettier
+- Use ESLint for code linting, make sure new code follows ESLint rules for Vue3 projects
+- Configure ESLint to use the Vue3 recommended ruleset
+- Configure ESLint to work with Prettier
 
 ## Documentation
 
