@@ -18,6 +18,16 @@ description: GitHub Copilot Guidelines for Vue
 
 - Avoid using lodash package utils, make sure new code is generated using native JS
 
+## File Organization
+
+- **Composables**: Place in `/src/composables` directory - reusable Composition API logic
+- **Stores**: Place in `/src/stores` directory - Pinia state management stores
+- **Pure functions**: Place in `/src/utils` directory - utility functions with no side effects
+- **Pages**: Place in `/src/pages` directory - page-level components (not `/views`)
+- **Components**: Place in `/src/components` directory - reusable Vue components
+- **Constants**: Place in `/src/constants` directory - shared constant values
+- **Internationalization**: Place in `/src/i18n` directory - translation files and i18n setup
+
 ## Testing
 
 - Write unit tests
@@ -45,14 +55,17 @@ description: GitHub Copilot Guidelines for Vue
 - Avoid side effects in functions
 
 - Use Prettier for code formatting, make sure new code is formatted according to Prettier rules
-- Configure Prettier to use 2 spaces for indentation
-- Configure Prettier to use single quotes for strings
-- Configure Prettier to add a trailing comma in multi-line objects and arrays
-- Configure Prettier to work with eslint
+  - Configuration exists in `.prettierrc.json`
+  - Uses 2 spaces for indentation
+  - Uses single quotes for strings
+  - Adds trailing comma in multi-line objects and arrays (es5)
+  - Max line length: 80 characters
 
 - Use ESLint for code linting, make sure new code follows ESLint rules for Vue3 projects
-- Configure ESLint to use the Vue3 recommended ruleset
-- Configure ESLint to work with Prettier
+  - Configuration exists in `eslint.config.js`
+  - Uses the Vue3 recommended ruleset
+  - Integrated with Prettier via `eslint-plugin-prettier`
+  - `prettier/prettier` rule is set to `error`
 
 ## Documentation
 
