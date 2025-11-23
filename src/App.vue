@@ -10,21 +10,22 @@
  * - Language switcher for internationalization
  */
 
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import Index from '@/pages/Index.vue';
 import About from '@/pages/About.vue';
 import LanguageSwitcher from '@/components/LanguageSwitcher.vue';
 
+// Composables
 const { t } = useI18n();
 
-// Simple hash-based routing
+// Reactive state
 const currentRoute = ref(window.location.hash.slice(1) || '/');
 
-// Update route on hash change
-window.addEventListener('hashchange', () => {
+// Methods
+const handleHashChange = () => {
   currentRoute.value = window.location.hash.slice(1) || '/';
-});
+};
 
 // Computed component based on route
 const currentComponent = computed(() => {

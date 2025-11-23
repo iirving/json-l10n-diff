@@ -13,9 +13,7 @@
 import { useI18n } from 'vue-i18n';
 import DualFileViewer from '@/components/DualFileViewer.vue';
 
-// i18n
-const { t } = useI18n();
-
+// Props
 // eslint-disable-next-line no-unused-vars
 const props = defineProps({
   file1: {
@@ -36,12 +34,18 @@ const props = defineProps({
   },
 });
 
+// Emits
 const emit = defineEmits([
   'add-key-to-file1',
   'add-key-to-file2',
   'value-changed',
   'node-toggled',
 ]);
+
+// Composables
+const { t } = useI18n();
+
+// Methods
 
 /**
  * Handle value edit from DualFileViewer

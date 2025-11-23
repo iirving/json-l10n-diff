@@ -7,6 +7,7 @@ import { formatValue } from '@/composables/useValueFormatter.js';
  * Renders a single node in the tree with support for recursion
  */
 
+// Props
 const props = defineProps({
   nodeKey: {
     type: String,
@@ -34,21 +35,24 @@ const props = defineProps({
   },
 });
 
+// Emits
 // eslint-disable-next-line no-unused-vars
 const emit = defineEmits(['value-edited']);
 
-// Inject functions from parent TreeViewer
+// Composables (inject)
 const isExpandedFn = inject('isExpanded', () => false);
 const getDiffStatusFn = inject('getDiffStatus', () => null);
 const toggleNodeFn = inject('toggleNode', () => {});
 
-const isObject = (val) => {
-  return val !== null && typeof val === 'object' && !Array.isArray(val);
-};
-
+// Computed properties
 const isParent = computed(() => isObject(props.value));
 const isExpanded = computed(() => isExpandedFn(props.keyPath));
 const diffStatus = computed(() => getDiffStatusFn(props.keyPath));
+
+// Methods
+const isObject = (val) => {
+  return val !== null && typeof val === 'object' && !Array.isArray(val);
+};
 
 const buildKeyPath = (parentPath, key) => {
   return parentPath ? `${parentPath}.${key}` : key;
