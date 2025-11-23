@@ -10,13 +10,45 @@ description: GitHub Copilot Guidelines for Vue
 
 - Use meaningful variable and function names
 
-- Follow camelCase naming convention for variables and functions
+- Follow naming conventions:
+  - **Variables and functions**: camelCase (`parseFile`, `keyCount`)
+  - **Components**: PascalCase (`FileUploader.vue`, `TreeViewer.vue`)
+  - **Utilities**: camelCase (`jsonValidator.js`, `keyPathUtils.js`)
+  - **Composables**: camelCase with `use` prefix (`useJsonDiff`, `useFileStore`)
+  - **Constants**: UPPER_SNAKE_CASE (`MAX_FILE_SIZE`, `DIFF_STATUS`)
 
 - Add JSDoc comments for functions and classes
 
 - Keep functions small and focused on a single responsibility
 
 - Avoid using lodash package utils, make sure new code is generated using native JS
+
+- Import order:
+  1. Vue imports (`vue`, `vue-router`, `pinia`)
+  2. Third-party libraries (`vue-i18n`)
+  3. Local composables and stores (`@/composables`, `@/stores`)
+  4. Components (`@/components`)
+  5. Utils and constants (`@/utils`, `@/constants`)
+
+- Component structure order in `<script setup>`:
+  1. Imports
+  2. Props definition (`defineProps`)
+  3. Emits definition (`defineEmits`)
+  4. Composables and stores
+  5. Reactive state (`ref`, `reactive`)
+  6. Computed properties
+  7. Methods/functions
+  8. Lifecycle hooks (if any)
+
+## File Organization
+
+- **Composables**: Place in `/src/composables` directory - reusable Composition API logic
+- **Stores**: Place in `/src/stores` directory - Pinia state management stores
+- **Pure functions**: Place in `/src/utils` directory - utility functions with no side effects
+- **Pages**: Place in `/src/pages` directory - page-level components (not `/views`)
+- **Components**: Place in `/src/components` directory - reusable Vue components
+- **Constants**: Place in `/src/constants` directory - shared constant values
+- **Internationalization**: Place in `/src/i18n` directory - translation files and i18n setup
 
 ## Testing
 
@@ -26,9 +58,23 @@ description: GitHub Copilot Guidelines for Vue
 
 - Include test cases for edge cases and error conditions
 
-- Make sure to always use Package.json scripts when running test
+- Make sure to always use package.json scripts when running test
 
 - Check test coverage, write test cases to get at least 80% of coverage
+
+## Internationalization (i18n)
+
+- Always use `useI18n()` composable from vue-i18n in components
+
+- Use the `t()` function for all user-facing text and messages
+
+- Never hardcode user-visible strings in templates or components
+
+- Add new translation keys to locale files in `/src/i18n/locales`
+
+- Use descriptive dot-notation keys (e.g., `errors.invalidFile`, `labels.uploadButton`)
+
+- Provide translations for all supported languages when adding new keys
 
 ## Best Practices
 
@@ -44,15 +90,18 @@ description: GitHub Copilot Guidelines for Vue
 
 - Avoid side effects in functions
 
-- use Prettier for code formatting, make sure new code is formatted according to Prettier rules
-- configure Prettier to use 2 spaces for indentation
-- configure Prettier to use single quotes for strings
-- configure Prettier to add a trailing comma in multi-line objects and arrays
-- configure Prettier to work with eslint
+- Use Prettier for code formatting, make sure new code is formatted according to Prettier rules
+  - Configuration exists in `.prettierrc.json`
+  - Uses 2 spaces for indentation
+  - Uses single quotes for strings
+  - Adds trailing comma in multi-line objects and arrays (es5)
+  - Max line length: 80 characters
 
-- use ESLint for code linting, make sure new code follows ESLint rules for Vue3 projects
-- configure ESLint to use the Vue3 recommended ruleset
-- configure ESLint to work with Prettier
+- Use ESLint for code linting, make sure new code follows ESLint rules for Vue3 projects
+  - Configuration exists in `eslint.config.js`
+  - Uses the Vue3 recommended ruleset
+  - Integrated with Prettier via `eslint-plugin-prettier`
+  - `prettier/prettier` rule is set to `error`
 
 ## Documentation
 

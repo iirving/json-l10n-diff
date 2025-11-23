@@ -15,25 +15,19 @@ import { useFileStore } from '@/stores/useFileStore.js';
 import ComparisonView from '@/components/ComparisonView.vue';
 import FileUploader from '@/components/FileUploader.vue';
 
-// i18n
+// Composables and stores
 const { t } = useI18n();
-
-// Get Pinia store instance
 const fileStore = useFileStore();
-
-// Destructure reactive STATE and GETTERS with storeToRefs
 const { hasFiles } = storeToRefs(fileStore);
-
-// Destructure ACTIONS normally (they don't lose reactivity)
 const { setFile1, setFile2, runComparison, reset } = fileStore;
 
-// Extract just the data from file objects for ComparisonView
-const file1 = computed(() => fileStore.file1?.data || null);
-const file2 = computed(() => fileStore.file2?.data || null);
-
-// Refs to FileUploader components
+// Reactive state
 const fileUploader1 = ref(null);
 const fileUploader2 = ref(null);
+
+// Computed properties
+const file1 = computed(() => fileStore.file1?.data || null);
+const file2 = computed(() => fileStore.file2?.data || null);
 
 /**
  * Clear data - reset store and file uploaders

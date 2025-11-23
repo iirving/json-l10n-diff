@@ -17,9 +17,7 @@ import { useI18n } from 'vue-i18n';
 import { useJsonDiff } from '@/composables/useJsonDiff.js';
 import DualTreeNode from '@/components/DualTreeNode.vue';
 
-// i18n
-const { t } = useI18n();
-
+// Props
 const props = defineProps({
   file1: {
     type: Object,
@@ -39,14 +37,19 @@ const props = defineProps({
   },
 });
 
+// Emits
 const emit = defineEmits([
   'add-key-to-file1',
   'add-key-to-file2',
   'value-changed',
 ]);
 
-const expandedNodes = ref(new Set());
+// Composables
+const { t } = useI18n();
 const { compareFiles } = useJsonDiff();
+
+// Reactive state
+const expandedNodes = ref(new Set());
 
 // Check if files are loaded
 const hasFiles = computed(() => !!(props.file1 || props.file2));
