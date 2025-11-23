@@ -10,13 +10,35 @@ description: GitHub Copilot Guidelines for Vue
 
 - Use meaningful variable and function names
 
-- Follow camelCase naming convention for variables and functions
+- Follow naming conventions:
+  - **Variables and functions**: camelCase (`parseFile`, `keyCount`)
+  - **Components**: PascalCase (`FileUploader.vue`, `TreeViewer.vue`)
+  - **Utilities**: camelCase (`jsonValidator.js`, `keyPathUtils.js`)
+  - **Composables**: camelCase with `use` prefix (`useJsonDiff`, `useFileStore`)
+  - **Constants**: UPPER_SNAKE_CASE (`MAX_FILE_SIZE`, `DIFF_STATUS`)
 
 - Add JSDoc comments for functions and classes
 
 - Keep functions small and focused on a single responsibility
 
 - Avoid using lodash package utils, make sure new code is generated using native JS
+
+- Import order:
+  1. Vue imports (`vue`, `vue-router`, `pinia`)
+  2. Third-party libraries (`vue-i18n`)
+  3. Local composables and stores (`@/composables`, `@/stores`)
+  4. Components (`@/components`)
+  5. Utils and constants (`@/utils`, `@/constants`)
+
+- Component structure order in `<script setup>`:
+  1. Imports
+  2. Props definition (`defineProps`)
+  3. Emits definition (`defineEmits`)
+  4. Composables and stores
+  5. Reactive state (`ref`, `reactive`)
+  6. Computed properties
+  7. Methods/functions
+  8. Lifecycle hooks (if any)
 
 ## File Organization
 
