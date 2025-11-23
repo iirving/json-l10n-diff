@@ -10,7 +10,7 @@
  * - Language switcher for internationalization
  */
 
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import Index from '@/pages/Index.vue';
 import About from '@/pages/About.vue';
@@ -22,10 +22,10 @@ const { t } = useI18n();
 // Reactive state
 const currentRoute = ref(window.location.hash.slice(1) || '/');
 
-// Methods
-const handleHashChange = () => {
+// Update route on hash change
+window.addEventListener('hashchange', () => {
   currentRoute.value = window.location.hash.slice(1) || '/';
-};
+});
 
 // Computed component based on route
 const currentComponent = computed(() => {
