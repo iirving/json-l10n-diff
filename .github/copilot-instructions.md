@@ -40,6 +40,20 @@ description: GitHub Copilot Guidelines for Vue
 
 - Check test coverage, write test cases to get at least 80% of coverage
 
+## Internationalization (i18n)
+
+- Always use `useI18n()` composable from vue-i18n in components
+
+- Use the `t()` function for all user-facing text and messages
+
+- Never hardcode user-visible strings in templates or components
+
+- Add new translation keys to locale files in `/src/i18n/locales`
+
+- Use descriptive dot-notation keys (e.g., `errors.invalidFile`, `labels.uploadButton`)
+
+- Provide translations for all supported languages when adding new keys
+
 ## Best Practices
 
 - Use ES6+ features when appropriate
