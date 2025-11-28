@@ -152,3 +152,111 @@ description: GitHub Copilot Guidelines for Vue
 - Never suggest adding new packages. Ask user to consult architects team first
 
 - All package additions/updates must be approved by the architects team before suggesting them
+
+## Priority Areas (Review These)
+
+### Security & Safety
+
+- XSS vulnerabilities (v-html usage, unsanitized input)
+- CSRF vulnerabilities in API calls
+- Credential exposure or hardcoded secrets
+- Missing input validation on props and user input
+- Improper error handling that could leak sensitive info
+- Unsafe direct DOM manipulation
+
+### Correctness Issues
+
+- Logic errors that could cause incorrect behavior
+- Race conditions in async code (await/promises)
+- Memory leaks (unremoved event listeners, uncleared intervals)
+- Off-by-one errors or boundary conditions
+- Incorrect error propagation (missing try/catch)
+- Reactivity loss (destructuring props without toRefs)
+- Incorrect usage of Vue lifecycle hooks
+- Mutation of props directly
+- Unnecessary watchers or computed properties with side effects
+
+### Architecture & Patterns
+
+- Code that violates existing patterns in the codebase
+- Missing error handling
+- Async/await misuse or blocking operations
+- Improper component composition
+- State management anti-patterns (modifying store state outside actions)
+- Props drilling (should use Provide/Inject or Pinia)
+
+- Logic errors that could cause panics or incorrect behavior
+- Race conditions in async code
+- Resource leaks (files, connections, memory)
+- Off-by-one errors or boundary conditions
+- Incorrect error propagation (using `unwrap()` inappropriately)
+- Optional types that don’t need to be optional
+- Booleans that should default to false but are set as optional
+- Error context that doesn’t add useful information
+- Overly defensive code with unnecessary checks
+- Unnecessary comments that restate obvious code behavior
+
+### Architecture & Patterns
+
+- Code that violates existing patterns in the codebase
+- Missing error handling (should use `anyhow::Result`)
+- Async/await misuse or blocking operations in async contexts
+- Improper trait implementations
+
+## CI Pipeline Context
+
+**Important**: You review PRs immediately, before CI completes. Do not flag issues that CI will catch.
+
+CI runs the following checks:
+
+- ESLint
+- Prettier
+- Vitest with coverage threshold of 80%
+<!-- - TypeScript type checking -->
+- Security scan with `npm audit`
+- Dependency freshness check with `npm outdated`
+- Build verification with `npm run build`
+- i18n key presence check with custom script
+- GitHub Actions workflow validation
+- Commit message linting with `commitlint`
+  <!-- - Changelog presence check with custom script -->
+  <!-- - PR size limit check (max 500 lines changed) -->
+  <!-- - Snapshot testing with Vitest -->
+- Dead code detection with `eslint-plugin-unused-imports`
+<!-- - Accessibility checks with `axe-core` in Storybook -->
+- Performance budget checks with `lighthouse-ci`
+  <!-- - Type coverage check with `tsc --noEmit` -->
+  <!-- - License compliance check with `license-checker` -->
+  <!-- - Bundle size analysis with `webpack-bundle-analyzer` -->
+- Environment variable usage check with custom script
+  <!-- - Dockerfile best practices check with `hadolint` -->
+  <!-- - API contract tests with `pact` -->
+  <!-- - Storybook build verification with `build-storybook` -->
+
+## Skip These (Low Value)
+
+Do not comment on:
+
+- Style/formatting (rustfmt, prettier)
+- Clippy warnings
+- Test failures
+- Missing dependencies (npm ci covers this)
+- Minor naming suggestions
+- Suggestions to add comments
+- Refactoring unless addressing a real bug
+- Multiple issues in one comment
+- Logging suggestions unless security-related
+- Pedantic text accuracy unless it affects meaning
+
+## Response Format
+
+1. State the problem (1 sentence)
+2. Why it matters (1 sentence, if needed)
+3. Suggested fix (snippet or specific action)
+4. Reference relevant guideline section (if applicable)
+
+## Reminder
+
+- Always follow these guidelines when generating or reviewing code
+- Prioritize correctness, security, and maintainability
+- Keep responses concise and focused on high-impact issues
