@@ -19,9 +19,7 @@ import { MAX_FILE_SIZE, MAX_FILE_SIZE_MB } from '@/constants/fileUpload.js';
 import { bytesToMB, bytesToKB } from '@/utils/fileSize.js';
 import { sanitizeFileName, sanitizeFileSize } from '@/utils/sanitize.js';
 
-// i18n
-const { t } = useI18n();
-
+// Props
 // eslint-disable-next-line no-unused-vars
 const props = defineProps({
   label: {
@@ -34,11 +32,14 @@ const props = defineProps({
   },
 });
 
+// Emits
 const emit = defineEmits(['file-loaded', 'file-error']);
 
-// JSON Parser
+// Composables
+const { t } = useI18n();
 const { parseFile } = useJsonParser();
 
+// Methods (functions needed during initialization)
 /**
  * Generate a unique file input ID
  * @returns {string} - Unique ID string
@@ -47,7 +48,7 @@ const generateFileInputId = () => {
   return `file-input-${Math.random().toString(36).substring(2, 11)}`;
 };
 
-// State
+// Reactive state
 const selectedFile = ref(null);
 const parsedData = ref(null);
 const errorMessage = ref('');
@@ -55,14 +56,13 @@ const errorType = ref(''); // 'size', 'parse', or ''
 const fileInputId = ref(generateFileInputId());
 const isValidating = ref(false);
 
-// Computed
+// Computed properties
 const hasError = computed(() => !!errorMessage.value);
 const hasFile = computed(() => !!selectedFile.value && !hasError.value);
 const hasNoError = computed(
   () => !hasFile.value && !isValidating.value && !hasError.value
 );
 
-// Computed for file info display
 const fileSizeKB = computed(() => {
   if (!parsedData.value) return 0;
   return bytesToKB(parsedData.value.fileSize, 1);
@@ -72,6 +72,8 @@ const keyCount = computed(() => {
   if (!parsedData.value) return 0;
   return parsedData.value.keyCount || 0;
 });
+
+// Methods
 
 /**
  * Validate file size with sanitization
