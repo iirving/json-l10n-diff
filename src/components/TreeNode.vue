@@ -44,15 +44,15 @@ const isExpandedFn = inject('isExpanded', () => false);
 const getDiffStatusFn = inject('getDiffStatus', () => null);
 const toggleNodeFn = inject('toggleNode', () => {});
 
+// Methods (needed for computed properties)
+const isObject = (val) => {
+  return val !== null && typeof val === 'object' && !Array.isArray(val);
+};
+
 // Computed properties
 const isParent = computed(() => isObject(props.value));
 const isExpanded = computed(() => isExpandedFn(props.keyPath));
 const diffStatus = computed(() => getDiffStatusFn(props.keyPath));
-
-// Methods
-const isObject = (val) => {
-  return val !== null && typeof val === 'object' && !Array.isArray(val);
-};
 
 const buildKeyPath = (parentPath, key) => {
   return parentPath ? `${parentPath}.${key}` : key;
