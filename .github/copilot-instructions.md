@@ -123,7 +123,7 @@ description: GitHub Copilot Guidelines for Vue
 
 - Create reusable composables for shared logic (e.g., `useFetch`, `useJsonDiff`)
 
-- Use `watch` and `watchEffect` with precise dependency lists
+- For `watch`, dependencies are tracked automatically when using a getter function; only specify dependency arrays when using the array source form. `watchEffect` always tracks dependencies automatically.
 
 - Cleanup side effects in `onUnmounted` or `watch` cleanup callbacks
 
