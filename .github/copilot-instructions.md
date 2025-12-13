@@ -52,15 +52,21 @@ description: GitHub Copilot Guidelines for Vue
 
 ## Testing
 
-- Write unit tests
+- Write unit tests using Vitest with Vue Test Utils
 
-- Use Vitest for testing
+- Focus on testing behavior, not implementation details
+
+- Use `mount` for full component testing, `shallowMount` for isolation
+
+- Mock global plugins (router, Pinia stores) as needed
 
 - Include test cases for edge cases and error conditions
 
-- Make sure to always use package.json scripts when running test
+- Make sure to always use package.json scripts when running tests
 
-- Check test coverage, write test cases to get at least 80% of coverage
+- Check test coverage, write test cases to get at least 80% coverage
+
+- Test accessibility using axe-core integration where applicable
 
 ## Internationalization (i18n)
 
@@ -113,6 +119,32 @@ description: GitHub Copilot Guidelines for Vue
 
 - Explain any non-obvious implementations
 
+## Composition API Patterns
+
+- Create reusable composables for shared logic (e.g., `useFetch`, `useJsonDiff`)
+
+- For `watch`, dependencies are tracked automatically when using a getter function; only specify dependency arrays when using the array source form. `watchEffect` always tracks dependencies automatically.
+
+- Cleanup side effects in `onUnmounted` or `watch` cleanup callbacks
+
+- Use `provide`/`inject` sparingly for deep dependency injection
+
+- Prefer `computed` over watchers where possible to avoid unnecessary reactivity
+
+## State Management (Pinia)
+
+- Define stores with `defineStore` using Composition API syntax
+
+- Use `storeToRefs` when destructuring reactive state from stores
+
+- Keep state normalized for complex data structures
+
+- Use actions for asynchronous logic; keep getters pure
+
+- Do not modify store state outside of actions
+
+- Use `computed` for derived state in components
+
 ## Performance
 
 - Avoid nested loops when possible
@@ -122,6 +154,14 @@ description: GitHub Copilot Guidelines for Vue
 - Consider time complexity of operations
 
 - Cache repeated calculations
+
+- Use `v-once` for static content that never changes
+
+- Use `v-memo` for infrequently changing elements in lists
+
+- Lazy-load components with `defineAsyncComponent` for code splitting
+
+- Profile with Vue DevTools Performance tab when debugging
 
 ## Error Handling
 
@@ -143,6 +183,20 @@ description: GitHub Copilot Guidelines for Vue
 
 - Add proper changelog entries
 
+## Accessibility
+
+- Use semantic HTML elements (`<button>`, `<nav>`, `<main>`) over generic `<div>`
+
+- Add ARIA attributes where semantic HTML is insufficient
+
+- Manage focus for modals and dynamic content (`focus()` on open)
+
+- Provide keyboard navigation for all interactive components
+
+- Ensure color contrast meets WCAG AA standards
+
+- Add meaningful `alt` text for images and `aria-label` for icon buttons
+
 ## Dependencies
 
 - Never install or uninstall packages - this must be done by the user themselves
@@ -157,9 +211,12 @@ description: GitHub Copilot Guidelines for Vue
 
 ### Security & Safety
 
-- XSS vulnerabilities (v-html usage, unsanitized input)
+- Sanitize any HTML inputs rigorously if unavoidable
+- XSS vulnerabilities from unsanitized user input
 - CSRF vulnerabilities in API calls
+- Use HTTPS for all API requests
 - Credential exposure or hardcoded secrets
+- Prefer storing sensitive tokens in HTTP-only cookies when possible (e.g., for session tokens), but recognize that for SPAs using stateless JWT authentication, localStorage or sessionStorage may be necessary for authorization headers. Choose the storage mechanism based on your authentication architecture and security requirements.
 - Missing input validation on props and user input
 - Improper error handling that could leak sensitive info
 - Unsafe direct DOM manipulation
@@ -184,24 +241,9 @@ description: GitHub Copilot Guidelines for Vue
 - Improper component composition
 - State management anti-patterns (modifying store state outside actions)
 - Props drilling (should use Provide/Inject or Pinia)
-
-- Logic errors that could cause panics or incorrect behavior
-- Race conditions in async code
-- Resource leaks (files, connections, memory)
-- Off-by-one errors or boundary conditions
-- Incorrect error propagation (using `unwrap()` inappropriately)
-- Optional types that don’t need to be optional
-- Booleans that should default to false but are set as optional
-- Error context that doesn’t add useful information
+- Resource leaks (unremoved event listeners, uncleared intervals)
 - Overly defensive code with unnecessary checks
 - Unnecessary comments that restate obvious code behavior
-
-### Architecture & Patterns
-
-- Code that violates existing patterns in the codebase
-- Missing error handling (should use `anyhow::Result`)
-- Async/await misuse or blocking operations in async contexts
-- Improper trait implementations
 
 ## CI Pipeline Context
 
@@ -237,9 +279,7 @@ CI runs the following checks:
 
 Do not comment on:
 
-- Style/formatting (rustfmt, prettier)
-- Clippy warnings
-- Test failures
+- Style/formatting (handled by Prettier)
 - Missing dependencies (npm ci covers this)
 - Minor naming suggestions
 - Suggestions to add comments
