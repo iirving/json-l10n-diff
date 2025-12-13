@@ -216,7 +216,7 @@ description: GitHub Copilot Guidelines for Vue
 - CSRF vulnerabilities in API calls
 - Use HTTPS for all API requests
 - Credential exposure or hardcoded secrets
-- Store sensitive tokens in HTTP-only cookies, not localStorage
+- Prefer storing sensitive tokens in HTTP-only cookies when possible (e.g., for session tokens), but recognize that for SPAs using stateless JWT authentication, localStorage or sessionStorage may be necessary for authorization headers. Choose the storage mechanism based on your authentication architecture and security requirements.
 - Missing input validation on props and user input
 - Improper error handling that could leak sensitive info
 - Unsafe direct DOM manipulation
