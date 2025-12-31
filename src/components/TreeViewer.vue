@@ -13,6 +13,7 @@ import TreeNode from '@/components/TreeNode.vue';
  * - scrollToKey, expandAll, collapseAll methods
  */
 
+// Props
 const props = defineProps({
   content: {
     type: Object,
@@ -37,12 +38,13 @@ const props = defineProps({
   },
 });
 
+// Emits
 const emit = defineEmits(['node-toggled', 'value-edited']);
 
-// Track which nodes are expanded
+// Reactive state
 const expandedNodes = ref(new Set());
 
-// Build a map of keyPath to diff status for quick lookups
+// Computed properties
 const diffStatusMap = computed(() => {
   const map = new Map();
   props.diffResults.forEach((result) => {
@@ -51,6 +53,7 @@ const diffStatusMap = computed(() => {
   return map;
 });
 
+// Methods
 /**
  * Check if a node is expanded
  */
@@ -137,7 +140,7 @@ provide('isExpanded', isExpanded);
 provide('getDiffStatus', getDiffStatus);
 provide('toggleNode', toggleNode);
 
-// Initialize expanded state based on defaultExpanded prop
+// Lifecycle hooks
 onMounted(() => {
   if (props.defaultExpanded) {
     expandAll();

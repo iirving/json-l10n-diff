@@ -16,9 +16,10 @@ import Index from '@/pages/Index.vue';
 import About from '@/pages/About.vue';
 import LanguageSwitcher from '@/components/LanguageSwitcher.vue';
 
+// Composables
 const { t } = useI18n();
 
-// Simple hash-based routing
+// Reactive state
 const currentRoute = ref(window.location.hash.slice(1) || '/');
 
 // Update route on hash change
