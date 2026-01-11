@@ -314,7 +314,7 @@ const fetchData = async () => {
 
 ```javascript
 const store = useMyStore();
-const computed = computed(() => {
+const activeItems = computed(() => {
   return store.items.filter((item) => item.active);
 });
 ```
