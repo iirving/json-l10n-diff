@@ -84,6 +84,15 @@
     "no": "Non",
     "ok": "OK"
   },
+  "editControls": {
+    "save": "Enregistrer {fileName}",
+    "saveAriaLabel": "Enregistrer les modifications de {fileName}",
+    "prettify": "Formater",
+    "prettifyAriaLabel": "Formater le JSON avec une indentation de {spaces} espaces",
+    "reset": "Réinitialiser",
+    "resetAriaLabel": "Annuler toutes les modifications et restaurer le fichier original",
+    "unsavedChanges": "Vous avez des modifications non enregistrées"
+  },
   "actions": {
     "addKeyToFile1": "Ajouter la clé \"{keyPath}\" au Fichier 1 avec la valeur : {value}",
     "addKeyToFile2": "Ajouter la clé \"{keyPath}\" au Fichier 2 avec la valeur : {value}"

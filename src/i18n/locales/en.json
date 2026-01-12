@@ -84,6 +84,15 @@
     "no": "No",
     "ok": "OK"
   },
+  "editControls": {
+    "save": "Save {fileName}",
+    "saveAriaLabel": "Save changes to {fileName}",
+    "prettify": "Prettify",
+    "prettifyAriaLabel": "Format JSON with {spaces}-space indentation",
+    "reset": "Reset",
+    "resetAriaLabel": "Discard all changes and restore original file",
+    "unsavedChanges": "You have unsaved changes"
+  },
   "actions": {
     "addKeyToFile1": "Add key \"{keyPath}\" to File 1 with value: {value}",
     "addKeyToFile2": "Add key \"{keyPath}\" to File 2 with value: {value}"
