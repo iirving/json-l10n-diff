@@ -1,0 +1,108 @@
+{
+  "app": {
+    "title": "JSON l10n Diff Tool",
+    "subtitle": "Comparaison JSON côte à côte avec vue arborescente unifiée"
+  },
+  "nav": {
+    "home": "Accueil",
+    "about": "À propos"
+  },
+  "upload": {
+    "file1": "Télécharger Fichier 1",
+    "file2": "Télécharger Fichier 2",
+    "dragDrop": "Glissez-déposez un fichier JSON ici, ou cliquez pour sélectionner",
+    "selectFile": "Sélectionner un fichier JSON",
+    "fileSelected": "Fichier sélectionné",
+    "fileLoaded": "{fileName} ({size} Ko, {count} clés)",
+    "keys": "clés",
+    "error": "Erreur lors du chargement du fichier",
+    "maxSize": "La taille du fichier doit être inférieure à {size} Mo",
+    "invalidJson": "Fichier JSON invalide",
+    "parseError": "Échec de l'analyse JSON"
+  },
+  "controls": {
+    "clearAll": "Tout effacer",
+    "runComparison": "Exécuter la comparaison",
+    "expandAll": "Tout développer",
+    "collapseAll": "Tout réduire"
+  },
+  "legend": {
+    "title": "Légende :",
+    "different": "Valeurs Différentes (Jaune)",
+    "missingRight": "Manquant dans Fichier 2 (Rouge Clair)",
+    "missingLeft": "Manquant dans Fichier 1 / Temporaire (Bleu Clair)",
+    "identical": "Valeurs Identiques"
+  },
+  "comparison": {
+    "emptyState": "Téléchargez deux fichiers JSON à comparer",
+    "noResults": "Aucun résultat de comparaison pour le moment"
+  },
+  "instructions": {
+    "title": "Fonctionnalités :",
+    "step1Title": "Structure Arborescente Unifiée :",
+    "step1": "Utilise les clés du Fichier 1 comme structure principale",
+    "step2Title": "Valeurs Côte à Côte :",
+    "step2": "Affiche les valeurs des deux fichiers pour chaque clé",
+    "step3Title": "Différences Codées par Couleur :",
+    "step3a": "Surbrillance jaune = Valeurs différentes",
+    "step3b": "Rouge clair = Manquant dans Fichier 2",
+    "step3c": "Bleu clair = Manquant dans Fichier 1 (clés temporaires)",
+    "step4Title": "Ajouter des Clés Manquantes :",
+    "step4": "Cliquez sur le bouton \"+ Ajouter\" pour ajouter des clés manquantes à l'un ou l'autre fichier",
+    "step5Title": "Clés Temporaires :",
+    "step5": "Les clés qui existent dans le Fichier 2 mais pas dans le Fichier 1 sont affichées avec le badge \"(temp)\"",
+    "step6Title": "Développer/Réduire :",
+    "step6": "Cliquez sur les flèches pour développer/réduire les objets imbriqués",
+    "step7Title": "Tout Développer / Tout Réduire :",
+    "step7": "Boutons en haut pour les opérations groupées"
+  },
+  "diff": {
+    "different": "Différent",
+    "missing": "Manquant",
+    "identical": "Identique",
+    "addToFile1": "Ajouter au fichier 1",
+    "addToFile2": "Ajouter au fichier 2"
+  },
+  "about": {
+    "title": "À propos de l'outil de comparaison JSON l10n",
+    "description": "Un outil puissant pour comparer et analyser les différences entre les fichiers de localisation JSON.",
+    "features": "Fonctionnalités",
+    "feature1": "Comparaison côte à côte des fichiers JSON",
+    "feature2": "Mise en évidence visuelle des différences",
+    "feature3": "Identification facile des clés manquantes",
+    "feature4": "Support des structures JSON imbriquées",
+    "version": "Version",
+    "license": "Licence",
+    "author": "Auteur"
+  },
+  "common": {
+    "loading": "Chargement...",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "close": "Fermer",
+    "yes": "Oui",
+    "no": "Non",
+    "ok": "OK"
+  },
+  "editControls": {
+    "save": "Enregistrer {fileName}",
+    "saveAriaLabel": "Enregistrer les modifications de {fileName}",
+    "prettify": "Formater",
+    "prettifyAriaLabel": "Formater le JSON avec une indentation de 2 espaces",
+    "reset": "Réinitialiser",
+    "resetAriaLabel": "Annuler toutes les modifications et restaurer le fichier original",
+    "unsavedChanges": "Vous avez des modifications non enregistrées"
+  },
+  "actions": {
+    "addKeyToFile1": "Ajouter la clé \"{keyPath}\" au Fichier 1 avec la valeur : {value}",
+    "addKeyToFile2": "Ajouter la clé \"{keyPath}\" au Fichier 2 avec la valeur : {value}"
+  },
+  "errors": {
+    "bothFilesRequired": "Les deux fichiers doivent être chargés avant d'exécuter la comparaison",
+    "invalidFile": "Fichier invalide fourni",
+    "jsonValidationFailed": "Échec de la validation JSON : {error}",
+    "jsonValidationFailedLine": "Échec de la validation JSON : {error} à la ligne {line}",
+    "parseJsonFailed": "Échec de l'analyse JSON : {message}",
+    "readFileFailed": "Échec de la lecture du fichier"
+  }
+}
