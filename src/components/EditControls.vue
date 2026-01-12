@@ -24,6 +24,8 @@
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
+const PRETTIFY_SPACES = 2;
+
 /**
  * @typedef {Object} JsonFile
  * @property {string} name - File name
@@ -147,8 +149,8 @@ const handleReset = () => {
         </span>
       </button>
 
-      <button v-if="showPrettify" type="button" class="btn btn--prettify" :disabled="isPrettifyDisabled"
-        :aria-label="t('editControls.prettifyAriaLabel')" @click="handlePrettify">
+      <button v-if="showPrettify" type="button" class="btn btn--prettify" :disabled="isPrettifyDisabled" :aria-label="t('editControls.prettifyAriaLabel', { spaces: PRETTIFY_SPACES })
+        " @click="handlePrettify">
         <span class="btn__icon" aria-hidden="true">✨</span>
         <span class="btn__text">{{ t('editControls.prettify') }}</span>
       </button>
