@@ -1,6 +1,6 @@
 {
   "app": {
-    "title": "Outil de Comparaison JSON l10n",
+    "title": "JSON l10n Diff Tool",
     "subtitle": "Comparaison JSON côte à côte avec vue arborescente unifiée"
   },
   "nav": {
@@ -88,7 +88,7 @@
     "save": "Enregistrer {fileName}",
     "saveAriaLabel": "Enregistrer les modifications de {fileName}",
     "prettify": "Formater",
-    "prettifyAriaLabel": "Formater le JSON avec une indentation de {spaces} espaces",
+    "prettifyAriaLabel": "Formater le JSON avec une indentation de 2 espaces",
     "reset": "Réinitialiser",
     "resetAriaLabel": "Annuler toutes les modifications et restaurer le fichier original",
     "unsavedChanges": "Vous avez des modifications non enregistrées"
