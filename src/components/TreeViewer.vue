@@ -90,6 +90,20 @@ const isObject = (value) => {
 };
 
 /**
+ * Check if a value is an array
+ */
+const isArray = (value) => {
+  return Array.isArray(value);
+};
+
+/**
+ * Check if a value is a parent node (object or array)
+ */
+const isParent = (value) => {
+  return isObject(value) || isArray(value);
+};
+
+/**
  * Build key path from parent and current key
  */
 const buildKeyPath = (parentPath, key) => {
@@ -102,11 +116,12 @@ const buildKeyPath = (parentPath, key) => {
 const expandAll = () => {
   const allPaths = new Set();
   const collectPaths = (obj, parentPath = '') => {
-    if (!isObject(obj)) return;
-    Object.keys(obj).forEach((key) => {
-      const keyPath = buildKeyPath(parentPath, key);
+    if (!isParent(obj)) return;
+    const keys = isArray(obj) ? obj.map((_, i) => i) : Object.keys(obj);
+    keys.forEach((key) => {
+      const keyPath = buildKeyPath(parentPath, String(key));
       allPaths.add(keyPath);
-      if (isObject(obj[key])) {
+      if (isParent(obj[key])) {
         collectPaths(obj[key], keyPath);
       }
     });
@@ -168,6 +183,7 @@ defineExpose({
         :key-path="String(key)"
         :parent-path="''"
         :editable="editable"
+        :file-id="fileId"
         @value-edited="emit('value-edited', $event)"
       />
     </div>

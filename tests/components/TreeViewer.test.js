@@ -261,7 +261,7 @@ describe('TreeViewer', () => {
       expect(deepWrapper.text()).toContain('deep value');
     });
 
-    it('should handle arrays as values', () => {
+    it('should handle arrays as values', async () => {
       const arrayData = {
         items: ['item1', 'item2', 'item3'],
       };
@@ -274,7 +274,15 @@ describe('TreeViewer', () => {
         },
       });
 
+      // Wait for next tick to ensure expandAll completes
+      await arrayWrapper.vm.$nextTick();
+
       expect(arrayWrapper.text()).toContain('items');
+      // Arrays are now expandable parent nodes - check for array indices
+      expect(arrayWrapper.text()).toContain('0');
+      expect(arrayWrapper.text()).toContain('1');
+      expect(arrayWrapper.text()).toContain('2');
+      // Values are displayed for each index
       expect(arrayWrapper.text()).toContain('item1');
       expect(arrayWrapper.text()).toContain('item2');
       expect(arrayWrapper.text()).toContain('item3');
@@ -402,6 +410,384 @@ describe('TreeViewer', () => {
       expect(defaultWrapper.props('diffResults')).toEqual([]);
       expect(defaultWrapper.props('defaultExpanded')).toBe(true);
       expect(defaultWrapper.props('editable')).toBe(false);
+    });
+  });
+
+  describe('Inline Editing', () => {
+    const simpleData = {
+      title: 'Hello World',
+      count: 42,
+      active: true,
+    };
+
+    it('should not show edit hint when editable is false', () => {
+      const wrapper = mount(TreeViewer, {
+        props: {
+          content: simpleData,
+          fileId: 'file1',
+          editable: false,
+        },
+      });
+
+      expect(wrapper.find('.edit-hint').exists()).toBe(false);
+    });
+
+    it('should show edit hint on hover when editable is true', async () => {
+      const wrapper = mount(TreeViewer, {
+        props: {
+          content: simpleData,
+          fileId: 'file1',
+          editable: true,
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      // Check that editable values have the editable class
+      const editableValues = wrapper.findAll('.node-value.editable');
+      expect(editableValues.length).toBeGreaterThan(0);
+    });
+
+    it('should show edit input when clicking on an editable value', async () => {
+      const wrapper = mount(TreeViewer, {
+        props: {
+          content: simpleData,
+          fileId: 'file1',
+          editable: true,
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const editableValue = wrapper.find('.node-value.editable');
+      await editableValue.trigger('click');
+
+      expect(wrapper.find('.edit-input').exists()).toBe(true);
+    });
+
+    it('should populate edit input with current value', async () => {
+      const wrapper = mount(TreeViewer, {
+        props: {
+          content: { name: 'Test Name' },
+          fileId: 'file1',
+          editable: true,
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const editableValue = wrapper.find('.node-value.editable');
+      await editableValue.trigger('click');
+
+      const input = wrapper.find('.edit-input');
+      expect(input.element.value).toBe('Test Name');
+    });
+
+    it('should emit value-edited event when saving edit', async () => {
+      const wrapper = mount(TreeViewer, {
+        props: {
+          content: { name: 'Old Value' },
+          fileId: 'file1',
+          editable: true,
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const editableValue = wrapper.find('.node-value.editable');
+      await editableValue.trigger('click');
+
+      const input = wrapper.find('.edit-input');
+      await input.setValue('New Value');
+      await input.trigger('keydown', { key: 'Enter' });
+
+      const emitted = wrapper.emitted('value-edited');
+      expect(emitted).toBeTruthy();
+      expect(emitted[0][0]).toEqual({
+        keyPath: 'name',
+        newValue: 'New Value',
+        oldValue: 'Old Value',
+        targetFile: 'file1',
+      });
+    });
+
+    it('should cancel edit on Escape key', async () => {
+      const wrapper = mount(TreeViewer, {
+        props: {
+          content: { name: 'Original' },
+          fileId: 'file1',
+          editable: true,
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const editableValue = wrapper.find('.node-value.editable');
+      await editableValue.trigger('click');
+
+      const input = wrapper.find('.edit-input');
+      await input.setValue('Changed');
+      await input.trigger('keydown', { key: 'Escape' });
+
+      // Should not emit value-edited when canceling
+      expect(wrapper.emitted('value-edited')).toBeFalsy();
+      // Edit mode should be closed
+      expect(wrapper.find('.edit-input').exists()).toBe(false);
+    });
+
+    it('should not emit value-edited if value did not change', async () => {
+      const wrapper = mount(TreeViewer, {
+        props: {
+          content: { name: 'Same Value' },
+          fileId: 'file1',
+          editable: true,
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const editableValue = wrapper.find('.node-value.editable');
+      await editableValue.trigger('click');
+
+      const input = wrapper.find('.edit-input');
+      // Value is already 'Same Value', don't change it
+      await input.trigger('keydown', { key: 'Enter' });
+
+      expect(wrapper.emitted('value-edited')).toBeFalsy();
+    });
+
+    it('should parse number values correctly', async () => {
+      const wrapper = mount(TreeViewer, {
+        props: {
+          content: { count: 'old' },
+          fileId: 'file1',
+          editable: true,
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const editableValue = wrapper.find('.node-value.editable');
+      await editableValue.trigger('click');
+
+      const input = wrapper.find('.edit-input');
+      await input.setValue('123');
+      await input.trigger('keydown', { key: 'Enter' });
+
+      const emitted = wrapper.emitted('value-edited');
+      expect(emitted).toBeTruthy();
+      expect(emitted[0][0].newValue).toBe(123);
+      expect(typeof emitted[0][0].newValue).toBe('number');
+    });
+
+    it('should parse boolean true correctly', async () => {
+      const wrapper = mount(TreeViewer, {
+        props: {
+          content: { flag: 'old' },
+          fileId: 'file1',
+          editable: true,
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const editableValue = wrapper.find('.node-value.editable');
+      await editableValue.trigger('click');
+
+      const input = wrapper.find('.edit-input');
+      await input.setValue('true');
+      await input.trigger('keydown', { key: 'Enter' });
+
+      const emitted = wrapper.emitted('value-edited');
+      expect(emitted).toBeTruthy();
+      expect(emitted[0][0].newValue).toBe(true);
+      expect(typeof emitted[0][0].newValue).toBe('boolean');
+    });
+
+    it('should parse boolean false correctly', async () => {
+      const wrapper = mount(TreeViewer, {
+        props: {
+          content: { flag: 'old' },
+          fileId: 'file1',
+          editable: true,
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const editableValue = wrapper.find('.node-value.editable');
+      await editableValue.trigger('click');
+
+      const input = wrapper.find('.edit-input');
+      await input.setValue('false');
+      await input.trigger('keydown', { key: 'Enter' });
+
+      const emitted = wrapper.emitted('value-edited');
+      expect(emitted).toBeTruthy();
+      expect(emitted[0][0].newValue).toBe(false);
+      expect(typeof emitted[0][0].newValue).toBe('boolean');
+    });
+
+    it('should parse null correctly', async () => {
+      const wrapper = mount(TreeViewer, {
+        props: {
+          content: { value: 'old' },
+          fileId: 'file1',
+          editable: true,
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const editableValue = wrapper.find('.node-value.editable');
+      await editableValue.trigger('click');
+
+      const input = wrapper.find('.edit-input');
+      await input.setValue('null');
+      await input.trigger('keydown', { key: 'Enter' });
+
+      const emitted = wrapper.emitted('value-edited');
+      expect(emitted).toBeTruthy();
+      expect(emitted[0][0].newValue).toBe(null);
+    });
+
+    it('should not make parent nodes editable', async () => {
+      const wrapper = mount(TreeViewer, {
+        props: {
+          content: {
+            nested: {
+              child: 'value',
+            },
+          },
+          fileId: 'file1',
+          editable: true,
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      // The parent node 'nested' should not have a .node-value element
+      // (parent nodes have .node-value-hint instead)
+      const nestedNode = wrapper.find('[data-key-path="nested"]');
+      const nestedNodeContent = nestedNode.find('.tree-node-content');
+      // Parent nodes should show hint, not editable value
+      expect(nestedNodeContent.find('.node-value-hint').exists()).toBe(true);
+      // The direct .node-value should not exist on the parent node's content
+      expect(nestedNodeContent.find(':scope > .node-value').exists()).toBe(
+        false
+      );
+    });
+
+    it('should not trigger edit mode when clicking on parent node', async () => {
+      const wrapper = mount(TreeViewer, {
+        props: {
+          content: {
+            nested: {
+              child: 'value',
+            },
+          },
+          fileId: 'file1',
+          editable: true,
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const nestedNode = wrapper.find('[data-key-path="nested"]');
+      const nodeContent = nestedNode.find('.tree-node-content');
+
+      // Try clicking on the parent node content
+      await nodeContent.trigger('click');
+      await wrapper.vm.$nextTick();
+
+      // Verify no edit input appears
+      expect(wrapper.find('.edit-input').exists()).toBe(false);
+    });
+
+    it('should include correct keyPath for nested values', async () => {
+      const wrapper = mount(TreeViewer, {
+        props: {
+          content: {
+            parent: {
+              child: 'value',
+            },
+          },
+          fileId: 'file1',
+          editable: true,
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      // Find the nested value
+      const childNode = wrapper.find('[data-key-path="parent.child"]');
+      const editableValue = childNode.find('.node-value.editable');
+      await editableValue.trigger('click');
+
+      const input = wrapper.find('.edit-input');
+      await input.setValue('newValue');
+      await input.trigger('keydown', { key: 'Enter' });
+
+      const emitted = wrapper.emitted('value-edited');
+      expect(emitted).toBeTruthy();
+      expect(emitted[0][0].keyPath).toBe('parent.child');
+    });
+
+    it('should include correct targetFile in event', async () => {
+      const wrapper = mount(TreeViewer, {
+        props: {
+          content: { name: 'value' },
+          fileId: 'file2',
+          editable: true,
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const editableValue = wrapper.find('.node-value.editable');
+      await editableValue.trigger('click');
+
+      const input = wrapper.find('.edit-input');
+      await input.setValue('changed');
+      await input.trigger('keydown', { key: 'Enter' });
+
+      const emitted = wrapper.emitted('value-edited');
+      expect(emitted).toBeTruthy();
+      expect(emitted[0][0].targetFile).toBe('file2');
+    });
+
+    it('should have accessible edit button attributes', async () => {
+      const wrapper = mount(TreeViewer, {
+        props: {
+          content: { name: 'value' },
+          fileId: 'file1',
+          editable: true,
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const editableValue = wrapper.find('.node-value.editable');
+      expect(editableValue.attributes('role')).toBe('button');
+      expect(editableValue.attributes('tabindex')).toBe('0');
+      expect(editableValue.attributes('aria-label')).toContain('Edit');
+    });
+
+    it('should start editing on Enter key press', async () => {
+      const wrapper = mount(TreeViewer, {
+        props: {
+          content: { name: 'value' },
+          fileId: 'file1',
+          editable: true,
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const editableValue = wrapper.find('.node-value.editable');
+      await editableValue.trigger('keydown.enter');
+
+      expect(wrapper.find('.edit-input').exists()).toBe(true);
     });
   });
 });
