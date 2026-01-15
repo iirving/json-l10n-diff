@@ -45,7 +45,7 @@ const emit = defineEmits(['value-edited']);
 // Composables (inject)
 const isExpandedFn = inject('isExpanded', () => false);
 const getDiffStatusFn = inject('getDiffStatus', () => null);
-const toggleNodeFn = inject('toggleNode', () => { });
+const toggleNodeFn = inject('toggleNode', () => {});
 
 // Reactive state for inline editing
 const isEditing = ref(false);
@@ -203,8 +203,14 @@ const handleEditBlur = () => {
 </script>
 
 <template>
-  <div class="tree-node" :class="{ expanded: isExpanded, editing: isEditing }" :data-depth="depth"
-    :data-key-path="keyPath" :data-status="diffStatus" :data-parent="parentPath">
+  <div
+    class="tree-node"
+    :class="{ expanded: isExpanded, editing: isEditing }"
+    :data-depth="depth"
+    :data-key-path="keyPath"
+    :data-status="diffStatus"
+    :data-parent="parentPath"
+  >
     <div class="tree-node-content" :style="{ paddingLeft: depth * 4 + 'px' }">
       <span v-if="isParent" class="expand-icon" @click="handleToggle">
         {{ isExpanded ? '▼' : '▶' }}
@@ -218,27 +224,49 @@ const handleEditBlur = () => {
       <template v-if="!isParent">
         <!-- Edit mode -->
         <span v-if="isEditing" class="node-value-edit">
-          <input ref="editInputRef" v-model="editValue" type="text" class="edit-input" @keydown="handleEditKeydown"
-            @blur="handleEditBlur" />
+          <input
+            ref="editInputRef"
+            v-model="editValue"
+            type="text"
+            class="edit-input"
+            @keydown="handleEditKeydown"
+            @blur="handleEditBlur"
+          />
         </span>
         <!-- View mode -->
-        <span v-else class="node-value" :class="{ editable: canEdit }" :role="canEdit ? 'button' : undefined"
-          :tabindex="canEdit ? 0 : undefined" :aria-label="canEdit ? `Edit value for ${nodeKey}` : undefined"
-          @click="canEdit && startEditing()" @keydown.enter="canEdit && startEditing()">
+        <span
+          v-else
+          class="node-value"
+          :class="{ editable: canEdit }"
+          :role="canEdit ? 'button' : undefined"
+          :tabindex="canEdit ? 0 : undefined"
+          :aria-label="canEdit ? `Edit value for ${nodeKey}` : undefined"
+          @click="canEdit && startEditing()"
+          @keydown.enter="canEdit && startEditing()"
+        >
           {{ formatValue(value) }}
           <span v-if="canEdit" class="edit-hint" aria-hidden="true">✏️</span>
         </span>
       </template>
       <span v-else class="node-value-hint">{{
         isExpanded ? '' : '{...}'
-        }}</span>
+      }}</span>
     </div>
 
     <!-- Recursive children -->
     <template v-if="isParent && isExpanded">
-      <TreeNode v-for="(childValue, childKey) in value" :key="childKey" :node-key="String(childKey)" :value="childValue"
-        :depth="depth + 1" :key-path="buildKeyPath(keyPath, String(childKey))" :parent-path="keyPath"
-        :editable="editable" :file-id="fileId" @value-edited="$emit('value-edited', $event)" />
+      <TreeNode
+        v-for="(childValue, childKey) in value"
+        :key="childKey"
+        :node-key="String(childKey)"
+        :value="childValue"
+        :depth="depth + 1"
+        :key-path="buildKeyPath(keyPath, String(childKey))"
+        :parent-path="keyPath"
+        :editable="editable"
+        :file-id="fileId"
+        @value-edited="$emit('value-edited', $event)"
+      />
     </template>
   </div>
 </template>
