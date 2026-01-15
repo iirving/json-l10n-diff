@@ -102,8 +102,8 @@ description: 'Task list for JSON i18n Comparison and Diff Tool implementation'
 
 - [x] T022 [P] [US2] Implement EditControls component in `src/components/EditControls.vue` (save button, prettify button, reset button, accept file/modified props, emit save/prettify/reset events, disable when not modified)
 - [x] T022-TEST [P] [US2] [TEST] Write unit tests for EditControls in `tests/components/EditControls.test.js` (test button states, event emissions, disabled states, aim for 90%+ coverage)
-- [ ] T023 [US2] Add inline edit functionality to TreeViewer in `src/components/TreeViewer.vue` (contenteditable or input overlay on value click, emit value-edited event with keyPath/newValue/targetFile)
-- [ ] T023-TEST [US2] [TEST] Update TreeViewer tests in `tests/components/TreeViewer.test.js` (test inline editing, value-edited event, keyPath tracking, aim for 90%+ coverage)
+- [x] T023 [US2] Add inline edit functionality to TreeViewer in `src/components/TreeViewer.vue` (contenteditable or input overlay on value click, emit value-edited event with keyPath/newValue/targetFile)
+- [x] T023-TEST [US2] [TEST] Update TreeViewer tests in `tests/components/TreeViewer.test.js` (test inline editing, value-edited event, keyPath tracking, aim for 90%+ coverage)
 - [ ] T024 [US2] Add "add key" action to KeyDiffItem in `src/components/KeyDiffItem.vue` (button appears on missing-left/missing-right status, emit add-key event with keyPath/targetFile)
 - [ ] T024-TEST [US2] [TEST] Update KeyDiffItem tests in `tests/components/KeyDiffItem.test.js` (test add key button visibility, add-key event, keyPath tracking, aim for 90%+ coverage)
 - [ ] T025 [US2] Wire edit events to useEditStore in `src/pages/Index.vue` (call editStore.addEdit, editStore.applyEdit on add-key/value-edited events, re-run fileStore.runComparison after edits)

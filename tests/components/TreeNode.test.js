@@ -240,7 +240,7 @@ describe('TreeNode', () => {
       expect(boolWrapper.find('.node-value').text()).toBe('true');
     });
 
-    it('should format array values as JSON', () => {
+    it('should treat arrays as expandable parent nodes', () => {
       const arrayWrapper = mount(TreeNode, {
         props: {
           nodeKey: 'arrayKey',
@@ -258,7 +258,11 @@ describe('TreeNode', () => {
         },
       });
 
-      expect(arrayWrapper.find('.node-value').text()).toBe('[1,2,3]');
+      // Arrays are now parent nodes with expand/collapse functionality
+      expect(arrayWrapper.find('.expand-icon').exists()).toBe(true);
+      expect(arrayWrapper.find('.node-value-hint').exists()).toBe(true);
+      // Should not have .node-value since it's a parent node
+      expect(arrayWrapper.find('.node-value').exists()).toBe(false);
     });
 
     it('should format object values with hint', () => {
