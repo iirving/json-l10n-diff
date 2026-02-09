@@ -34,7 +34,7 @@ description: 'Task list for JSON i18n Comparison and Diff Tool implementation'
 
 - [ ] T001 Create directory structure: `src/components/`, `src/pages/`, `src/stores/`, `src/composables/`, `src/utils/`, `tests/utils/`, `tests/composables/`, `tests/components/`, `tests/stores/`
 - [ ] T002 Install and configure Pinia in `src/main.js` (createPinia, app.use(pinia))
-- [ ] T003 Update `src/style.css` with base styles for tree viewer, color coding (red/yellow/neutral), navigation, and responsive layout
+- [ ] T003 Update `src/style.css` with base styles for tree viewer, color coding (red/yellow/green), navigation, and responsive layout
 - [ ] T004 [P] Create placeholder components for FileUploader, TreeViewer, ComparisonView, KeyDiffItem, EditControls, TierGate in `src/components/`
 - [ ] T005 [P] Create `src/pages/Index.vue` placeholder (main application page)
 - [ ] T006 [P] Create `src/pages/About.vue` with static content (features, pricing, how it works, technical details)
@@ -67,9 +67,9 @@ description: 'Task list for JSON i18n Comparison and Diff Tool implementation'
 
 ## Phase 3: User Story 1 - View and Compare Basic i18n Files (Priority: P1) 🎯 MVP
 
-**Goal**: Allow users to upload two JSON i18n files and visualize differences with color-coded highlights (red for missing keys, yellow for identical values, neutral for different values)
+**Goal**: Allow users to upload two JSON i18n files and visualize differences with color-coded highlights (red for missing keys, yellow for identical values, green for different values)
 
-**Independent Test**: Upload two valid JSON files with nested keys (e.g., en.json with `{"app": {"title": "My App"}}` and fr.json with `{"app": {"title": "Mon App", "welcome": "Bienvenue"}}`), verify tree displays both files with correct highlighting (red for missing "welcome" in file1, neutral for "title" with different values)
+**Independent Test**: Upload two valid JSON files with nested keys (e.g., en.json with `{"app": {"title": "My App"}}` and fr.json with `{"app": {"title": "Mon App", "welcome": "Bienvenue"}}`), verify tree displays both files with correct highlighting (red for missing "welcome" in file1, green for "title" with different values)
 
 ### Implementation for User Story 1
 
@@ -96,7 +96,7 @@ description: 'Task list for JSON i18n Comparison and Diff Tool implementation'
 
 **Goal**: Allow users to inline-edit values and add missing keys directly in the comparison view
 
-**Independent Test**: Load two files with a missing key (e.g., "app.welcome" missing in file1), click "add key" button on red-highlighted key, verify key is added to file1's data structure and highlighted yellow if values now match, or neutral if different
+**Independent Test**: Load two files with a missing key (e.g., "app.welcome" missing in file1), click "add key" button on red-highlighted key, verify key is added to file1's data structure and highlighted yellow if values now match, or green if different
 
 ### Implementation for User Story 2
 
@@ -104,8 +104,8 @@ description: 'Task list for JSON i18n Comparison and Diff Tool implementation'
 - [x] T022-TEST [P] [US2] [TEST] Write unit tests for EditControls in `tests/components/EditControls.test.js` (test button states, event emissions, disabled states, aim for 90%+ coverage)
 - [x] T023 [US2] Add inline edit functionality to TreeViewer in `src/components/TreeViewer.vue` (contenteditable or input overlay on value click, emit value-edited event with keyPath/newValue/targetFile)
 - [x] T023-TEST [US2] [TEST] Update TreeViewer tests in `tests/components/TreeViewer.test.js` (test inline editing, value-edited event, keyPath tracking, aim for 90%+ coverage)
-- [ ] T024 [US2] Add "add key" action to KeyDiffItem in `src/components/KeyDiffItem.vue` (button appears on missing-left/missing-right status, emit add-key event with keyPath/targetFile)
-- [ ] T024-TEST [US2] [TEST] Update KeyDiffItem tests in `tests/components/KeyDiffItem.test.js` (test add key button visibility, add-key event, keyPath tracking, aim for 90%+ coverage)
+- [x] T024 [US2] Add "add key" action to KeyDiffItem in `src/components/KeyDiffItem.vue` (button appears on missing-left/missing-right status, emit add-key event with keyPath/targetFile)
+- [x] T024-TEST [US2] [TEST] Update KeyDiffItem tests in `tests/components/KeyDiffItem.test.js` (test add key button visibility, add-key event, keyPath tracking, aim for 90%+ coverage)
 - [ ] T025 [US2] Wire edit events to useEditStore in `src/pages/Index.vue` (call editStore.addEdit, editStore.applyEdit on add-key/value-edited events, re-run fileStore.runComparison after edits)
 - [ ] T025-TEST [US2] [TEST] Update Index.vue tests in `tests/pages/Index.test.js` (test edit event wiring, store interactions, comparison re-run, aim for 90%+ coverage)
 - [ ] T026 [US2] Add visual feedback for modified state in TreeViewer (e.g., asterisk or badge on modified keys, highlight modified values using editStore.file1Modified/file2Modified)
@@ -162,6 +162,7 @@ description: 'Task list for JSON i18n Comparison and Diff Tool implementation'
 - [ ] T051 Add JSDoc comments to all Pinia stores in `src/stores/` (document state, actions, getters)
 - [ ] T052 Run through quickstart.md validation scenarios in `specs/001-json-i18n-comparison/quickstart.md` (verify all examples work as documented)
 - [ ] T053 [TEST] Run coverage report and ensure all modules achieve 90%+ coverage: `npm run test:coverage`
+- [x] T054 [P] Fix color coding in diff status styles: update `src/components/KeyDiffItem.vue` and `src/style.css` to use green for different values and yellow for identical/same values
 
 **Checkpoint**: All features complete with comprehensive test coverage
 

@@ -112,21 +112,14 @@ const showAddButton = () => {
     </div>
 
     <div class="actions">
-      <button
-        v-if="showAddButton()"
-        class="add-key-button"
+      <button v-if="showAddButton()" class="add-key-button"
         :aria-label="`Add key ${keyPath} to ${status === 'missing-left' ? 'left' : 'right'} file`"
-        @click="handleAddKey"
-      >
+        @click="handleAddKey">
         Add Key
       </button>
 
-      <button
-        v-if="status === 'different'"
-        class="edit-value-button"
-        :aria-label="`Edit value for ${keyPath}`"
-        @click="handleEditValue"
-      >
+      <button v-if="status === 'different'" class="edit-value-button" :aria-label="`Edit value for ${keyPath}`"
+        @click="handleEditValue">
         Edit
       </button>
     </div>
@@ -166,8 +159,8 @@ const showAddButton = () => {
 }
 
 .status-different {
-  background-color: rgba(100, 116, 139, 0.05);
-  border-left: 3px solid #64748b;
+  background-color: rgba(34, 197, 94, 0.1);
+  border-left: 3px solid #22c55e;
 }
 
 /* Key path */

@@ -9,7 +9,7 @@ import TreeNode from '@/components/TreeNode.vue';
  * Features:
  * - Recursive tree node rendering
  * - Expand/collapse functionality
- * - Color-coded diff highlighting (red for missing, yellow for identical, neutral for different)
+ * - Color-coded diff highlighting (red for missing, yellow for identical, green for different)
  * - scrollToKey, expandAll, collapseAll methods
  */
 
@@ -176,16 +176,8 @@ defineExpose({
       No data to display
     </div>
     <div v-for="(value, key) in content" :key="key" class="tree-node-container">
-      <TreeNode
-        :node-key="String(key)"
-        :value="value"
-        :depth="0"
-        :key-path="String(key)"
-        :parent-path="''"
-        :editable="editable"
-        :file-id="fileId"
-        @value-edited="emit('value-edited', $event)"
-      />
+      <TreeNode :node-key="String(key)" :value="value" :depth="0" :key-path="String(key)" :parent-path="''"
+        :editable="editable" :file-id="fileId" @value-edited="emit('value-edited', $event)" />
     </div>
   </div>
 </template>

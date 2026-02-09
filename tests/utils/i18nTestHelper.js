@@ -44,10 +44,10 @@ const defaultEnglishMessages = {
   },
   legend: {
     title: 'Legend:',
-    different: 'Different Values (Yellow)',
+    different: 'Different Values (Green)',
     missingRight: 'Missing in File 2 (Light Red)',
     missingLeft: 'Missing in File 1 / Temporary (Light Blue)',
-    identical: 'Identical Values',
+    identical: 'Identical Values (Yellow)',
   },
   comparison: {
     emptyState: 'Upload two JSON files to compare',
@@ -60,7 +60,7 @@ const defaultEnglishMessages = {
     step2Title: 'Side-by-side Values:',
     step2: 'Shows values from both files for each key',
     step3Title: 'Color-coded Differences:',
-    step3a: 'Yellow highlight = Different values',
+    step3a: 'Green highlight = Different values',
     step3b: 'Light red = Missing in File 2',
     step3c: 'Light blue = Missing in File 1 (temporary keys)',
     step4Title: 'Add Missing Keys:',

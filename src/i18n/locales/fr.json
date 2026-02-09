@@ -28,10 +28,10 @@
   },
   "legend": {
     "title": "Légende :",
-    "different": "Valeurs Différentes (Jaune)",
+    "different": "Valeurs Différentes (Vert)",
     "missingRight": "Manquant dans Fichier 2 (Rouge Clair)",
     "missingLeft": "Manquant dans Fichier 1 / Temporaire (Bleu Clair)",
-    "identical": "Valeurs Identiques"
+    "identical": "Valeurs Identiques (Jaune)"
   },
   "comparison": {
     "emptyState": "Téléchargez deux fichiers JSON à comparer",
@@ -44,7 +44,7 @@
     "step2Title": "Valeurs Côte à Côte :",
     "step2": "Affiche les valeurs des deux fichiers pour chaque clé",
     "step3Title": "Différences Codées par Couleur :",
-    "step3a": "Surbrillance jaune = Valeurs différentes",
+    "step3a": "Surbrillance verte = Valeurs différentes",
     "step3b": "Rouge clair = Manquant dans Fichier 2",
     "step3c": "Bleu clair = Manquant dans Fichier 1 (clés temporaires)",
     "step4Title": "Ajouter des Clés Manquantes :",
