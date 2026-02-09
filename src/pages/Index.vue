@@ -132,13 +132,21 @@ const handleAddKeyToFile2 = ({ keyPath, value }) => {
         <div class="upload-section">
           <div class="upload-row">
             <div class="upload-group">
-              <FileUploader ref="fileUploader1" :label="t('upload.file1')" @file-loaded="handleFile1Loaded"
-                @file-error="handleFile1Error" />
+              <FileUploader
+                ref="fileUploader1"
+                :label="t('upload.file1')"
+                @file-loaded="handleFile1Loaded"
+                @file-error="handleFile1Error"
+              />
             </div>
 
             <div class="upload-group">
-              <FileUploader ref="fileUploader2" :label="t('upload.file2')" @file-loaded="handleFile2Loaded"
-                @file-error="handleFile2Error" />
+              <FileUploader
+                ref="fileUploader2"
+                :label="t('upload.file2')"
+                @file-loaded="handleFile2Loaded"
+                @file-error="handleFile2Error"
+              />
             </div>
           </div>
         </div>
@@ -169,9 +177,14 @@ const handleAddKeyToFile2 = ({ keyPath, value }) => {
 
       <!-- Comparison View -->
       <section class="viewer-section">
-        <ComparisonView :file1="file1" :file2="file2" :file1-name="fileStore.file1?.fileName || 'File 1'"
-          :file2-name="fileStore.file2?.fileName || 'File 2'" @add-key-to-file1="handleAddKeyToFile1"
-          @add-key-to-file2="handleAddKeyToFile2" />
+        <ComparisonView
+          :file1="file1"
+          :file2="file2"
+          :file1-name="fileStore.file1?.fileName || t('defaults.file1')"
+          :file2-name="fileStore.file2?.fileName || t('defaults.file2')"
+          @add-key-to-file1="handleAddKeyToFile1"
+          @add-key-to-file2="handleAddKeyToFile2"
+        />
       </section>
 
       <!-- Instructions -->
