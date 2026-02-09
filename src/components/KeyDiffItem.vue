@@ -10,11 +10,15 @@
  * - Edit value functionality
  */
 
+import { useI18n } from 'vue-i18n';
+
 import {
   MISSING_LEFT,
   MISSING_RIGHT,
   DIFF_STATUSES,
 } from '@/constants/diffStatus.js';
+
+const { t } = useI18n();
 
 const props = defineProps({
   keyPath: {
@@ -113,9 +117,9 @@ const showAddButton = () => {
 
     <div class="actions">
       <button v-if="showAddButton()" class="add-key-button"
-        :aria-label="`Add key ${keyPath} to ${status === 'missing-left' ? 'left' : 'right'} file`"
+        :aria-label="t('actions.addKeyAriaLabel', { keyPath, target: status === 'missing-left' ? 'left' : 'right' })"
         @click="handleAddKey">
-        Add Key
+        {{ t('actions.addKeyButton') }}
       </button>
 
       <button v-if="status === 'different'" class="edit-value-button" :aria-label="`Edit value for ${keyPath}`"

@@ -115,6 +115,8 @@ const defaultEnglishMessages = {
   actions: {
     addKeyToFile1: 'Add key "{keyPath}" to File 1 with value: {value}',
     addKeyToFile2: 'Add key "{keyPath}" to File 2 with value: {value}',
+    addKeyButton: 'Add Key',
+    addKeyAriaLabel: 'Add key {keyPath} to {target} file',
   },
   errors: {
     bothFilesRequired: 'Both files must be loaded before running comparison',
