@@ -29,8 +29,8 @@
   /* ===== Diff Status Colors ===== */
   --color-missing: #ef4444; /* Red for missing keys */
   --color-identical: #eab308; /* Yellow for identical values */
-  --color-different: #6b7280; /* Neutral gray for different values */
-  --color-different-alt: #64748b; /* Alternate gray for different values */
+  --color-different: #22c55e; /* Green for different values */
+  --color-different-alt: #16a34a; /* Alternate green for different values */
 
   /* ===== Text Colors ===== */
   --color-text-primary: rgba(255, 255, 255, 0.87); /* Primary text */
@@ -55,8 +55,10 @@
   --bg-missing-alt: #ffebee; /* Alternate missing key highlight */
   --bg-identical: rgba(234, 179, 8, 0.1); /* Identical value highlight */
   --bg-identical-alt: #fff9c4; /* Alternate identical value highlight */
-  --bg-different: transparent; /* Different value highlight */
-  --bg-different-alt: #e3f2fd; /* Alternate different value highlight */
+  --bg-different: rgba(34, 197, 94, 0.1); /* Different value highlight (green) */
+  --bg-different-alt: #dcfce7; /* Alternate different value highlight (light green) */
+  --bg-temporary: rgba(59, 130, 246, 0.1); /* Temporary key highlight (blue) */
+  --bg-temporary-alt: #e3f2fd; /* Alternate temporary key highlight (light blue) */
   --bg-modified: rgba(59, 130, 246, 0.1); /* Modified value highlight */
   --bg-success: rgba(16, 185, 129, 0.1); /* Success state background */
   --bg-error: rgba(239, 68, 68, 0.1); /* Error state background */
@@ -283,8 +285,8 @@ nav a.active {
     /* ===== Light Mode Color Adjustments ===== */
     --color-missing: #dc2626;
     --color-identical: #ca8a04;
-    --color-different: #4b5563;
-    --color-different-alt: #64748b;
+    --color-different: #16a34a;
+    --color-different-alt: #15803d;
 
     /* Text colors for light mode */
     --color-text-primary: rgba(0, 0, 0, 0.9);

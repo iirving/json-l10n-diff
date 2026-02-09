@@ -43,7 +43,7 @@
             <h3>Smart Diff Highlighting</h3>
             <p>
               Color-coded differences: red for missing keys, yellow for
-              identical values, neutral for translations
+              identical values, green for different values
             </p>
           </div>
 

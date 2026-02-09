@@ -28,10 +28,10 @@
   },
   "legend": {
     "title": "Légende :",
-    "different": "Valeurs Différentes (Jaune)",
+    "different": "Valeurs Différentes (Vert)",
     "missingRight": "Manquant dans Fichier 2 (Rouge Clair)",
     "missingLeft": "Manquant dans Fichier 1 / Temporaire (Bleu Clair)",
-    "identical": "Valeurs Identiques"
+    "identical": "Valeurs Identiques (Jaune)"
   },
   "comparison": {
     "emptyState": "Téléchargez deux fichiers JSON à comparer",
@@ -44,7 +44,7 @@
     "step2Title": "Valeurs Côte à Côte :",
     "step2": "Affiche les valeurs des deux fichiers pour chaque clé",
     "step3Title": "Différences Codées par Couleur :",
-    "step3a": "Surbrillance jaune = Valeurs différentes",
+    "step3a": "Surbrillance verte = Valeurs différentes",
     "step3b": "Rouge clair = Manquant dans Fichier 2",
     "step3c": "Bleu clair = Manquant dans Fichier 1 (clés temporaires)",
     "step4Title": "Ajouter des Clés Manquantes :",
@@ -95,7 +95,9 @@
   },
   "actions": {
     "addKeyToFile1": "Ajouter la clé \"{keyPath}\" au Fichier 1 avec la valeur : {value}",
-    "addKeyToFile2": "Ajouter la clé \"{keyPath}\" au Fichier 2 avec la valeur : {value}"
+    "addKeyToFile2": "Ajouter la clé \"{keyPath}\" au Fichier 2 avec la valeur : {value}",
+    "addKeyButton": "Ajouter clé",
+    "addKeyAriaLabel": "Ajouter la clé {keyPath} au fichier {target}"
   },
   "errors": {
     "bothFilesRequired": "Les deux fichiers doivent être chargés avant d'exécuter la comparaison",
@@ -104,5 +106,9 @@
     "jsonValidationFailedLine": "Échec de la validation JSON : {error} à la ligne {line}",
     "parseJsonFailed": "Échec de l'analyse JSON : {message}",
     "readFileFailed": "Échec de la lecture du fichier"
+  },
+  "defaults": {
+    "file1": "Fichier 1",
+    "file2": "Fichier 2"
   }
 }

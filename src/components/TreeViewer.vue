@@ -9,7 +9,7 @@ import TreeNode from '@/components/TreeNode.vue';
  * Features:
  * - Recursive tree node rendering
  * - Expand/collapse functionality
- * - Color-coded diff highlighting (red for missing, yellow for identical, neutral for different)
+ * - Color-coded diff highlighting (red for missing, yellow for identical, green for different)
  * - scrollToKey, expandAll, collapseAll methods
  */
 

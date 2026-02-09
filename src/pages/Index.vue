@@ -180,8 +180,8 @@ const handleAddKeyToFile2 = ({ keyPath, value }) => {
         <ComparisonView
           :file1="file1"
           :file2="file2"
-          :file1-name="fileStore.file1?.fileName || 'File 1'"
-          :file2-name="fileStore.file2?.fileName || 'File 2'"
+          :file1-name="fileStore.file1?.fileName || t('defaults.file1')"
+          :file2-name="fileStore.file2?.fileName || t('defaults.file2')"
           @add-key-to-file1="handleAddKeyToFile1"
           @add-key-to-file2="handleAddKeyToFile2"
         />
@@ -398,7 +398,7 @@ const handleAddKeyToFile2 = ({ keyPath, value }) => {
 }
 
 .legend-different {
-  background: var(--bg-identical-alt);
+  background: var(--bg-different-alt);
 }
 
 .legend-missing-right {
@@ -406,11 +406,11 @@ const handleAddKeyToFile2 = ({ keyPath, value }) => {
 }
 
 .legend-missing-left {
-  background: var(--bg-different-alt);
+  background: var(--bg-temporary-alt);
 }
 
 .legend-identical {
-  background: transparent;
+  background: var(--bg-identical-alt);
 }
 
 .viewer-section {

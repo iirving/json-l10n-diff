@@ -10,6 +10,7 @@ import { computed } from 'vue';
 import { formatValue } from '@/composables/useValueFormatter.js';
 import {
   DIFFERENT,
+  IDENTICAL,
   MISSING_LEFT,
   MISSING_RIGHT,
   isValidDiffStatus,
@@ -54,11 +55,13 @@ const emit = defineEmits(['toggle', 'add-to-file1', 'add-to-file2']);
 const getRowColor = computed(() => {
   switch (props.node.status) {
     case DIFFERENT:
-      return 'var(--bg-identical-alt)'; // Yellow for different values
+      return 'var(--bg-different-alt)'; // Green for different values
+    case IDENTICAL:
+      return 'var(--bg-identical-alt)'; // Yellow for identical values
     case MISSING_RIGHT:
       return 'var(--bg-missing-alt)'; // Light red for missing in file2
     case MISSING_LEFT:
-      return 'var(--bg-different-alt)'; // Light blue for missing in file1 (temporary)
+      return 'var(--bg-temporary-alt)'; // Light blue for missing in file1 (temporary)
     default:
       return 'transparent';
   }
