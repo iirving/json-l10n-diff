@@ -116,14 +116,26 @@ const showAddButton = () => {
     </div>
 
     <div class="actions">
-      <button v-if="showAddButton()" class="add-key-button"
-        :aria-label="t('actions.addKeyAriaLabel', { keyPath, target: status === 'missing-left' ? 'left' : 'right' })"
-        @click="handleAddKey">
+      <button
+        v-if="showAddButton()"
+        class="add-key-button"
+        :aria-label="
+          t('actions.addKeyAriaLabel', {
+            keyPath,
+            target: status === 'missing-left' ? 'left' : 'right',
+          })
+        "
+        @click="handleAddKey"
+      >
         {{ t('actions.addKeyButton') }}
       </button>
 
-      <button v-if="status === 'different'" class="edit-value-button" :aria-label="`Edit value for ${keyPath}`"
-        @click="handleEditValue">
+      <button
+        v-if="status === 'different'"
+        class="edit-value-button"
+        :aria-label="`Edit value for ${keyPath}`"
+        @click="handleEditValue"
+      >
         Edit
       </button>
     </div>

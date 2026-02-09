@@ -200,7 +200,12 @@
               <h4>Open Source</h4>
               <p>
                 Inspect the code yourself on
-                <a href="https://github.com/iirving/json-l10n-diff" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <a
+                  href="https://github.com/iirving/json-l10n-diff"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >GitHub</a
+                >
               </p>
             </div>
           </div>
@@ -217,11 +222,13 @@
             languages are up to date.
           </p>
           <div class="example-box">
-            <code>✅ Upload en.json (your main language file)<br />
+            <code
+              >✅ Upload en.json (your main language file)<br />
               ✅ Upload fr.json (French translations)<br />
               🔴 Missing keys highlighted instantly<br />
               ➕ Add missing keys with one click<br />
-              💾 Save updated fr.json</code>
+              💾 Save updated fr.json</code
+            >
           </div>
         </div>
 
@@ -229,11 +236,13 @@
           <h3>Catching Untranslated Placeholders</h3>
           <p>Sometimes placeholder text gets copied instead of translated.</p>
           <div class="example-box">
-            <code>✅ Upload en.json: { "welcome": "Welcome" }<br />
+            <code
+              >✅ Upload en.json: { "welcome": "Welcome" }<br />
               ✅ Upload fr.json: { "welcome": "Welcome" }<br />
               🟡 Identical values highlighted in yellow<br />
               ✏️ Edit "Welcome" → "Bienvenue"<br />
-              💾 Save corrected fr.json</code>
+              💾 Save corrected fr.json</code
+            >
           </div>
         </div>
 
@@ -243,10 +252,12 @@
             Multiple team members working on translations? Keep files in sync.
           </p>
           <div class="example-box">
-            <code>✅ Compare your local changes against the main branch<br />
+            <code
+              >✅ Compare your local changes against the main branch<br />
               🔴 See what others added that you're missing<br />
               ➕ Add new keys to your file<br />
-              💾 Export and commit synchronized files</code>
+              💾 Export and commit synchronized files</code
+            >
           </div>
         </div>
       </section>
@@ -265,9 +276,11 @@
   padding: var(--spacing-xl) var(--spacing-lg);
   text-align: center;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  background: linear-gradient(135deg,
-      rgba(100, 108, 255, 0.1) 0%,
-      rgba(139, 92, 246, 0.1) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(100, 108, 255, 0.1) 0%,
+    rgba(139, 92, 246, 0.1) 100%
+  );
 }
 
 .page-header h1 {

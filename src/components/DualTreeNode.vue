@@ -93,10 +93,13 @@ const handleAddToFile2 = () => {
 
 <template>
   <div class="dual-tree-node">
-    <div class="node-row" :style="{
-      paddingLeft: depth * 16 + 'px',
-      backgroundColor: getRowColor,
-    }">
+    <div
+      class="node-row"
+      :style="{
+        paddingLeft: depth * 16 + 'px',
+        backgroundColor: getRowColor,
+      }"
+    >
       <!-- Expand icon -->
       <span v-if="node.isParent" class="expand-icon" @click="handleToggle">
         {{ isExpanded ? '▼' : '▶' }}
@@ -117,7 +120,11 @@ const handleAddToFile2 = () => {
             {{ formatValue(node.value1) }}
           </span>
           <span v-else class="missing-indicator">
-            <button v-if="node.isMissingInFile1" class="add-btn" @click="handleAddToFile1">
+            <button
+              v-if="node.isMissingInFile1"
+              class="add-btn"
+              @click="handleAddToFile1"
+            >
               + Add
             </button>
           </span>
@@ -129,7 +136,11 @@ const handleAddToFile2 = () => {
             {{ formatValue(node.value2) }}
           </span>
           <span v-else class="missing-indicator">
-            <button v-if="node.isMissingInFile2" class="add-btn" @click="handleAddToFile2">
+            <button
+              v-if="node.isMissingInFile2"
+              class="add-btn"
+              @click="handleAddToFile2"
+            >
               + Add
             </button>
           </span>
@@ -139,13 +150,21 @@ const handleAddToFile2 = () => {
 
     <!-- Recursive children -->
     <template v-if="node.isParent && isExpanded && node.children.length > 0">
-      <DualTreeNode v-for="child in node.children" :key="child.keyPath" :node="child" :depth="depth + 1"
-        :is-expanded="expandedNodes.has(child.keyPath)" :expanded-nodes="expandedNodes"
-        @toggle="(keyPath) => $emit('toggle', keyPath)" @add-to-file1="
+      <DualTreeNode
+        v-for="child in node.children"
+        :key="child.keyPath"
+        :node="child"
+        :depth="depth + 1"
+        :is-expanded="expandedNodes.has(child.keyPath)"
+        :expanded-nodes="expandedNodes"
+        @toggle="(keyPath) => $emit('toggle', keyPath)"
+        @add-to-file1="
           (keyPath, value) => $emit('add-to-file1', keyPath, value)
-        " @add-to-file2="
+        "
+        @add-to-file2="
           (keyPath, value) => $emit('add-to-file2', keyPath, value)
-        " />
+        "
+      />
     </template>
   </div>
 </template>
