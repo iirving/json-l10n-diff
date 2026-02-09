@@ -36,11 +36,11 @@ describe('KeyDiffItem', () => {
 
     it('should display left and right values', () => {
       const wrapper = mountComponent({
-          keyPath: 'app.title',
-          leftValue: 'My App',
-          rightValue: 'Mon App',
-          status: 'different',
-        });
+        keyPath: 'app.title',
+        leftValue: 'My App',
+        rightValue: 'Mon App',
+        status: 'different',
+      });
 
       expect(wrapper.text()).toContain('My App');
       expect(wrapper.text()).toContain('Mon App');
@@ -48,11 +48,11 @@ describe('KeyDiffItem', () => {
 
     it('should render with missing-left status and show red highlight', () => {
       const wrapper = mountComponent({
-          keyPath: 'app.welcome',
-          leftValue: null,
-          rightValue: 'Bienvenue',
-          status: 'missing-left',
-        });
+        keyPath: 'app.welcome',
+        leftValue: null,
+        rightValue: 'Bienvenue',
+        status: 'missing-left',
+      });
 
       const item = wrapper.find('.key-diff-item');
       expect(item.classes()).toContain('status-missing-left');
@@ -60,11 +60,11 @@ describe('KeyDiffItem', () => {
 
     it('should render with missing-right status and show red highlight', () => {
       const wrapper = mountComponent({
-          keyPath: 'app.goodbye',
-          leftValue: 'Goodbye',
-          rightValue: null,
-          status: 'missing-right',
-        });
+        keyPath: 'app.goodbye',
+        leftValue: 'Goodbye',
+        rightValue: null,
+        status: 'missing-right',
+      });
 
       const item = wrapper.find('.key-diff-item');
       expect(item.classes()).toContain('status-missing-right');
@@ -72,11 +72,11 @@ describe('KeyDiffItem', () => {
 
     it('should render with identical status and show yellow highlight', () => {
       const wrapper = mountComponent({
-          keyPath: 'app.name',
-          leftValue: 'App',
-          rightValue: 'App',
-          status: 'identical',
-        });
+        keyPath: 'app.name',
+        leftValue: 'App',
+        rightValue: 'App',
+        status: 'identical',
+      });
 
       const item = wrapper.find('.key-diff-item');
       expect(item.classes()).toContain('status-identical');
@@ -84,11 +84,11 @@ describe('KeyDiffItem', () => {
 
     it('should render with different status and show neutral color', () => {
       const wrapper = mountComponent({
-          keyPath: 'app.title',
-          leftValue: 'My App',
-          rightValue: 'Mon App',
-          status: 'different',
-        });
+        keyPath: 'app.title',
+        leftValue: 'My App',
+        rightValue: 'Mon App',
+        status: 'different',
+      });
 
       const item = wrapper.find('.key-diff-item');
       expect(item.classes()).toContain('status-different');
@@ -98,44 +98,44 @@ describe('KeyDiffItem', () => {
   describe('Color coding', () => {
     it('should apply correct CSS class for missing-left status', () => {
       const wrapper = mountComponent({
-          keyPath: 'test',
-          leftValue: null,
-          rightValue: 'value',
-          status: 'missing-left',
-        });
+        keyPath: 'test',
+        leftValue: null,
+        rightValue: 'value',
+        status: 'missing-left',
+      });
 
       expect(wrapper.find('.status-missing-left').exists()).toBe(true);
     });
 
     it('should apply correct CSS class for missing-right status', () => {
       const wrapper = mountComponent({
-          keyPath: 'test',
-          leftValue: 'value',
-          rightValue: null,
-          status: 'missing-right',
-        });
+        keyPath: 'test',
+        leftValue: 'value',
+        rightValue: null,
+        status: 'missing-right',
+      });
 
       expect(wrapper.find('.status-missing-right').exists()).toBe(true);
     });
 
     it('should apply correct CSS class for identical status', () => {
       const wrapper = mountComponent({
-          keyPath: 'test',
-          leftValue: 'same',
-          rightValue: 'same',
-          status: 'identical',
-        });
+        keyPath: 'test',
+        leftValue: 'same',
+        rightValue: 'same',
+        status: 'identical',
+      });
 
       expect(wrapper.find('.status-identical').exists()).toBe(true);
     });
 
     it('should apply correct CSS class for different status', () => {
       const wrapper = mountComponent({
-          keyPath: 'test',
-          leftValue: 'one',
-          rightValue: 'two',
-          status: 'different',
-        });
+        keyPath: 'test',
+        leftValue: 'one',
+        rightValue: 'two',
+        status: 'different',
+      });
 
       expect(wrapper.find('.status-different').exists()).toBe(true);
     });
@@ -144,33 +144,33 @@ describe('KeyDiffItem', () => {
   describe('Value display', () => {
     it('should display "(missing)" for null left value', () => {
       const wrapper = mountComponent({
-          keyPath: 'test',
-          leftValue: null,
-          rightValue: 'value',
-          status: 'missing-left',
-        });
+        keyPath: 'test',
+        leftValue: null,
+        rightValue: 'value',
+        status: 'missing-left',
+      });
 
       expect(wrapper.text()).toContain('(missing)');
     });
 
     it('should display "(missing)" for null right value', () => {
       const wrapper = mountComponent({
-          keyPath: 'test',
-          leftValue: 'value',
-          rightValue: null,
-          status: 'missing-right',
-        });
+        keyPath: 'test',
+        leftValue: 'value',
+        rightValue: null,
+        status: 'missing-right',
+      });
 
       expect(wrapper.text()).toContain('(missing)');
     });
 
     it('should handle string values', () => {
       const wrapper = mountComponent({
-          keyPath: 'test',
-          leftValue: 'hello',
-          rightValue: 'world',
-          status: 'different',
-        });
+        keyPath: 'test',
+        leftValue: 'hello',
+        rightValue: 'world',
+        status: 'different',
+      });
 
       expect(wrapper.text()).toContain('hello');
       expect(wrapper.text()).toContain('world');
@@ -178,11 +178,11 @@ describe('KeyDiffItem', () => {
 
     it('should handle number values', () => {
       const wrapper = mountComponent({
-          keyPath: 'test',
-          leftValue: 42,
-          rightValue: 100,
-          status: 'different',
-        });
+        keyPath: 'test',
+        leftValue: 42,
+        rightValue: 100,
+        status: 'different',
+      });
 
       expect(wrapper.text()).toContain('42');
       expect(wrapper.text()).toContain('100');
@@ -190,11 +190,11 @@ describe('KeyDiffItem', () => {
 
     it('should handle boolean values', () => {
       const wrapper = mountComponent({
-          keyPath: 'test',
-          leftValue: true,
-          rightValue: false,
-          status: 'different',
-        });
+        keyPath: 'test',
+        leftValue: true,
+        rightValue: false,
+        status: 'different',
+      });
 
       expect(wrapper.text()).toContain('true');
       expect(wrapper.text()).toContain('false');
@@ -202,11 +202,10 @@ describe('KeyDiffItem', () => {
 
     it('should handle object values by showing JSON representation', () => {
       const wrapper = mountComponent({
-          keyPath: 'test',
-          leftValue: { nested: 'value' },
-          rightValue: { nested: 'other' },
-          status: 'different',
-        },
+        keyPath: 'test',
+        leftValue: { nested: 'value' },
+        rightValue: { nested: 'other' },
+        status: 'different',
       });
 
       const text = wrapper.text();
@@ -215,11 +214,11 @@ describe('KeyDiffItem', () => {
 
     it('should handle array values by showing JSON representation', () => {
       const wrapper = mountComponent({
-          keyPath: 'test',
-          leftValue: [1, 2, 3],
-          rightValue: [4, 5, 6],
-          status: 'different',
-        });
+        keyPath: 'test',
+        leftValue: [1, 2, 3],
+        rightValue: [4, 5, 6],
+        status: 'different',
+      });
 
       const text = wrapper.text();
       expect(text).toMatch(/\[.*\]/);
@@ -229,11 +228,11 @@ describe('KeyDiffItem', () => {
   describe('Event emissions', () => {
     it('should emit add-key event when add button is clicked for missing-left', async () => {
       const wrapper = mountComponent({
-          keyPath: 'app.welcome',
-          leftValue: null,
-          rightValue: 'Bienvenue',
-          status: 'missing-left',
-        });
+        keyPath: 'app.welcome',
+        leftValue: null,
+        rightValue: 'Bienvenue',
+        status: 'missing-left',
+      });
 
       const addButton = wrapper.find('.add-key-button');
       expect(addButton.exists()).toBe(true);
@@ -251,11 +250,11 @@ describe('KeyDiffItem', () => {
 
     it('should emit add-key event when add button is clicked for missing-right', async () => {
       const wrapper = mountComponent({
-          keyPath: 'app.goodbye',
-          leftValue: 'Goodbye',
-          rightValue: null,
-          status: 'missing-right',
-        });
+        keyPath: 'app.goodbye',
+        leftValue: 'Goodbye',
+        rightValue: null,
+        status: 'missing-right',
+      });
 
       const addButton = wrapper.find('.add-key-button');
       expect(addButton.exists()).toBe(true);
@@ -273,11 +272,11 @@ describe('KeyDiffItem', () => {
 
     it('should emit edit-value event when edit button is clicked', async () => {
       const wrapper = mountComponent({
-          keyPath: 'app.title',
-          leftValue: 'My App',
-          rightValue: 'Mon App',
-          status: 'different',
-        });
+        keyPath: 'app.title',
+        leftValue: 'My App',
+        rightValue: 'Mon App',
+        status: 'different',
+      });
 
       const editButton = wrapper.find('.edit-value-button');
       if (editButton.exists()) {
@@ -288,11 +287,11 @@ describe('KeyDiffItem', () => {
 
     it('should not show add button for identical status', () => {
       const wrapper = mountComponent({
-          keyPath: 'app.name',
-          leftValue: 'App',
-          rightValue: 'App',
-          status: 'identical',
-        });
+        keyPath: 'app.name',
+        leftValue: 'App',
+        rightValue: 'App',
+        status: 'identical',
+      });
 
       const addButton = wrapper.find('.add-key-button');
       expect(addButton.exists()).toBe(false);
@@ -300,11 +299,11 @@ describe('KeyDiffItem', () => {
 
     it('should not show add button for different status', () => {
       const wrapper = mountComponent({
-          keyPath: 'app.title',
-          leftValue: 'My App',
-          rightValue: 'Mon App',
-          status: 'different',
-        });
+        keyPath: 'app.title',
+        leftValue: 'My App',
+        rightValue: 'Mon App',
+        status: 'different',
+      });
 
       const addButton = wrapper.find('.add-key-button');
       expect(addButton.exists()).toBe(false);
@@ -314,11 +313,11 @@ describe('KeyDiffItem', () => {
   describe('Props validation', () => {
     it('should accept valid keyPath prop', () => {
       const wrapper = mountComponent({
-          keyPath: 'valid.key.path',
-          leftValue: 'test',
-          rightValue: 'test',
-          status: 'identical',
-        });
+        keyPath: 'valid.key.path',
+        leftValue: 'test',
+        rightValue: 'test',
+        status: 'identical',
+      });
 
       expect(wrapper.props('keyPath')).toBe('valid.key.path');
     });
@@ -333,11 +332,11 @@ describe('KeyDiffItem', () => {
 
       statuses.forEach((status) => {
         const wrapper = mountComponent({
-            keyPath: 'test',
-            leftValue: 'test',
-            rightValue: 'test',
-            status,
-          });
+          keyPath: 'test',
+          leftValue: 'test',
+          rightValue: 'test',
+          status,
+        });
 
         expect(wrapper.props('status')).toBe(status);
       });
@@ -345,11 +344,11 @@ describe('KeyDiffItem', () => {
 
     it('should handle null values in props', () => {
       const wrapper = mountComponent({
-          keyPath: 'test',
-          leftValue: null,
-          rightValue: null,
-          status: 'identical',
-        });
+        keyPath: 'test',
+        leftValue: null,
+        rightValue: null,
+        status: 'identical',
+      });
 
       expect(wrapper.props('leftValue')).toBeNull();
       expect(wrapper.props('rightValue')).toBeNull();
@@ -359,11 +358,11 @@ describe('KeyDiffItem', () => {
   describe('Edge cases', () => {
     it('should handle empty string key path', () => {
       const wrapper = mountComponent({
-          keyPath: '',
-          leftValue: 'test',
-          rightValue: 'test',
-          status: 'identical',
-        });
+        keyPath: '',
+        leftValue: 'test',
+        rightValue: 'test',
+        status: 'identical',
+      });
 
       expect(wrapper.props('keyPath')).toBe('');
     });
@@ -371,22 +370,22 @@ describe('KeyDiffItem', () => {
     it('should handle very long key paths', () => {
       const longPath = 'a.very.long.nested.key.path.that.goes.deep';
       const wrapper = mountComponent({
-          keyPath: longPath,
-          leftValue: 'test',
-          rightValue: 'test',
-          status: 'identical',
-        });
+        keyPath: longPath,
+        leftValue: 'test',
+        rightValue: 'test',
+        status: 'identical',
+      });
 
       expect(wrapper.text()).toContain(longPath);
     });
 
     it('should handle special characters in values', () => {
       const wrapper = mountComponent({
-          keyPath: 'test',
-          leftValue: 'Hello "World" & <Friends>',
-          rightValue: 'Bonjour "Monde" & <Amis>',
-          status: 'different',
-        });
+        keyPath: 'test',
+        leftValue: 'Hello "World" & <Friends>',
+        rightValue: 'Bonjour "Monde" & <Amis>',
+        status: 'different',
+      });
 
       expect(wrapper.text()).toContain('Hello');
       expect(wrapper.text()).toContain('Bonjour');
@@ -394,11 +393,11 @@ describe('KeyDiffItem', () => {
 
     it('should handle undefined values', () => {
       const wrapper = mountComponent({
-          keyPath: 'test',
-          leftValue: undefined,
-          rightValue: 'value',
-          status: 'missing-left',
-        });
+        keyPath: 'test',
+        leftValue: undefined,
+        rightValue: 'value',
+        status: 'missing-left',
+      });
 
       // Vue props with default: null will be null when undefined is passed
       expect(wrapper.props('leftValue')).toBeNull();
@@ -406,22 +405,22 @@ describe('KeyDiffItem', () => {
 
     it('should handle zero as a value', () => {
       const wrapper = mountComponent({
-          keyPath: 'test',
-          leftValue: 0,
-          rightValue: 0,
-          status: 'identical',
-        });
+        keyPath: 'test',
+        leftValue: 0,
+        rightValue: 0,
+        status: 'identical',
+      });
 
       expect(wrapper.text()).toContain('0');
     });
 
     it('should handle empty strings as values', () => {
       const wrapper = mountComponent({
-          keyPath: 'test',
-          leftValue: '',
-          rightValue: '',
-          status: 'identical',
-        });
+        keyPath: 'test',
+        leftValue: '',
+        rightValue: '',
+        status: 'identical',
+      });
 
       expect(wrapper.props('leftValue')).toBe('');
       expect(wrapper.props('rightValue')).toBe('');
@@ -431,11 +430,11 @@ describe('KeyDiffItem', () => {
   describe('Accessibility', () => {
     it('should have accessible button for add-key action', () => {
       const wrapper = mountComponent({
-          keyPath: 'app.welcome',
-          leftValue: null,
-          rightValue: 'Bienvenue',
-          status: 'missing-left',
-        });
+        keyPath: 'app.welcome',
+        leftValue: null,
+        rightValue: 'Bienvenue',
+        status: 'missing-left',
+      });
 
       const addButton = wrapper.find('.add-key-button');
       expect(addButton.attributes('aria-label')).toBeTruthy();
@@ -443,11 +442,11 @@ describe('KeyDiffItem', () => {
 
     it('should have role attribute on key-diff-item', () => {
       const wrapper = mountComponent({
-          keyPath: 'test',
-          leftValue: 'test',
-          rightValue: 'test',
-          status: 'identical',
-        });
+        keyPath: 'test',
+        leftValue: 'test',
+        rightValue: 'test',
+        status: 'identical',
+      });
 
       const item = wrapper.find('.key-diff-item');
       expect(item.attributes('role')).toBeTruthy();
