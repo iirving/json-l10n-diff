@@ -106,5 +106,9 @@
     "jsonValidationFailedLine": "Échec de la validation JSON : {error} à la ligne {line}",
     "parseJsonFailed": "Échec de l'analyse JSON : {message}",
     "readFileFailed": "Échec de la lecture du fichier"
+  },
+  "defaults": {
+    "file1": "Fichier 1",
+    "file2": "Fichier 2"
   }
 }

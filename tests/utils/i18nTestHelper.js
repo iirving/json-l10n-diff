@@ -126,6 +126,10 @@ const defaultEnglishMessages = {
     parseJsonFailed: 'Failed to parse JSON: {message}',
     readFileFailed: 'Failed to read file',
   },
+  defaults: {
+    file1: 'File 1',
+    file2: 'File 2',
+  },
 };
 
 /**
