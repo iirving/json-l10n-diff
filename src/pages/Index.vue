@@ -12,12 +12,14 @@ import { ref, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 import { useFileStore } from '@/stores/useFileStore.js';
+import { useEditStore } from '@/stores/useEditStore.js';
 import ComparisonView from '@/components/ComparisonView.vue';
 import FileUploader from '@/components/FileUploader.vue';
 
 // Composables and stores
 const { t } = useI18n();
 const fileStore = useFileStore();
+const editStore = useEditStore();
 const { hasFiles } = storeToRefs(fileStore);
 const { setFile1, setFile2, runComparison, reset } = fileStore;
 
@@ -26,14 +28,21 @@ const fileUploader1 = ref(null);
 const fileUploader2 = ref(null);
 
 // Computed properties
-const file1 = computed(() => fileStore.file1?.data || null);
-const file2 = computed(() => fileStore.file2?.data || null);
+const file1 = computed(() => {
+  const originalData = fileStore.file1?.data || null;
+  return editStore.getCurrentData('file1', originalData);
+});
+const file2 = computed(() => {
+  const originalData = fileStore.file2?.data || null;
+  return editStore.getCurrentData('file2', originalData);
+});
 
 /**
  * Clear data - reset store and file uploaders
  */
 const clearData = () => {
   reset();
+  editStore.clearAllEdits();
 
   // Reset both file uploaders if they have the reset method
   if (fileUploader1.value && typeof fileUploader1.value.reset === 'function') {
@@ -96,18 +105,93 @@ const handleFile2Error = (errorData) => {
 
 /**
  * Handle add key to file1
+ * @param {object} param0 - Add key details
+ * @param {string} param0.keyPath - Dot-notation path to the key
+ * @param {*} param0.value - Value to add
  */
 const handleAddKeyToFile1 = ({ keyPath, value }) => {
-  // In a real implementation, this would update the file1 data
-  alert(t('actions.addKeyToFile1', { keyPath, value: JSON.stringify(value) }));
+  const originalData = fileStore.file1?.data;
+  if (!originalData) {
+    console.error('Cannot add key: file1 not loaded');
+    return;
+  }
+
+  // Add the edit to history
+  editStore.addEdit('file1', keyPath, value, 'add');
+
+  // Apply edits to get updated data
+  editStore.applyEdit('file1', originalData);
+
+  // Re-run comparison with updated data
+  if (hasFiles.value) {
+    try {
+      runComparison();
+    } catch (error) {
+      console.error('Comparison failed after adding key:', error);
+    }
+  }
 };
 
 /**
  * Handle add key to file2
+ * @param {object} param0 - Add key details
+ * @param {string} param0.keyPath - Dot-notation path to the key
+ * @param {*} param0.value - Value to add
  */
 const handleAddKeyToFile2 = ({ keyPath, value }) => {
-  // In a real implementation, this would update the file2 data
-  alert(t('actions.addKeyToFile2', { keyPath, value: JSON.stringify(value) }));
+  const originalData = fileStore.file2?.data;
+  if (!originalData) {
+    console.error('Cannot add key: file2 not loaded');
+    return;
+  }
+
+  // Add the edit to history
+  editStore.addEdit('file2', keyPath, value, 'add');
+
+  // Apply edits to get updated data
+  editStore.applyEdit('file2', originalData);
+
+  // Re-run comparison with updated data
+  if (hasFiles.value) {
+    try {
+      runComparison();
+    } catch (error) {
+      console.error('Comparison failed after adding key:', error);
+    }
+  }
+};
+
+/**
+ * Handle value changed event
+ * @param {object} param0 - Value change details
+ * @param {string} param0.keyPath - Dot-notation path to the key
+ * @param {*} param0.newValue - New value
+ * @param {string} param0.targetFile - 'file1' or 'file2'
+ */
+const handleValueChanged = ({ keyPath, newValue, targetFile }) => {
+  const fileKey = targetFile || 'file1';
+  const originalData =
+    fileKey === 'file1' ? fileStore.file1?.data : fileStore.file2?.data;
+
+  if (!originalData) {
+    console.error(`Cannot edit value: ${fileKey} not loaded`);
+    return;
+  }
+
+  // Add the edit to history
+  editStore.addEdit(fileKey, keyPath, newValue, 'modify');
+
+  // Apply edits to get updated data
+  editStore.applyEdit(fileKey, originalData);
+
+  // Re-run comparison with updated data
+  if (hasFiles.value) {
+    try {
+      runComparison();
+    } catch (error) {
+      console.error('Comparison failed after editing value:', error);
+    }
+  }
 };
 </script>
 
@@ -184,6 +268,7 @@ const handleAddKeyToFile2 = ({ keyPath, value }) => {
           :file2-name="fileStore.file2?.fileName || t('defaults.file2')"
           @add-key-to-file1="handleAddKeyToFile1"
           @add-key-to-file2="handleAddKeyToFile2"
+          @value-changed="handleValueChanged"
         />
       </section>
 
