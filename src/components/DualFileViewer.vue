@@ -92,7 +92,7 @@ const treeStructure = computed(() => {
         keyPath,
         value1,
         value2,
-        status: diffResult?.status || 'unknown',
+        status: diffResult?.status || null,
         isParent: isObj1,
         isMissingInFile2: !keys2.includes(key),
         children: [],
@@ -245,17 +245,9 @@ defineExpose({
 
       <!-- Tree Content -->
       <div class="tree-content">
-        <DualTreeNode
-          v-for="node in treeStructure"
-          :key="node.keyPath"
-          :node="node"
-          :depth="0"
-          :is-expanded="isExpanded(node.keyPath)"
-          :expanded-nodes="expandedNodes"
-          @toggle="toggleNode"
-          @add-to-file1="handleAddToFile1"
-          @add-to-file2="handleAddToFile2"
-        />
+        <DualTreeNode v-for="node in treeStructure" :key="node.keyPath" :node="node" :depth="0"
+          :is-expanded="isExpanded(node.keyPath)" :expanded-nodes="expandedNodes" @toggle="toggleNode"
+          @add-to-file1="handleAddToFile1" @add-to-file2="handleAddToFile2" />
       </div>
     </div>
   </div>
