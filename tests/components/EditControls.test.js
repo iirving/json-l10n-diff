@@ -253,7 +253,9 @@ describe('EditControls', () => {
         // With the current implementation, handleSave emits unconditionally
         // but the button is disabled so no action would occur in real usage
         // This test documents the actual behavior
-        expect(wrapper.find('[data-testid="save-btn"]').attributes('disabled')).toBeDefined();
+        expect(
+          wrapper.find('[data-testid="save-btn"]').attributes('disabled')
+        ).toBeDefined();
       });
     });
 

@@ -205,12 +205,16 @@ describe('TreeViewer', () => {
     });
 
     it('should apply identical class for keys with same values', () => {
-      const identicalNode = wrapper.find('[data-testid="tree-node"][data-status="identical"]');
+      const identicalNode = wrapper.find(
+        '[data-testid="tree-node"][data-status="identical"]'
+      );
       expect(identicalNode.exists()).toBe(true);
     });
 
     it('should apply different class for keys with different values', () => {
-      const differentNode = wrapper.find('[data-testid="tree-node"][data-status="different"]');
+      const differentNode = wrapper.find(
+        '[data-testid="tree-node"][data-status="different"]'
+      );
       expect(differentNode.exists()).toBe(true);
     });
 

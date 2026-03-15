@@ -88,16 +88,9 @@ function handleNodeToggled(toggleDetails) {
     </div>
 
     <div v-else class="comparison-container" data-testid="comparison-container">
-      <DualFileViewer
-        :file1="file1"
-        :file2="file2"
-        :file1-name="file1Name"
-        :file2-name="file2Name"
-        @add-key-to-file1="handleAddKeyToFile1"
-        @add-key-to-file2="handleAddKeyToFile2"
-        @value-changed="handleValueEdited"
-        @node-toggled="handleNodeToggled"
-      />
+      <DualFileViewer :file1="file1" :file2="file2" :file1-name="file1Name" :file2-name="file2Name"
+        @add-key-to-file1="handleAddKeyToFile1" @add-key-to-file2="handleAddKeyToFile2"
+        @value-changed="handleValueEdited" @node-toggled="handleNodeToggled" />
     </div>
   </div>
 </template>
