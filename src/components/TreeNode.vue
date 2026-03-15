@@ -206,19 +206,33 @@ const handleEditBlur = () => {
   <div
     class="tree-node"
     :class="{ expanded: isExpanded, editing: isEditing }"
+    data-testid="tree-node"
     :data-depth="depth"
     :data-key-path="keyPath"
     :data-status="diffStatus"
     :data-parent="parentPath"
   >
-    <div class="tree-node-content" :style="{ paddingLeft: depth * 4 + 'px' }">
-      <span v-if="isParent" class="expand-icon" @click="handleToggle">
+    <div
+      class="tree-node-content"
+      data-testid="tree-node-content"
+      :style="{ paddingLeft: depth * 4 + 'px' }"
+    >
+      <span
+        v-if="isParent"
+        class="expand-icon"
+        data-testid="expand-icon"
+        @click="handleToggle"
+      >
         {{ isExpanded ? '▼' : '▶' }}
       </span>
-      <span v-else class="expand-icon-placeholder"></span>
+      <span
+        v-else
+        class="expand-icon-placeholder"
+        data-testid="expand-icon-placeholder"
+      ></span>
 
-      <span class="node-key">{{ nodeKey }}</span>
-      <span class="node-separator">: </span>
+      <span class="node-key" data-testid="node-key">{{ nodeKey }}</span>
+      <span class="node-separator" data-testid="node-separator">: </span>
 
       <!-- Editable value display -->
       <template v-if="!isParent">
@@ -229,6 +243,7 @@ const handleEditBlur = () => {
             v-model="editValue"
             type="text"
             class="edit-input"
+            data-testid="edit-input"
             @keydown="handleEditKeydown"
             @blur="handleEditBlur"
           />
@@ -237,6 +252,7 @@ const handleEditBlur = () => {
         <span
           v-else
           class="node-value"
+          data-testid="node-value"
           :class="{ editable: canEdit }"
           :role="canEdit ? 'button' : undefined"
           :tabindex="canEdit ? 0 : undefined"
@@ -245,10 +261,16 @@ const handleEditBlur = () => {
           @keydown.enter="canEdit && startEditing()"
         >
           {{ formatValue(value) }}
-          <span v-if="canEdit" class="edit-hint" aria-hidden="true">✏️</span>
+          <span
+            v-if="canEdit"
+            class="edit-hint"
+            data-testid="edit-hint"
+            aria-hidden="true"
+            >✏️</span
+          >
         </span>
       </template>
-      <span v-else class="node-value-hint">{{
+      <span v-else class="node-value-hint" data-testid="node-value-hint">{{
         isExpanded ? '' : '{...}'
       }}</span>
     </div>

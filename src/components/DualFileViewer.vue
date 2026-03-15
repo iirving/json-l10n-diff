@@ -38,11 +38,7 @@ const props = defineProps({
 });
 
 // Emits
-const emit = defineEmits([
-  'add-key-to-file1',
-  'add-key-to-file2',
-  'value-changed',
-]);
+const emit = defineEmits(['add-key-to-file1', 'add-key-to-file2']);
 
 // Composables
 const { t } = useI18n();
@@ -92,7 +88,7 @@ const treeStructure = computed(() => {
         keyPath,
         value1,
         value2,
-        status: diffResult?.status || 'unknown',
+        status: diffResult?.status || null,
         isParent: isObj1,
         isMissingInFile2: !keys2.includes(key),
         children: [],

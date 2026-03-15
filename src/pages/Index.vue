@@ -12,13 +12,17 @@ import { ref, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 import { useFileStore } from '@/stores/useFileStore.js';
+import { useEditStore } from '@/stores/useEditStore.js';
 import ComparisonView from '@/components/ComparisonView.vue';
+import EditControls from '@/components/EditControls.vue';
 import FileUploader from '@/components/FileUploader.vue';
 
 // Composables and stores
 const { t } = useI18n();
 const fileStore = useFileStore();
+const editStore = useEditStore();
 const { hasFiles } = storeToRefs(fileStore);
+const { hasFile1Edits, hasFile2Edits } = storeToRefs(editStore);
 const { setFile1, setFile2, runComparison, reset } = fileStore;
 
 // Reactive state
@@ -26,14 +30,35 @@ const fileUploader1 = ref(null);
 const fileUploader2 = ref(null);
 
 // Computed properties
-const file1 = computed(() => fileStore.file1?.data || null);
-const file2 = computed(() => fileStore.file2?.data || null);
+
+/**
+ * Maps a file store entry to the shape EditControls expects
+ * @param {Object|null} storeFile - File object from fileStore
+ * @returns {Object|null} File object with `name` property
+ */
+const toEditFile = (storeFile) => {
+  if (!storeFile) return null;
+  return { name: storeFile.fileName, ...storeFile };
+};
+
+const editFile1 = computed(() => toEditFile(fileStore.file1));
+const editFile2 = computed(() => toEditFile(fileStore.file2));
+
+const file1 = computed(() => {
+  const originalData = fileStore.file1?.data || null;
+  return editStore.getCurrentData('file1', originalData);
+});
+const file2 = computed(() => {
+  const originalData = fileStore.file2?.data || null;
+  return editStore.getCurrentData('file2', originalData);
+});
 
 /**
  * Clear data - reset store and file uploaders
  */
 const clearData = () => {
   reset();
+  editStore.clearAllEdits();
 
   // Reset both file uploaders if they have the reset method
   if (fileUploader1.value && typeof fileUploader1.value.reset === 'function') {
@@ -50,6 +75,7 @@ const clearData = () => {
  */
 const handleFile1Loaded = (parsedData) => {
   setFile1(parsedData);
+  editStore.clearEdits('file1');
 
   // Auto-run comparison if both files are now loaded
   if (hasFiles.value) {
@@ -75,6 +101,7 @@ const handleFile1Error = (errorData) => {
  */
 const handleFile2Loaded = (parsedData) => {
   setFile2(parsedData);
+  editStore.clearEdits('file2');
 
   // Auto-run comparison if both files are now loaded
   if (hasFiles.value) {
@@ -96,40 +123,178 @@ const handleFile2Error = (errorData) => {
 
 /**
  * Handle add key to file1
+ * @param {object} param0 - Add key details
+ * @param {string} param0.keyPath - Dot-notation path to the key
+ * @param {*} param0.value - Value to add
  */
 const handleAddKeyToFile1 = ({ keyPath, value }) => {
-  // In a real implementation, this would update the file1 data
-  alert(t('actions.addKeyToFile1', { keyPath, value: JSON.stringify(value) }));
+  const originalData = fileStore.file1?.data;
+  if (!originalData) {
+    console.error('Cannot add key: file1 not loaded');
+    return;
+  }
+
+  // Add the edit to history
+  editStore.addEdit('file1', keyPath, value, 'add');
+
+  // Apply edits to get updated data
+  editStore.applyEdit('file1', originalData);
+
+  // Re-run comparison with updated data
+  if (hasFiles.value) {
+    try {
+      runComparison();
+    } catch (error) {
+      console.error('Comparison failed after adding key:', error);
+    }
+  }
 };
 
 /**
  * Handle add key to file2
+ * @param {object} param0 - Add key details
+ * @param {string} param0.keyPath - Dot-notation path to the key
+ * @param {*} param0.value - Value to add
  */
 const handleAddKeyToFile2 = ({ keyPath, value }) => {
-  // In a real implementation, this would update the file2 data
-  alert(t('actions.addKeyToFile2', { keyPath, value: JSON.stringify(value) }));
+  const originalData = fileStore.file2?.data;
+  if (!originalData) {
+    console.error('Cannot add key: file2 not loaded');
+    return;
+  }
+
+  // Add the edit to history
+  editStore.addEdit('file2', keyPath, value, 'add');
+
+  // Apply edits to get updated data
+  editStore.applyEdit('file2', originalData);
+
+  // Re-run comparison with updated data
+  if (hasFiles.value) {
+    try {
+      runComparison();
+    } catch (error) {
+      console.error('Comparison failed after adding key:', error);
+    }
+  }
+};
+
+const PRETTIFY_SPACES = 2;
+
+/**
+ * Download a JSON file to the user's machine
+ * @param {string} fileName - Name for the downloaded file
+ * @param {Object} data - JSON data to save
+ */
+const downloadJsonFile = (fileName, data) => {
+  const json = JSON.stringify(data, null, PRETTIFY_SPACES);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = fileName;
+  link.click();
+  URL.revokeObjectURL(url);
+};
+
+/**
+ * Handle save for file1 — downloads the current (edited) data
+ */
+const handleSaveFile1 = () => {
+  const data = file1.value;
+  const fileName = fileStore.file1?.fileName || 'file1.json';
+  if (!data) return;
+  downloadJsonFile(fileName, data);
+};
+
+/**
+ * Handle save for file2 — downloads the current (edited) data
+ */
+const handleSaveFile2 = () => {
+  const data = file2.value;
+  const fileName = fileStore.file2?.fileName || 'file2.json';
+  if (!data) return;
+  downloadJsonFile(fileName, data);
+};
+
+/**
+ * Handle prettify for file1 — re-applies edits with a formatted data pass
+ */
+const handlePrettifyFile1 = () => {
+  const data = file1.value;
+  if (!data) return;
+  // Prettify by round-tripping through JSON stringify/parse
+  const prettified = JSON.parse(JSON.stringify(data, null, PRETTIFY_SPACES));
+  editStore.applyEdit('file1', prettified);
+};
+
+/**
+ * Handle prettify for file2 — re-applies edits with a formatted data pass
+ */
+const handlePrettifyFile2 = () => {
+  const data = file2.value;
+  if (!data) return;
+  // Prettify by round-tripping through JSON stringify/parse
+  const prettified = JSON.parse(JSON.stringify(data, null, PRETTIFY_SPACES));
+  editStore.applyEdit('file2', prettified);
+};
+
+/**
+ * Handle reset edits for file1
+ * Clears all edits and re-runs comparison with original data
+ */
+const handleResetFile1 = () => {
+  editStore.clearEdits('file1');
+
+  if (hasFiles.value) {
+    try {
+      runComparison();
+    } catch (error) {
+      console.error('Comparison failed after reset:', error);
+    }
+  }
+};
+
+/**
+ * Handle reset edits for file2
+ * Clears all edits and re-runs comparison with original data
+ */
+const handleResetFile2 = () => {
+  editStore.clearEdits('file2');
+
+  if (hasFiles.value) {
+    try {
+      runComparison();
+    } catch (error) {
+      console.error('Comparison failed after reset:', error);
+    }
+  }
 };
 </script>
 
 <template>
-  <div class="index-page">
-    <header class="page-header">
+  <div class="index-page" data-testid="index-page">
+    <header class="page-header" data-testid="page-header">
       <h1>{{ t('app.title') }}</h1>
-      <p class="subtitle">
+      <p class="subtitle" data-testid="subtitle">
         {{ t('app.subtitle') }}
       </p>
     </header>
 
-    <main class="page-content">
+    <main class="page-content" data-testid="page-content">
       <!-- Controls -->
-      <section class="controls-section">
+      <section class="controls-section" data-testid="controls-section">
         <div class="button-group">
-          <button class="control-btn" @click="clearData">
+          <button
+            class="control-btn"
+            data-testid="clear-all-btn"
+            @click="clearData"
+          >
             {{ t('controls.clearAll') }}
           </button>
         </div>
 
-        <div class="upload-section">
+        <div class="upload-section" data-testid="upload-section">
           <div class="upload-row">
             <div class="upload-group">
               <FileUploader
@@ -176,7 +341,7 @@ const handleAddKeyToFile2 = ({ keyPath, value }) => {
       </section>
 
       <!-- Comparison View -->
-      <section class="viewer-section">
+      <section class="viewer-section" data-testid="viewer-section">
         <ComparisonView
           :file1="file1"
           :file2="file2"
@@ -185,6 +350,30 @@ const handleAddKeyToFile2 = ({ keyPath, value }) => {
           @add-key-to-file1="handleAddKeyToFile1"
           @add-key-to-file2="handleAddKeyToFile2"
         />
+      </section>
+
+      <!-- Edit Controls -->
+      <section
+        v-if="hasFiles"
+        class="edit-controls-section"
+        data-testid="edit-controls-section"
+      >
+        <div class="edit-controls-row">
+          <EditControls
+            :file="editFile1"
+            :modified="hasFile1Edits"
+            @save="handleSaveFile1"
+            @prettify="handlePrettifyFile1"
+            @reset="handleResetFile1"
+          />
+          <EditControls
+            :file="editFile2"
+            :modified="hasFile2Edits"
+            @save="handleSaveFile2"
+            @prettify="handlePrettifyFile2"
+            @reset="handleResetFile2"
+          />
+        </div>
       </section>
 
       <!-- Instructions -->
@@ -416,6 +605,16 @@ const handleAddKeyToFile2 = ({ keyPath, value }) => {
 .viewer-section {
   margin-bottom: var(--spacing-lg);
   height: 600px;
+}
+
+.edit-controls-section {
+  margin-bottom: var(--spacing-lg);
+}
+
+.edit-controls-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-lg);
 }
 
 .instructions-section {

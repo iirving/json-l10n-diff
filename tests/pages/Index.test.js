@@ -12,6 +12,8 @@ import FileUploader from '@/components/FileUploader.vue';
 import ComparisonView from '@/components/ComparisonView.vue';
 import EditControls from '@/components/EditControls.vue';
 
+import { useEditStore } from '@/stores/useEditStore.js';
+
 // Create i18n instance for tests
 const i18n = createTestI18n();
 
@@ -752,7 +754,7 @@ describe('Index.vue', () => {
       expect(wrapper.vm.file2).toEqual(mockFile2Data.content);
 
       // Click Clear All button (note: stubbed components won't have reset method, but that's okay)
-      const clearButton = wrapper.find('.control-btn');
+      const clearButton = wrapper.find('[data-testid="clear-all-btn"]');
       expect(clearButton.text()).toBe('Clear All');
 
       // The clearData call will try to reset stubbed components which don't have the method
@@ -815,7 +817,9 @@ describe('Index.vue', () => {
       expect(uploaders[1].vm.selectedFile).toBeTruthy();
 
       // Click Clear All button
-      const clearButton = wrapperWithRealComponents.find('.control-btn');
+      const clearButton = wrapperWithRealComponents.find(
+        '[data-testid="clear-all-btn"]'
+      );
       await clearButton.trigger('click');
       await wrapperWithRealComponents.vm.$nextTick();
 
@@ -852,7 +856,7 @@ describe('Index.vue', () => {
       expect(wrapper.vm.file2).toEqual(mockFile2Data.content);
 
       // Click Clear All
-      const clearButton = wrapper.find('.control-btn');
+      const clearButton = wrapper.find('[data-testid="clear-all-btn"]');
       await clearButton.trigger('click');
       await wrapper.vm.$nextTick();
 
@@ -863,7 +867,7 @@ describe('Index.vue', () => {
     });
 
     it('Clear All button is always visible', () => {
-      const clearButton = wrapper.find('.control-btn');
+      const clearButton = wrapper.find('[data-testid="clear-all-btn"]');
       expect(clearButton.exists()).toBe(true);
       expect(clearButton.text()).toBe('Clear All');
     });
@@ -881,7 +885,7 @@ describe('Index.vue', () => {
       expect(wrapper.vm.file1).toEqual(mockFile1Data.content);
 
       // Clear
-      await wrapper.find('.control-btn').trigger('click');
+      await wrapper.find('[data-testid="clear-all-btn"]').trigger('click');
       await wrapper.vm.$nextTick();
       expect(wrapper.vm.file1).toBeNull();
 
@@ -894,6 +898,530 @@ describe('Index.vue', () => {
       });
       await wrapper.vm.$nextTick();
       expect(wrapper.vm.file1).toEqual(mockFile2Data.content);
+    });
+  });
+
+  describe('T025: Edit Event Wiring', () => {
+    let editStore;
+
+    beforeEach(() => {
+      editStore = useEditStore();
+    });
+
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+
+    /**
+     * Helper to upload both files
+     */
+    const uploadBothFiles = async (w) => {
+      const uploaders = w.findAllComponents(FileUploader);
+      await uploaders[0].vm.$emit('file-loaded', {
+        data: { key1: 'value1', nested: { a: '1' } },
+        keyCount: 3,
+        fileName: 'en.json',
+        fileSize: 1024,
+      });
+      await uploaders[1].vm.$emit('file-loaded', {
+        data: { key1: 'valeur1', nested: { a: '1' } },
+        keyCount: 3,
+        fileName: 'fr.json',
+        fileSize: 1024,
+      });
+      await w.vm.$nextTick();
+    };
+
+    describe('Add Key Events', () => {
+      it('handles add-key-to-file1 event from ComparisonView', async () => {
+        await uploadBothFiles(wrapper);
+
+        const comparison = wrapper.findComponent(ComparisonView);
+        await comparison.vm.$emit('add-key-to-file1', {
+          keyPath: 'newKey',
+          value: 'new value',
+        });
+        await wrapper.vm.$nextTick();
+
+        // File1 computed should now contain the added key
+        expect(wrapper.vm.file1).toHaveProperty('newKey', 'new value');
+      });
+
+      it('handles add-key-to-file2 event from ComparisonView', async () => {
+        await uploadBothFiles(wrapper);
+
+        const comparison = wrapper.findComponent(ComparisonView);
+        await comparison.vm.$emit('add-key-to-file2', {
+          keyPath: 'newKey',
+          value: 'nouvelle valeur',
+        });
+        await wrapper.vm.$nextTick();
+
+        // File2 computed should now contain the added key
+        expect(wrapper.vm.file2).toHaveProperty('newKey', 'nouvelle valeur');
+      });
+
+      it('records add-key edit in editStore history', async () => {
+        await uploadBothFiles(wrapper);
+
+        const comparison = wrapper.findComponent(ComparisonView);
+        await comparison.vm.$emit('add-key-to-file1', {
+          keyPath: 'addedKey',
+          value: 'added value',
+        });
+        await wrapper.vm.$nextTick();
+
+        const edit = editStore.getEdit('file1', 'addedKey');
+        expect(edit).toBeDefined();
+        expect(edit.editType).toBe('add');
+        expect(edit.newValue).toBe('added value');
+      });
+
+      it('does not add key when file1 is not loaded', async () => {
+        // Only upload file2
+        const uploaders = wrapper.findAllComponents(FileUploader);
+        await uploaders[1].vm.$emit('file-loaded', {
+          data: { key1: 'val' },
+          keyCount: 1,
+          fileName: 'fr.json',
+          fileSize: 512,
+        });
+        await wrapper.vm.$nextTick();
+
+        const consoleSpy = vi.spyOn(console, 'error');
+        const comparison = wrapper.findComponent(ComparisonView);
+        await comparison.vm.$emit('add-key-to-file1', {
+          keyPath: 'key',
+          value: 'val',
+        });
+
+        expect(consoleSpy).toHaveBeenCalledWith(
+          'Cannot add key: file1 not loaded'
+        );
+        // Verify no edit was recorded
+        expect(editStore.hasFile1Edits).toBe(false);
+        expect(wrapper.vm.file1).toBeNull();
+      });
+
+      it('does not add key when file2 is not loaded', async () => {
+        // Only upload file1
+        const uploaders = wrapper.findAllComponents(FileUploader);
+        await uploaders[0].vm.$emit('file-loaded', {
+          data: { key1: 'val' },
+          keyCount: 1,
+          fileName: 'en.json',
+          fileSize: 512,
+        });
+        await wrapper.vm.$nextTick();
+
+        const consoleSpy = vi.spyOn(console, 'error');
+        const comparison = wrapper.findComponent(ComparisonView);
+        await comparison.vm.$emit('add-key-to-file2', {
+          keyPath: 'key',
+          value: 'val',
+        });
+
+        expect(consoleSpy).toHaveBeenCalledWith(
+          'Cannot add key: file2 not loaded'
+        );
+        // Verify no edit was recorded
+        expect(editStore.hasFile2Edits).toBe(false);
+        expect(wrapper.vm.file2).toBeNull();
+      });
+    });
+
+    describe('Multiple Edits', () => {
+      it('accumulates multiple edits for the same file', async () => {
+        await uploadBothFiles(wrapper);
+
+        const comparison = wrapper.findComponent(ComparisonView);
+
+        await comparison.vm.$emit('add-key-to-file1', {
+          keyPath: 'newKey1',
+          value: 'value1',
+        });
+        await comparison.vm.$emit('add-key-to-file1', {
+          keyPath: 'newKey2',
+          value: 'value2',
+        });
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.vm.file1).toHaveProperty('newKey1', 'value1');
+        expect(wrapper.vm.file1).toHaveProperty('newKey2', 'value2');
+        expect(editStore.hasFile1Edits).toBe(true);
+      });
+
+      it('tracks edits independently per file', async () => {
+        await uploadBothFiles(wrapper);
+
+        const comparison = wrapper.findComponent(ComparisonView);
+
+        await comparison.vm.$emit('add-key-to-file1', {
+          keyPath: 'newKey',
+          value: 'file1 edit',
+        });
+        await wrapper.vm.$nextTick();
+
+        expect(editStore.hasFile1Edits).toBe(true);
+        expect(editStore.hasFile2Edits).toBe(false);
+
+        await comparison.vm.$emit('add-key-to-file2', {
+          keyPath: 'newKey',
+          value: 'file2 edit',
+        });
+        await wrapper.vm.$nextTick();
+
+        expect(editStore.hasFile1Edits).toBe(true);
+        expect(editStore.hasFile2Edits).toBe(true);
+      });
+    });
+
+    describe('EditControls Integration', () => {
+      it('shows EditControls when both files uploaded', async () => {
+        expect(
+          wrapper.find('[data-testid="edit-controls-section"]').exists()
+        ).toBe(false);
+
+        await uploadBothFiles(wrapper);
+
+        expect(
+          wrapper.find('[data-testid="edit-controls-section"]').exists()
+        ).toBe(true);
+        const editControlsComponents = wrapper.findAllComponents(EditControls);
+        expect(editControlsComponents).toHaveLength(2);
+      });
+
+      it('does not show EditControls when only one file uploaded', async () => {
+        const uploaders = wrapper.findAllComponents(FileUploader);
+        await uploaders[0].vm.$emit('file-loaded', {
+          data: { key1: 'val' },
+          keyCount: 1,
+          fileName: 'en.json',
+          fileSize: 512,
+        });
+        await wrapper.vm.$nextTick();
+
+        expect(
+          wrapper.find('[data-testid="edit-controls-section"]').exists()
+        ).toBe(false);
+      });
+
+      it('passes file prop with name to EditControls', async () => {
+        await uploadBothFiles(wrapper);
+
+        const editControlsComponents = wrapper.findAllComponents(EditControls);
+        expect(editControlsComponents[0].props('file').name).toBe('en.json');
+        expect(editControlsComponents[1].props('file').name).toBe('fr.json');
+      });
+
+      it('passes modified=false when no edits', async () => {
+        await uploadBothFiles(wrapper);
+
+        const editControlsComponents = wrapper.findAllComponents(EditControls);
+        expect(editControlsComponents[0].props('modified')).toBe(false);
+        expect(editControlsComponents[1].props('modified')).toBe(false);
+      });
+
+      it('passes modified=true after edit to file1', async () => {
+        await uploadBothFiles(wrapper);
+
+        const comparison = wrapper.findComponent(ComparisonView);
+        await comparison.vm.$emit('add-key-to-file1', {
+          keyPath: 'newKey',
+          value: 'edited',
+        });
+        await wrapper.vm.$nextTick();
+
+        const editControlsComponents = wrapper.findAllComponents(EditControls);
+        expect(editControlsComponents[0].props('modified')).toBe(true);
+        expect(editControlsComponents[1].props('modified')).toBe(false);
+      });
+
+      it('passes modified=true after edit to file2', async () => {
+        await uploadBothFiles(wrapper);
+
+        const comparison = wrapper.findComponent(ComparisonView);
+        await comparison.vm.$emit('add-key-to-file2', {
+          keyPath: 'newKey',
+          value: 'edited',
+        });
+        await wrapper.vm.$nextTick();
+
+        const editControlsComponents = wrapper.findAllComponents(EditControls);
+        expect(editControlsComponents[0].props('modified')).toBe(false);
+        expect(editControlsComponents[1].props('modified')).toBe(true);
+      });
+    });
+
+    describe('Reset Functionality', () => {
+      it('resets file1 edits when EditControls emits reset', async () => {
+        await uploadBothFiles(wrapper);
+
+        // Make an edit to file1
+        const comparison = wrapper.findComponent(ComparisonView);
+        await comparison.vm.$emit('add-key-to-file1', {
+          keyPath: 'newKey',
+          value: 'edited',
+        });
+        await wrapper.vm.$nextTick();
+        expect(editStore.hasFile1Edits).toBe(true);
+
+        // Trigger reset on first EditControls
+        const editControlsComponents = wrapper.findAllComponents(EditControls);
+        await editControlsComponents[0].vm.$emit('reset');
+        await wrapper.vm.$nextTick();
+
+        expect(editStore.hasFile1Edits).toBe(false);
+        // File1 should return to original data
+        expect(wrapper.vm.file1).toEqual({
+          key1: 'value1',
+          nested: { a: '1' },
+        });
+      });
+
+      it('resets file2 edits when EditControls emits reset', async () => {
+        await uploadBothFiles(wrapper);
+
+        // Make an edit to file2
+        const comparison = wrapper.findComponent(ComparisonView);
+        await comparison.vm.$emit('add-key-to-file2', {
+          keyPath: 'newKey',
+          value: 'edited',
+        });
+        await wrapper.vm.$nextTick();
+        expect(editStore.hasFile2Edits).toBe(true);
+
+        // Trigger reset on second EditControls
+        const editControlsComponents = wrapper.findAllComponents(EditControls);
+        await editControlsComponents[1].vm.$emit('reset');
+        await wrapper.vm.$nextTick();
+
+        expect(editStore.hasFile2Edits).toBe(false);
+        // File2 should return to original data
+        expect(wrapper.vm.file2).toEqual({
+          key1: 'valeur1',
+          nested: { a: '1' },
+        });
+      });
+
+      it('reset does not affect other file edits', async () => {
+        await uploadBothFiles(wrapper);
+
+        const comparison = wrapper.findComponent(ComparisonView);
+
+        // Edit both files
+        await comparison.vm.$emit('add-key-to-file1', {
+          keyPath: 'newKey',
+          value: 'file1 edit',
+        });
+        await comparison.vm.$emit('add-key-to-file2', {
+          keyPath: 'newKey',
+          value: 'file2 edit',
+        });
+        await wrapper.vm.$nextTick();
+
+        // Reset only file1
+        const editControlsComponents = wrapper.findAllComponents(EditControls);
+        await editControlsComponents[0].vm.$emit('reset');
+        await wrapper.vm.$nextTick();
+
+        expect(editStore.hasFile1Edits).toBe(false);
+        expect(editStore.hasFile2Edits).toBe(true);
+        expect(wrapper.vm.file2).toHaveProperty('newKey', 'file2 edit');
+      });
+    });
+
+    describe('Clear All with Edits', () => {
+      it('clears all edits when Clear All is clicked', async () => {
+        await uploadBothFiles(wrapper);
+
+        const comparison = wrapper.findComponent(ComparisonView);
+        await comparison.vm.$emit('add-key-to-file1', {
+          keyPath: 'newKey',
+          value: 'edited',
+        });
+        await comparison.vm.$emit('add-key-to-file2', {
+          keyPath: 'newKey',
+          value: 'edited',
+        });
+        await wrapper.vm.$nextTick();
+
+        expect(editStore.hasAnyEdits).toBe(true);
+
+        // Click Clear All
+        const clearButton = wrapper.find('[data-testid="clear-all-btn"]');
+        await clearButton.trigger('click');
+        await wrapper.vm.$nextTick();
+
+        expect(editStore.hasAnyEdits).toBe(false);
+        expect(editStore.hasFile1Edits).toBe(false);
+        expect(editStore.hasFile2Edits).toBe(false);
+      });
+    });
+
+    describe('Edit Clearing on File Upload', () => {
+      it('clears file1 edits when a new file1 is uploaded', async () => {
+        await uploadBothFiles(wrapper);
+
+        // Make an edit to file1
+        const comparison = wrapper.findComponent(ComparisonView);
+        await comparison.vm.$emit('add-key-to-file1', {
+          keyPath: 'newKey',
+          value: 'edited',
+        });
+        await wrapper.vm.$nextTick();
+        expect(editStore.hasFile1Edits).toBe(true);
+
+        // Upload a new file1
+        const uploaders = wrapper.findAllComponents(FileUploader);
+        await uploaders[0].vm.$emit('file-loaded', {
+          data: { replaced: 'data' },
+          keyCount: 1,
+          fileName: 'replaced.json',
+          fileSize: 256,
+        });
+        await wrapper.vm.$nextTick();
+
+        expect(editStore.hasFile1Edits).toBe(false);
+        expect(wrapper.vm.file1).toEqual({ replaced: 'data' });
+      });
+
+      it('clears file2 edits when a new file2 is uploaded', async () => {
+        await uploadBothFiles(wrapper);
+
+        // Make an edit to file2
+        const comparison = wrapper.findComponent(ComparisonView);
+        await comparison.vm.$emit('add-key-to-file2', {
+          keyPath: 'newKey',
+          value: 'edited',
+        });
+        await wrapper.vm.$nextTick();
+        expect(editStore.hasFile2Edits).toBe(true);
+
+        // Upload a new file2
+        const uploaders = wrapper.findAllComponents(FileUploader);
+        await uploaders[1].vm.$emit('file-loaded', {
+          data: { replaced: 'data' },
+          keyCount: 1,
+          fileName: 'replaced.json',
+          fileSize: 256,
+        });
+        await wrapper.vm.$nextTick();
+
+        expect(editStore.hasFile2Edits).toBe(false);
+        expect(wrapper.vm.file2).toEqual({ replaced: 'data' });
+      });
+
+      it('does not clear file2 edits when file1 is replaced', async () => {
+        await uploadBothFiles(wrapper);
+
+        const comparison = wrapper.findComponent(ComparisonView);
+        await comparison.vm.$emit('add-key-to-file2', {
+          keyPath: 'newKey',
+          value: 'edited',
+        });
+        await wrapper.vm.$nextTick();
+        expect(editStore.hasFile2Edits).toBe(true);
+
+        // Upload a new file1
+        const uploaders = wrapper.findAllComponents(FileUploader);
+        await uploaders[0].vm.$emit('file-loaded', {
+          data: { replaced: 'data' },
+          keyCount: 1,
+          fileName: 'replaced.json',
+          fileSize: 256,
+        });
+        await wrapper.vm.$nextTick();
+
+        // File2 edits should still be present
+        expect(editStore.hasFile2Edits).toBe(true);
+      });
+    });
+
+    describe('Save Functionality', () => {
+      it('triggers file download when save is emitted for file1', async () => {
+        await uploadBothFiles(wrapper);
+
+        // jsdom doesn't have URL.createObjectURL
+        const mockUrl = 'blob:mock-url';
+        globalThis.URL.createObjectURL = vi.fn().mockReturnValue(mockUrl);
+        globalThis.URL.revokeObjectURL = vi.fn();
+        const clickSpy = vi.fn();
+        vi.spyOn(document, 'createElement').mockReturnValue({
+          set href(val) {
+            this._href = val;
+          },
+          get href() {
+            return this._href;
+          },
+          download: '',
+          click: clickSpy,
+        });
+
+        const editControlsComponents = wrapper.findAllComponents(EditControls);
+        await editControlsComponents[0].vm.$emit('save');
+        await wrapper.vm.$nextTick();
+
+        expect(globalThis.URL.createObjectURL).toHaveBeenCalled();
+        expect(clickSpy).toHaveBeenCalled();
+        expect(globalThis.URL.revokeObjectURL).toHaveBeenCalledWith(mockUrl);
+      });
+
+      it('triggers file download when save is emitted for file2', async () => {
+        await uploadBothFiles(wrapper);
+
+        const mockUrl = 'blob:mock-url';
+        globalThis.URL.createObjectURL = vi.fn().mockReturnValue(mockUrl);
+        globalThis.URL.revokeObjectURL = vi.fn();
+        const clickSpy = vi.fn();
+        vi.spyOn(document, 'createElement').mockReturnValue({
+          set href(val) {
+            this._href = val;
+          },
+          get href() {
+            return this._href;
+          },
+          download: '',
+          click: clickSpy,
+        });
+
+        const editControlsComponents = wrapper.findAllComponents(EditControls);
+        await editControlsComponents[1].vm.$emit('save');
+        await wrapper.vm.$nextTick();
+
+        expect(globalThis.URL.createObjectURL).toHaveBeenCalled();
+        expect(clickSpy).toHaveBeenCalled();
+        expect(globalThis.URL.revokeObjectURL).toHaveBeenCalledWith(mockUrl);
+      });
+    });
+
+    describe('Prettify Functionality', () => {
+      it('prettifies file1 data when prettify is emitted', async () => {
+        await uploadBothFiles(wrapper);
+
+        const editControlsComponents = wrapper.findAllComponents(EditControls);
+        await editControlsComponents[0].vm.$emit('prettify');
+        await wrapper.vm.$nextTick();
+
+        // Data should still be identical (prettify doesn't change object structure)
+        expect(wrapper.vm.file1).toEqual({
+          key1: 'value1',
+          nested: { a: '1' },
+        });
+      });
+
+      it('prettifies file2 data when prettify is emitted', async () => {
+        await uploadBothFiles(wrapper);
+
+        const editControlsComponents = wrapper.findAllComponents(EditControls);
+        await editControlsComponents[1].vm.$emit('prettify');
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.vm.file2).toEqual({
+          key1: 'valeur1',
+          nested: { a: '1' },
+        });
+      });
     });
   });
 });

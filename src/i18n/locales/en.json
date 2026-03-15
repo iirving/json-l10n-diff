@@ -37,6 +37,9 @@
     "emptyState": "Upload two JSON files to compare",
     "noResults": "No comparison results yet"
   },
+  "treeViewer": {
+    "noData": "No data to display"
+  },
   "instructions": {
     "title": "Features:",
     "step1Title": "Unified Tree Structure:",
@@ -98,6 +101,12 @@
     "addKeyToFile2": "Add key \"{keyPath}\" to File 2 with value: {value}",
     "addKeyButton": "Add Key",
     "addKeyAriaLabel": "Add key {keyPath} to {target} file"
+  },
+  "keyDiffItem": {
+    "leftLabel": "Left:",
+    "rightLabel": "Right:",
+    "editButton": "Edit",
+    "editAriaLabel": "Edit value for {keyPath}"
   },
   "errors": {
     "bothFilesRequired": "Both files must be loaded before running comparison",

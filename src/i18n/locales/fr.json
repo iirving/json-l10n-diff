@@ -37,6 +37,9 @@
     "emptyState": "Téléchargez deux fichiers JSON à comparer",
     "noResults": "Aucun résultat de comparaison pour le moment"
   },
+  "treeViewer": {
+    "noData": "Aucune donnée à afficher"
+  },
   "instructions": {
     "title": "Fonctionnalités :",
     "step1Title": "Structure Arborescente Unifiée :",
@@ -98,6 +101,12 @@
     "addKeyToFile2": "Ajouter la clé \"{keyPath}\" au Fichier 2 avec la valeur : {value}",
     "addKeyButton": "Ajouter clé",
     "addKeyAriaLabel": "Ajouter la clé {keyPath} au fichier {target}"
+  },
+  "keyDiffItem": {
+    "leftLabel": "Gauche :",
+    "rightLabel": "Droite :",
+    "editButton": "Modifier",
+    "editAriaLabel": "Modifier la valeur de {keyPath}"
   },
   "errors": {
     "bothFilesRequired": "Les deux fichiers doivent être chargés avant d'exécuter la comparaison",

@@ -188,6 +188,7 @@ defineExpose({
     <button
       type="button"
       class="file-uploader__button"
+      data-testid="file-upload-btn"
       :class="{ 'has-error': hasError, 'has-file': hasFile && !hasError }"
       @click="triggerFileInput"
     >
@@ -350,6 +351,7 @@ defineExpose({
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
