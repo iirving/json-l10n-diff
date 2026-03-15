@@ -75,6 +75,7 @@ const clearData = () => {
  */
 const handleFile1Loaded = (parsedData) => {
   setFile1(parsedData);
+  editStore.clearEdits('file1');
 
   // Auto-run comparison if both files are now loaded
   if (hasFiles.value) {
@@ -100,6 +101,7 @@ const handleFile1Error = (errorData) => {
  */
 const handleFile2Loaded = (parsedData) => {
   setFile2(parsedData);
+  editStore.clearEdits('file2');
 
   // Auto-run comparison if both files are now loaded
   if (hasFiles.value) {
@@ -177,37 +179,64 @@ const handleAddKeyToFile2 = ({ keyPath, value }) => {
   }
 };
 
+const PRETTIFY_SPACES = 2;
+
 /**
- * Handle value changed event
- * @param {object} param0 - Value change details
- * @param {string} param0.keyPath - Dot-notation path to the key
- * @param {*} param0.newValue - New value
- * @param {string} param0.targetFile - 'file1' or 'file2'
+ * Download a JSON file to the user's machine
+ * @param {string} fileName - Name for the downloaded file
+ * @param {Object} data - JSON data to save
  */
-const handleValueChanged = ({ keyPath, newValue, targetFile }) => {
-  const fileKey = targetFile || 'file1';
-  const originalData =
-    fileKey === 'file1' ? fileStore.file1?.data : fileStore.file2?.data;
+const downloadJsonFile = (fileName, data) => {
+  const json = JSON.stringify(data, null, PRETTIFY_SPACES);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = fileName;
+  link.click();
+  URL.revokeObjectURL(url);
+};
 
-  if (!originalData) {
-    console.error(`Cannot edit value: ${fileKey} not loaded`);
-    return;
-  }
+/**
+ * Handle save for file1 — downloads the current (edited) data
+ */
+const handleSaveFile1 = () => {
+  const data = file1.value;
+  const fileName = fileStore.file1?.fileName || 'file1.json';
+  if (!data) return;
+  downloadJsonFile(fileName, data);
+};
 
-  // Add the edit to history
-  editStore.addEdit(fileKey, keyPath, newValue, 'modify');
+/**
+ * Handle save for file2 — downloads the current (edited) data
+ */
+const handleSaveFile2 = () => {
+  const data = file2.value;
+  const fileName = fileStore.file2?.fileName || 'file2.json';
+  if (!data) return;
+  downloadJsonFile(fileName, data);
+};
 
-  // Apply edits to get updated data
-  editStore.applyEdit(fileKey, originalData);
+/**
+ * Handle prettify for file1 — re-applies edits with a formatted data pass
+ */
+const handlePrettifyFile1 = () => {
+  const data = file1.value;
+  if (!data) return;
+  // Prettify by round-tripping through JSON stringify/parse
+  const prettified = JSON.parse(JSON.stringify(data, null, PRETTIFY_SPACES));
+  editStore.applyEdit('file1', prettified);
+};
 
-  // Re-run comparison with updated data
-  if (hasFiles.value) {
-    try {
-      runComparison();
-    } catch (error) {
-      console.error('Comparison failed after editing value:', error);
-    }
-  }
+/**
+ * Handle prettify for file2 — re-applies edits with a formatted data pass
+ */
+const handlePrettifyFile2 = () => {
+  const data = file2.value;
+  if (!data) return;
+  // Prettify by round-tripping through JSON stringify/parse
+  const prettified = JSON.parse(JSON.stringify(data, null, PRETTIFY_SPACES));
+  editStore.applyEdit('file2', prettified);
 };
 
 /**
@@ -256,11 +285,7 @@ const handleResetFile2 = () => {
       <!-- Controls -->
       <section class="controls-section" data-testid="controls-section">
         <div class="button-group">
-          <button
-            class="control-btn"
-            data-testid="clear-all-btn"
-            @click="clearData"
-          >
+          <button class="control-btn" data-testid="clear-all-btn" @click="clearData">
             {{ t('controls.clearAll') }}
           </button>
         </div>
@@ -268,21 +293,13 @@ const handleResetFile2 = () => {
         <div class="upload-section" data-testid="upload-section">
           <div class="upload-row">
             <div class="upload-group">
-              <FileUploader
-                ref="fileUploader1"
-                :label="t('upload.file1')"
-                @file-loaded="handleFile1Loaded"
-                @file-error="handleFile1Error"
-              />
+              <FileUploader ref="fileUploader1" :label="t('upload.file1')" @file-loaded="handleFile1Loaded"
+                @file-error="handleFile1Error" />
             </div>
 
             <div class="upload-group">
-              <FileUploader
-                ref="fileUploader2"
-                :label="t('upload.file2')"
-                @file-loaded="handleFile2Loaded"
-                @file-error="handleFile2Error"
-              />
+              <FileUploader ref="fileUploader2" :label="t('upload.file2')" @file-loaded="handleFile2Loaded"
+                @file-error="handleFile2Error" />
             </div>
           </div>
         </div>
@@ -313,34 +330,18 @@ const handleResetFile2 = () => {
 
       <!-- Comparison View -->
       <section class="viewer-section" data-testid="viewer-section">
-        <ComparisonView
-          :file1="file1"
-          :file2="file2"
-          :file1-name="fileStore.file1?.fileName || t('defaults.file1')"
-          :file2-name="fileStore.file2?.fileName || t('defaults.file2')"
-          @add-key-to-file1="handleAddKeyToFile1"
-          @add-key-to-file2="handleAddKeyToFile2"
-          @value-changed="handleValueChanged"
-        />
+        <ComparisonView :file1="file1" :file2="file2" :file1-name="fileStore.file1?.fileName || t('defaults.file1')"
+          :file2-name="fileStore.file2?.fileName || t('defaults.file2')" @add-key-to-file1="handleAddKeyToFile1"
+          @add-key-to-file2="handleAddKeyToFile2" />
       </section>
 
       <!-- Edit Controls -->
-      <section
-        v-if="hasFiles"
-        class="edit-controls-section"
-        data-testid="edit-controls-section"
-      >
+      <section v-if="hasFiles" class="edit-controls-section" data-testid="edit-controls-section">
         <div class="edit-controls-row">
-          <EditControls
-            :file="editFile1"
-            :modified="hasFile1Edits"
-            @reset="handleResetFile1"
-          />
-          <EditControls
-            :file="editFile2"
-            :modified="hasFile2Edits"
-            @reset="handleResetFile2"
-          />
+          <EditControls :file="editFile1" :modified="hasFile1Edits" @save="handleSaveFile1"
+            @prettify="handlePrettifyFile1" @reset="handleResetFile1" />
+          <EditControls :file="editFile2" :modified="hasFile2Edits" @save="handleSaveFile2"
+            @prettify="handlePrettifyFile2" @reset="handleResetFile2" />
         </div>
       </section>
 

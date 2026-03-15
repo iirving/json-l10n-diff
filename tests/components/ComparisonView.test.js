@@ -159,20 +159,6 @@ describe('ComparisonView', () => {
       expect(wrapper.emitted('add-key-to-file2')[0]).toEqual([addKeyDetails]);
     });
 
-    it('should forward value-changed event from DualFileViewer to parent', async () => {
-      const dualViewer = wrapper.findComponent(DualFileViewer);
-      const editDetails = {
-        keyPath: 'app.title',
-        newValue: 'Updated Title',
-        targetFile: 'file1',
-      };
-
-      await dualViewer.vm.$emit('value-changed', editDetails);
-
-      expect(wrapper.emitted('value-changed')).toBeTruthy();
-      expect(wrapper.emitted('value-changed')[0]).toEqual([editDetails]);
-    });
-
     it('should forward node-toggled event from DualFileViewer to parent', async () => {
       const dualViewer = wrapper.findComponent(DualFileViewer);
       const toggleDetails = { keyPath: 'app', expanded: true };
@@ -198,21 +184,6 @@ describe('ComparisonView', () => {
       });
 
       expect(wrapper.emitted('add-key-to-file1')).toHaveLength(2);
-    });
-
-    it('should handle multiple value-changed events in sequence', async () => {
-      const dualViewer = wrapper.findComponent(DualFileViewer);
-
-      await dualViewer.vm.$emit('value-changed', {
-        keyPath: 'app.title',
-        newValue: 'Title 1',
-      });
-      await dualViewer.vm.$emit('value-changed', {
-        keyPath: 'app.description',
-        newValue: 'Description 1',
-      });
-
-      expect(wrapper.emitted('value-changed')).toHaveLength(2);
     });
   });
 

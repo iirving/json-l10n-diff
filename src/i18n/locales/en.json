@@ -102,6 +102,12 @@
     "addKeyButton": "Add Key",
     "addKeyAriaLabel": "Add key {keyPath} to {target} file"
   },
+  "keyDiffItem": {
+    "leftLabel": "Left:",
+    "rightLabel": "Right:",
+    "editButton": "Edit",
+    "editAriaLabel": "Edit value for {keyPath}"
+  },
   "errors": {
     "bothFilesRequired": "Both files must be loaded before running comparison",
     "invalidFile": "Invalid file provided",

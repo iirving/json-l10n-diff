@@ -38,7 +38,6 @@ const props = defineProps({
 const emit = defineEmits([
   'add-key-to-file1',
   'add-key-to-file2',
-  'value-changed',
   'node-toggled',
 ]);
 
@@ -46,14 +45,6 @@ const emit = defineEmits([
 const { t } = useI18n();
 
 // Methods
-
-/**
- * Handle value edit from DualFileViewer
- * @param {object} editDetails - Edit details from DualFileViewer
- */
-function handleValueEdited(editDetails) {
-  emit('value-changed', editDetails);
-}
 
 /**
  * Handle add key request from DualFileViewer
@@ -88,16 +79,9 @@ function handleNodeToggled(toggleDetails) {
     </div>
 
     <div v-else class="comparison-container" data-testid="comparison-container">
-      <DualFileViewer
-        :file1="file1"
-        :file2="file2"
-        :file1-name="file1Name"
-        :file2-name="file2Name"
-        @add-key-to-file1="handleAddKeyToFile1"
-        @add-key-to-file2="handleAddKeyToFile2"
-        @value-changed="handleValueEdited"
-        @node-toggled="handleNodeToggled"
-      />
+      <DualFileViewer :file1="file1" :file2="file2" :file1-name="file1Name" :file2-name="file2Name"
+        @add-key-to-file1="handleAddKeyToFile1" @add-key-to-file2="handleAddKeyToFile2"
+        @node-toggled="handleNodeToggled" />
     </div>
   </div>
 </template>

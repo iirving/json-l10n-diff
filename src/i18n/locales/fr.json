@@ -102,6 +102,12 @@
     "addKeyButton": "Ajouter clé",
     "addKeyAriaLabel": "Ajouter la clé {keyPath} au fichier {target}"
   },
+  "keyDiffItem": {
+    "leftLabel": "Gauche :",
+    "rightLabel": "Droite :",
+    "editButton": "Modifier",
+    "editAriaLabel": "Modifier la valeur de {keyPath}"
+  },
   "errors": {
     "bothFilesRequired": "Les deux fichiers doivent être chargés avant d'exécuter la comparaison",
     "invalidFile": "Fichier invalide fourni",

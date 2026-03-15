@@ -98,51 +98,35 @@ const showAddButton = () => {
 </script>
 
 <template>
-  <div
-    class="key-diff-item"
-    :class="`status-${status}`"
-    role="listitem"
-    data-testid="key-diff-item"
-  >
+  <div class="key-diff-item" :class="`status-${status}`" role="listitem" data-testid="key-diff-item">
     <div class="key-path">
       {{ keyPath }}
     </div>
 
     <div class="values-container">
       <div class="value left-value">
-        <span class="value-label">Left:</span>
+        <span class="value-label">{{ t('keyDiffItem.leftLabel') }}</span>
         <span class="value-content">{{ formatValue(leftValue) }}</span>
       </div>
 
       <div class="value right-value">
-        <span class="value-label">Right:</span>
+        <span class="value-label">{{ t('keyDiffItem.rightLabel') }}</span>
         <span class="value-content">{{ formatValue(rightValue) }}</span>
       </div>
     </div>
 
     <div class="actions">
-      <button
-        v-if="showAddButton()"
-        class="add-key-button"
-        data-testid="add-key-btn"
-        :aria-label="
-          t('actions.addKeyAriaLabel', {
-            keyPath,
-            target: status === 'missing-left' ? 'left' : 'right',
-          })
-        "
-        @click="handleAddKey"
-      >
+      <button v-if="showAddButton()" class="add-key-button" data-testid="add-key-btn" :aria-label="t('actions.addKeyAriaLabel', {
+        keyPath,
+        target: status === 'missing-left' ? 'left' : 'right',
+      })
+        " @click="handleAddKey">
         {{ t('actions.addKeyButton') }}
       </button>
 
-      <button
-        v-if="status === 'different'"
-        class="edit-value-button"
-        :aria-label="`Edit value for ${keyPath}`"
-        @click="handleEditValue"
-      >
-        Edit
+      <button v-if="status === 'different'" class="edit-value-button"
+        :aria-label="t('keyDiffItem.editAriaLabel', { keyPath })" @click="handleEditValue">
+        {{ t('keyDiffItem.editButton') }}
       </button>
     </div>
   </div>
