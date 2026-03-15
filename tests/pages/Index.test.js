@@ -12,7 +12,6 @@ import FileUploader from '@/components/FileUploader.vue';
 import ComparisonView from '@/components/ComparisonView.vue';
 import EditControls from '@/components/EditControls.vue';
 
-import { useFileStore } from '@/stores/useFileStore.js';
 import { useEditStore } from '@/stores/useEditStore.js';
 
 // Create i18n instance for tests
@@ -1175,11 +1174,15 @@ describe('Index.vue', () => {
 
     describe('EditControls Integration', () => {
       it('shows EditControls when both files uploaded', async () => {
-        expect(wrapper.find('.edit-controls-section').exists()).toBe(false);
+        expect(
+          wrapper.find('[data-testid="edit-controls-section"]').exists()
+        ).toBe(false);
 
         await uploadBothFiles(wrapper);
 
-        expect(wrapper.find('.edit-controls-section').exists()).toBe(true);
+        expect(
+          wrapper.find('[data-testid="edit-controls-section"]').exists()
+        ).toBe(true);
         const editControlsComponents = wrapper.findAllComponents(EditControls);
         expect(editControlsComponents).toHaveLength(2);
       });
@@ -1194,7 +1197,9 @@ describe('Index.vue', () => {
         });
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.find('.edit-controls-section').exists()).toBe(false);
+        expect(
+          wrapper.find('[data-testid="edit-controls-section"]').exists()
+        ).toBe(false);
       });
 
       it('passes file prop with name to EditControls', async () => {
