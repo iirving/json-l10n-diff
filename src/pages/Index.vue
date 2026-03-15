@@ -14,6 +14,7 @@ import { useI18n } from 'vue-i18n';
 import { useFileStore } from '@/stores/useFileStore.js';
 import { useEditStore } from '@/stores/useEditStore.js';
 import ComparisonView from '@/components/ComparisonView.vue';
+import EditControls from '@/components/EditControls.vue';
 import FileUploader from '@/components/FileUploader.vue';
 
 // Composables and stores
@@ -21,6 +22,7 @@ const { t } = useI18n();
 const fileStore = useFileStore();
 const editStore = useEditStore();
 const { hasFiles } = storeToRefs(fileStore);
+const { hasFile1Edits, hasFile2Edits } = storeToRefs(editStore);
 const { setFile1, setFile2, runComparison, reset } = fileStore;
 
 // Reactive state
@@ -28,6 +30,20 @@ const fileUploader1 = ref(null);
 const fileUploader2 = ref(null);
 
 // Computed properties
+
+/**
+ * Maps a file store entry to the shape EditControls expects
+ * @param {Object|null} storeFile - File object from fileStore
+ * @returns {Object|null} File object with `name` property
+ */
+const toEditFile = (storeFile) => {
+  if (!storeFile) return null;
+  return { name: storeFile.fileName, ...storeFile };
+};
+
+const editFile1 = computed(() => toEditFile(fileStore.file1));
+const editFile2 = computed(() => toEditFile(fileStore.file2));
+
 const file1 = computed(() => {
   const originalData = fileStore.file1?.data || null;
   return editStore.getCurrentData('file1', originalData);
@@ -193,6 +209,38 @@ const handleValueChanged = ({ keyPath, newValue, targetFile }) => {
     }
   }
 };
+
+/**
+ * Handle reset edits for file1
+ * Clears all edits and re-runs comparison with original data
+ */
+const handleResetFile1 = () => {
+  editStore.clearEdits('file1');
+
+  if (hasFiles.value) {
+    try {
+      runComparison();
+    } catch (error) {
+      console.error('Comparison failed after reset:', error);
+    }
+  }
+};
+
+/**
+ * Handle reset edits for file2
+ * Clears all edits and re-runs comparison with original data
+ */
+const handleResetFile2 = () => {
+  editStore.clearEdits('file2');
+
+  if (hasFiles.value) {
+    try {
+      runComparison();
+    } catch (error) {
+      console.error('Comparison failed after reset:', error);
+    }
+  }
+};
 </script>
 
 <template>
@@ -216,13 +264,21 @@ const handleValueChanged = ({ keyPath, newValue, targetFile }) => {
         <div class="upload-section">
           <div class="upload-row">
             <div class="upload-group">
-              <FileUploader ref="fileUploader1" :label="t('upload.file1')" @file-loaded="handleFile1Loaded"
-                @file-error="handleFile1Error" />
+              <FileUploader
+                ref="fileUploader1"
+                :label="t('upload.file1')"
+                @file-loaded="handleFile1Loaded"
+                @file-error="handleFile1Error"
+              />
             </div>
 
             <div class="upload-group">
-              <FileUploader ref="fileUploader2" :label="t('upload.file2')" @file-loaded="handleFile2Loaded"
-                @file-error="handleFile2Error" />
+              <FileUploader
+                ref="fileUploader2"
+                :label="t('upload.file2')"
+                @file-loaded="handleFile2Loaded"
+                @file-error="handleFile2Error"
+              />
             </div>
           </div>
         </div>
@@ -253,9 +309,31 @@ const handleValueChanged = ({ keyPath, newValue, targetFile }) => {
 
       <!-- Comparison View -->
       <section class="viewer-section">
-        <ComparisonView :file1="file1" :file2="file2" :file1-name="fileStore.file1?.fileName || t('defaults.file1')"
-          :file2-name="fileStore.file2?.fileName || t('defaults.file2')" @add-key-to-file1="handleAddKeyToFile1"
-          @add-key-to-file2="handleAddKeyToFile2" @value-changed="handleValueChanged" />
+        <ComparisonView
+          :file1="file1"
+          :file2="file2"
+          :file1-name="fileStore.file1?.fileName || t('defaults.file1')"
+          :file2-name="fileStore.file2?.fileName || t('defaults.file2')"
+          @add-key-to-file1="handleAddKeyToFile1"
+          @add-key-to-file2="handleAddKeyToFile2"
+          @value-changed="handleValueChanged"
+        />
+      </section>
+
+      <!-- Edit Controls -->
+      <section v-if="hasFiles" class="edit-controls-section">
+        <div class="edit-controls-row">
+          <EditControls
+            :file="editFile1"
+            :modified="hasFile1Edits"
+            @reset="handleResetFile1"
+          />
+          <EditControls
+            :file="editFile2"
+            :modified="hasFile2Edits"
+            @reset="handleResetFile2"
+          />
+        </div>
       </section>
 
       <!-- Instructions -->
@@ -487,6 +565,16 @@ const handleValueChanged = ({ keyPath, newValue, targetFile }) => {
 .viewer-section {
   margin-bottom: var(--spacing-lg);
   height: 600px;
+}
+
+.edit-controls-section {
+  margin-bottom: var(--spacing-lg);
+}
+
+.edit-controls-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-lg);
 }
 
 .instructions-section {

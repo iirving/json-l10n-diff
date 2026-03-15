@@ -33,7 +33,7 @@ export default defineConfig({
       },
     },
     include: ['tests/**/*.test.js'],
-    setupFiles: [],
+    setupFiles: ['tests/setup.js'],
   },
   resolve: {
     alias: {
