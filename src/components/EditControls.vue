@@ -139,11 +139,12 @@ const handleReset = () => {
 </script>
 
 <template>
-  <div class="edit-controls" :class="{ 'edit-controls--disabled': isDisabled }">
+  <div class="edit-controls" :class="{ 'edit-controls--disabled': isDisabled }" data-testid="edit-controls">
     <div class="controls-group">
       <button
         type="button"
         class="btn btn--save"
+        data-testid="save-btn"
         :disabled="isSaveResetDisabled"
         :aria-label="t('editControls.saveAriaLabel', { fileName })"
         @click="handleSave"
@@ -158,6 +159,7 @@ const handleReset = () => {
         v-if="showPrettify"
         type="button"
         class="btn btn--prettify"
+        data-testid="prettify-btn"
         :disabled="isPrettifyDisabled"
         :aria-label="
           t('editControls.prettifyAriaLabel', { spaces: PRETTIFY_SPACES })
@@ -171,6 +173,7 @@ const handleReset = () => {
       <button
         type="button"
         class="btn btn--reset"
+        data-testid="reset-btn"
         :disabled="isSaveResetDisabled"
         :aria-label="t('editControls.resetAriaLabel')"
         @click="handleReset"
@@ -183,6 +186,7 @@ const handleReset = () => {
     <p
       v-if="modified"
       class="modified-indicator"
+      data-testid="modified-indicator"
       role="status"
       aria-live="polite"
     >

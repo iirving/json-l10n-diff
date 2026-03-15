@@ -98,7 +98,7 @@ const showAddButton = () => {
 </script>
 
 <template>
-  <div class="key-diff-item" :class="`status-${status}`" role="listitem">
+  <div class="key-diff-item" :class="`status-${status}`" role="listitem" data-testid="key-diff-item">
     <div class="key-path">
       {{ keyPath }}
     </div>
@@ -119,6 +119,7 @@ const showAddButton = () => {
       <button
         v-if="showAddButton()"
         class="add-key-button"
+        data-testid="add-key-btn"
         :aria-label="
           t('actions.addKeyAriaLabel', {
             keyPath,

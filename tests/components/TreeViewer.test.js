@@ -192,25 +192,25 @@ describe('TreeViewer', () => {
   describe('Color Coding', () => {
     it('should apply missing-left class for keys missing in left file', () => {
       const missingNode = wrapper.find(
-        '.tree-node[data-status="missing-left"]'
+        '[data-testid="tree-node"][data-status="missing-left"]'
       );
       expect(missingNode.exists()).toBe(true);
     });
 
     it('should apply missing-right class for keys missing in right file', () => {
       const missingNode = wrapper.find(
-        '.tree-node[data-status="missing-right"]'
+        '[data-testid="tree-node"][data-status="missing-right"]'
       );
       expect(missingNode.exists()).toBe(true);
     });
 
     it('should apply identical class for keys with same values', () => {
-      const identicalNode = wrapper.find('.tree-node[data-status="identical"]');
+      const identicalNode = wrapper.find('[data-testid="tree-node"][data-status="identical"]');
       expect(identicalNode.exists()).toBe(true);
     });
 
     it('should apply different class for keys with different values', () => {
-      const differentNode = wrapper.find('.tree-node[data-status="different"]');
+      const differentNode = wrapper.find('[data-testid="tree-node"][data-status="different"]');
       expect(differentNode.exists()).toBe(true);
     });
 

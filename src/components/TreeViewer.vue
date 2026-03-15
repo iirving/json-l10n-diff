@@ -171,7 +171,7 @@ defineExpose({
 </script>
 
 <template>
-  <div class="tree-viewer">
+  <div class="tree-viewer" data-testid="tree-viewer">
     <div v-if="Object.keys(content).length === 0" class="empty-state">
       No data to display
     </div>

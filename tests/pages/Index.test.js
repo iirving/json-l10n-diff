@@ -755,7 +755,7 @@ describe('Index.vue', () => {
       expect(wrapper.vm.file2).toEqual(mockFile2Data.content);
 
       // Click Clear All button (note: stubbed components won't have reset method, but that's okay)
-      const clearButton = wrapper.find('.control-btn');
+      const clearButton = wrapper.find('[data-testid="clear-all-btn"]');
       expect(clearButton.text()).toBe('Clear All');
 
       // The clearData call will try to reset stubbed components which don't have the method
@@ -818,7 +818,9 @@ describe('Index.vue', () => {
       expect(uploaders[1].vm.selectedFile).toBeTruthy();
 
       // Click Clear All button
-      const clearButton = wrapperWithRealComponents.find('.control-btn');
+      const clearButton = wrapperWithRealComponents.find(
+        '[data-testid="clear-all-btn"]'
+      );
       await clearButton.trigger('click');
       await wrapperWithRealComponents.vm.$nextTick();
 
@@ -855,7 +857,7 @@ describe('Index.vue', () => {
       expect(wrapper.vm.file2).toEqual(mockFile2Data.content);
 
       // Click Clear All
-      const clearButton = wrapper.find('.control-btn');
+      const clearButton = wrapper.find('[data-testid="clear-all-btn"]');
       await clearButton.trigger('click');
       await wrapper.vm.$nextTick();
 
@@ -866,7 +868,7 @@ describe('Index.vue', () => {
     });
 
     it('Clear All button is always visible', () => {
-      const clearButton = wrapper.find('.control-btn');
+      const clearButton = wrapper.find('[data-testid="clear-all-btn"]');
       expect(clearButton.exists()).toBe(true);
       expect(clearButton.text()).toBe('Clear All');
     });
@@ -884,7 +886,7 @@ describe('Index.vue', () => {
       expect(wrapper.vm.file1).toEqual(mockFile1Data.content);
 
       // Clear
-      await wrapper.find('.control-btn').trigger('click');
+      await wrapper.find('[data-testid="clear-all-btn"]').trigger('click');
       await wrapper.vm.$nextTick();
       expect(wrapper.vm.file1).toBeNull();
 
@@ -905,6 +907,10 @@ describe('Index.vue', () => {
 
     beforeEach(() => {
       editStore = useEditStore();
+    });
+
+    afterEach(() => {
+      vi.restoreAllMocks();
     });
 
     /**
@@ -953,10 +959,7 @@ describe('Index.vue', () => {
         await wrapper.vm.$nextTick();
 
         // File2 computed should now contain the added key
-        expect(wrapper.vm.file2).toHaveProperty(
-          'newKey',
-          'nouvelle valeur',
-        );
+        expect(wrapper.vm.file2).toHaveProperty('newKey', 'nouvelle valeur');
       });
 
       it('records add-key edit in editStore history', async () => {
@@ -994,9 +997,11 @@ describe('Index.vue', () => {
         });
 
         expect(consoleSpy).toHaveBeenCalledWith(
-          'Cannot add key: file1 not loaded',
+          'Cannot add key: file1 not loaded'
         );
-        consoleSpy.mockRestore();
+        // Verify no edit was recorded
+        expect(editStore.hasFile1Edits).toBe(false);
+        expect(wrapper.vm.file1).toBeNull();
       });
 
       it('does not add key when file2 is not loaded', async () => {
@@ -1018,9 +1023,11 @@ describe('Index.vue', () => {
         });
 
         expect(consoleSpy).toHaveBeenCalledWith(
-          'Cannot add key: file2 not loaded',
+          'Cannot add key: file2 not loaded'
         );
-        consoleSpy.mockRestore();
+        // Verify no edit was recorded
+        expect(editStore.hasFile2Edits).toBe(false);
+        expect(wrapper.vm.file2).toBeNull();
       });
     });
 
@@ -1036,10 +1043,7 @@ describe('Index.vue', () => {
         });
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.vm.file1).toHaveProperty(
-          'key1',
-          'updated value',
-        );
+        expect(wrapper.vm.file1).toHaveProperty('key1', 'updated value');
       });
 
       it('handles value-changed event for file2', async () => {
@@ -1053,10 +1057,7 @@ describe('Index.vue', () => {
         });
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.vm.file2).toHaveProperty(
-          'key1',
-          'valeur modifiée',
-        );
+        expect(wrapper.vm.file2).toHaveProperty('key1', 'valeur modifiée');
       });
 
       it('records modify edit in editStore history', async () => {
@@ -1116,9 +1117,11 @@ describe('Index.vue', () => {
         });
 
         expect(consoleSpy).toHaveBeenCalledWith(
-          'Cannot edit value: file1 not loaded',
+          'Cannot edit value: file1 not loaded'
         );
-        consoleSpy.mockRestore();
+        // Verify no edit was recorded and file remains null
+        expect(editStore.hasFile1Edits).toBe(false);
+        expect(wrapper.vm.file1).toBeNull();
       });
     });
 
@@ -1172,17 +1175,12 @@ describe('Index.vue', () => {
 
     describe('EditControls Integration', () => {
       it('shows EditControls when both files uploaded', async () => {
-        expect(
-          wrapper.find('.edit-controls-section').exists(),
-        ).toBe(false);
+        expect(wrapper.find('.edit-controls-section').exists()).toBe(false);
 
         await uploadBothFiles(wrapper);
 
-        expect(
-          wrapper.find('.edit-controls-section').exists(),
-        ).toBe(true);
-        const editControlsComponents =
-          wrapper.findAllComponents(EditControls);
+        expect(wrapper.find('.edit-controls-section').exists()).toBe(true);
+        const editControlsComponents = wrapper.findAllComponents(EditControls);
         expect(editControlsComponents).toHaveLength(2);
       });
 
@@ -1196,35 +1194,23 @@ describe('Index.vue', () => {
         });
         await wrapper.vm.$nextTick();
 
-        expect(
-          wrapper.find('.edit-controls-section').exists(),
-        ).toBe(false);
+        expect(wrapper.find('.edit-controls-section').exists()).toBe(false);
       });
 
       it('passes file prop with name to EditControls', async () => {
         await uploadBothFiles(wrapper);
 
-        const editControlsComponents =
-          wrapper.findAllComponents(EditControls);
-        expect(editControlsComponents[0].props('file').name).toBe(
-          'en.json',
-        );
-        expect(editControlsComponents[1].props('file').name).toBe(
-          'fr.json',
-        );
+        const editControlsComponents = wrapper.findAllComponents(EditControls);
+        expect(editControlsComponents[0].props('file').name).toBe('en.json');
+        expect(editControlsComponents[1].props('file').name).toBe('fr.json');
       });
 
       it('passes modified=false when no edits', async () => {
         await uploadBothFiles(wrapper);
 
-        const editControlsComponents =
-          wrapper.findAllComponents(EditControls);
-        expect(editControlsComponents[0].props('modified')).toBe(
-          false,
-        );
-        expect(editControlsComponents[1].props('modified')).toBe(
-          false,
-        );
+        const editControlsComponents = wrapper.findAllComponents(EditControls);
+        expect(editControlsComponents[0].props('modified')).toBe(false);
+        expect(editControlsComponents[1].props('modified')).toBe(false);
       });
 
       it('passes modified=true after edit to file1', async () => {
@@ -1238,14 +1224,9 @@ describe('Index.vue', () => {
         });
         await wrapper.vm.$nextTick();
 
-        const editControlsComponents =
-          wrapper.findAllComponents(EditControls);
-        expect(editControlsComponents[0].props('modified')).toBe(
-          true,
-        );
-        expect(editControlsComponents[1].props('modified')).toBe(
-          false,
-        );
+        const editControlsComponents = wrapper.findAllComponents(EditControls);
+        expect(editControlsComponents[0].props('modified')).toBe(true);
+        expect(editControlsComponents[1].props('modified')).toBe(false);
       });
 
       it('passes modified=true after edit to file2', async () => {
@@ -1259,14 +1240,9 @@ describe('Index.vue', () => {
         });
         await wrapper.vm.$nextTick();
 
-        const editControlsComponents =
-          wrapper.findAllComponents(EditControls);
-        expect(editControlsComponents[0].props('modified')).toBe(
-          false,
-        );
-        expect(editControlsComponents[1].props('modified')).toBe(
-          true,
-        );
+        const editControlsComponents = wrapper.findAllComponents(EditControls);
+        expect(editControlsComponents[0].props('modified')).toBe(false);
+        expect(editControlsComponents[1].props('modified')).toBe(true);
       });
     });
 
@@ -1285,8 +1261,7 @@ describe('Index.vue', () => {
         expect(editStore.hasFile1Edits).toBe(true);
 
         // Trigger reset on first EditControls
-        const editControlsComponents =
-          wrapper.findAllComponents(EditControls);
+        const editControlsComponents = wrapper.findAllComponents(EditControls);
         await editControlsComponents[0].vm.$emit('reset');
         await wrapper.vm.$nextTick();
 
@@ -1312,8 +1287,7 @@ describe('Index.vue', () => {
         expect(editStore.hasFile2Edits).toBe(true);
 
         // Trigger reset on second EditControls
-        const editControlsComponents =
-          wrapper.findAllComponents(EditControls);
+        const editControlsComponents = wrapper.findAllComponents(EditControls);
         await editControlsComponents[1].vm.$emit('reset');
         await wrapper.vm.$nextTick();
 
@@ -1344,17 +1318,13 @@ describe('Index.vue', () => {
         await wrapper.vm.$nextTick();
 
         // Reset only file1
-        const editControlsComponents =
-          wrapper.findAllComponents(EditControls);
+        const editControlsComponents = wrapper.findAllComponents(EditControls);
         await editControlsComponents[0].vm.$emit('reset');
         await wrapper.vm.$nextTick();
 
         expect(editStore.hasFile1Edits).toBe(false);
         expect(editStore.hasFile2Edits).toBe(true);
-        expect(wrapper.vm.file2).toHaveProperty(
-          'key1',
-          'file2 edit',
-        );
+        expect(wrapper.vm.file2).toHaveProperty('key1', 'file2 edit');
       });
     });
 
@@ -1378,7 +1348,7 @@ describe('Index.vue', () => {
         expect(editStore.hasAnyEdits).toBe(true);
 
         // Click Clear All
-        const clearButton = wrapper.find('.control-btn');
+        const clearButton = wrapper.find('[data-testid="clear-all-btn"]');
         await clearButton.trigger('click');
         await wrapper.vm.$nextTick();
 

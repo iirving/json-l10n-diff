@@ -244,41 +244,33 @@ const handleResetFile2 = () => {
 </script>
 
 <template>
-  <div class="index-page">
-    <header class="page-header">
+  <div class="index-page" data-testid="index-page">
+    <header class="page-header" data-testid="page-header">
       <h1>{{ t('app.title') }}</h1>
-      <p class="subtitle">
+      <p class="subtitle" data-testid="subtitle">
         {{ t('app.subtitle') }}
       </p>
     </header>
 
-    <main class="page-content">
+    <main class="page-content" data-testid="page-content">
       <!-- Controls -->
-      <section class="controls-section">
+      <section class="controls-section" data-testid="controls-section">
         <div class="button-group">
-          <button class="control-btn" @click="clearData">
+          <button class="control-btn" data-testid="clear-all-btn" @click="clearData">
             {{ t('controls.clearAll') }}
           </button>
         </div>
 
-        <div class="upload-section">
+        <div class="upload-section" data-testid="upload-section">
           <div class="upload-row">
             <div class="upload-group">
-              <FileUploader
-                ref="fileUploader1"
-                :label="t('upload.file1')"
-                @file-loaded="handleFile1Loaded"
-                @file-error="handleFile1Error"
-              />
+              <FileUploader ref="fileUploader1" :label="t('upload.file1')" @file-loaded="handleFile1Loaded"
+                @file-error="handleFile1Error" />
             </div>
 
             <div class="upload-group">
-              <FileUploader
-                ref="fileUploader2"
-                :label="t('upload.file2')"
-                @file-loaded="handleFile2Loaded"
-                @file-error="handleFile2Error"
-              />
+              <FileUploader ref="fileUploader2" :label="t('upload.file2')" @file-loaded="handleFile2Loaded"
+                @file-error="handleFile2Error" />
             </div>
           </div>
         </div>
@@ -308,31 +300,17 @@ const handleResetFile2 = () => {
       </section>
 
       <!-- Comparison View -->
-      <section class="viewer-section">
-        <ComparisonView
-          :file1="file1"
-          :file2="file2"
-          :file1-name="fileStore.file1?.fileName || t('defaults.file1')"
-          :file2-name="fileStore.file2?.fileName || t('defaults.file2')"
-          @add-key-to-file1="handleAddKeyToFile1"
-          @add-key-to-file2="handleAddKeyToFile2"
-          @value-changed="handleValueChanged"
-        />
+      <section class="viewer-section" data-testid="viewer-section">
+        <ComparisonView :file1="file1" :file2="file2" :file1-name="fileStore.file1?.fileName || t('defaults.file1')"
+          :file2-name="fileStore.file2?.fileName || t('defaults.file2')" @add-key-to-file1="handleAddKeyToFile1"
+          @add-key-to-file2="handleAddKeyToFile2" @value-changed="handleValueChanged" />
       </section>
 
       <!-- Edit Controls -->
-      <section v-if="hasFiles" class="edit-controls-section">
+      <section v-if="hasFiles" class="edit-controls-section" data-testid="edit-controls-section">
         <div class="edit-controls-row">
-          <EditControls
-            :file="editFile1"
-            :modified="hasFile1Edits"
-            @reset="handleResetFile1"
-          />
-          <EditControls
-            :file="editFile2"
-            :modified="hasFile2Edits"
-            @reset="handleResetFile2"
-          />
+          <EditControls :file="editFile1" :modified="hasFile1Edits" @reset="handleResetFile1" />
+          <EditControls :file="editFile2" :modified="hasFile2Edits" @reset="handleResetFile2" />
         </div>
       </section>
 

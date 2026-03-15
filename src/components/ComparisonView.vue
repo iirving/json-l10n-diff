@@ -82,12 +82,12 @@ function handleNodeToggled(toggleDetails) {
 </script>
 
 <template>
-  <div class="comparison-view">
-    <div v-if="!file1 && !file2" class="empty-state">
+  <div class="comparison-view" data-testid="comparison-view">
+    <div v-if="!file1 && !file2" class="empty-state" data-testid="empty-state">
       <p>{{ t('comparison.emptyState') }}</p>
     </div>
 
-    <div v-else class="comparison-container">
+    <div v-else class="comparison-container" data-testid="comparison-container">
       <DualFileViewer
         :file1="file1"
         :file2="file2"

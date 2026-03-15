@@ -188,6 +188,7 @@ defineExpose({
     <button
       type="button"
       class="file-uploader__button"
+      data-testid="file-upload-btn"
       :class="{ 'has-error': hasError, 'has-file': hasFile && !hasError }"
       @click="triggerFileInput"
     >

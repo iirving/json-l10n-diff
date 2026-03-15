@@ -45,23 +45,23 @@ describe('EditControls', () => {
 
   describe('component rendering', () => {
     it('should render the edit controls container', () => {
-      expect(wrapper.find('.edit-controls').exists()).toBe(true);
+      expect(wrapper.find('[data-testid="edit-controls"]').exists()).toBe(true);
     });
 
     it('should render save button', () => {
-      const saveBtn = wrapper.find('.btn--save');
+      const saveBtn = wrapper.find('[data-testid="save-btn"]');
       expect(saveBtn.exists()).toBe(true);
       expect(saveBtn.text()).toContain('Save');
     });
 
     it('should render prettify button by default', () => {
-      const prettifyBtn = wrapper.find('.btn--prettify');
+      const prettifyBtn = wrapper.find('[data-testid="prettify-btn"]');
       expect(prettifyBtn.exists()).toBe(true);
       expect(prettifyBtn.text()).toContain('Prettify');
     });
 
     it('should render reset button', () => {
-      const resetBtn = wrapper.find('.btn--reset');
+      const resetBtn = wrapper.find('[data-testid="reset-btn"]');
       expect(resetBtn.exists()).toBe(true);
       expect(resetBtn.text()).toContain('Reset');
     });
@@ -72,7 +72,7 @@ describe('EditControls', () => {
         modified: true,
       });
 
-      const saveBtn = wrapper.find('.btn--save');
+      const saveBtn = wrapper.find('[data-testid="save-btn"]');
       expect(saveBtn.text()).toContain('custom-file.json');
     });
 
@@ -82,7 +82,7 @@ describe('EditControls', () => {
         modified: true,
       });
 
-      const saveBtn = wrapper.find('.btn--save');
+      const saveBtn = wrapper.find('[data-testid="save-btn"]');
       expect(saveBtn.text()).toContain('file.json');
     });
   });
@@ -95,7 +95,7 @@ describe('EditControls', () => {
         showPrettify: false,
       });
 
-      expect(wrapper.find('.btn--prettify').exists()).toBe(false);
+      expect(wrapper.find('[data-testid="prettify-btn"]').exists()).toBe(false);
     });
 
     it('should show prettify button when showPrettify is true', () => {
@@ -105,7 +105,7 @@ describe('EditControls', () => {
         showPrettify: true,
       });
 
-      expect(wrapper.find('.btn--prettify').exists()).toBe(true);
+      expect(wrapper.find('[data-testid="prettify-btn"]').exists()).toBe(true);
     });
   });
 
@@ -234,7 +234,7 @@ describe('EditControls', () => {
           modified: true,
         });
 
-        await wrapper.find('.btn--save').trigger('click');
+        await wrapper.find('[data-testid="save-btn"]').trigger('click');
 
         expect(wrapper.emitted('save')).toBeTruthy();
         expect(wrapper.emitted('save')).toHaveLength(1);
@@ -248,12 +248,12 @@ describe('EditControls', () => {
 
         // Disabled buttons don't trigger click events in real browsers
         // Vue Test Utils respects the disabled attribute
-        await wrapper.find('.btn--save').trigger('click');
+        await wrapper.find('[data-testid="save-btn"]').trigger('click');
 
         // With the current implementation, handleSave emits unconditionally
         // but the button is disabled so no action would occur in real usage
         // This test documents the actual behavior
-        expect(wrapper.find('.btn--save').attributes('disabled')).toBeDefined();
+        expect(wrapper.find('[data-testid="save-btn"]').attributes('disabled')).toBeDefined();
       });
     });
 
@@ -264,7 +264,7 @@ describe('EditControls', () => {
           modified: false,
         });
 
-        await wrapper.find('.btn--prettify').trigger('click');
+        await wrapper.find('[data-testid="prettify-btn"]').trigger('click');
 
         expect(wrapper.emitted('prettify')).toBeTruthy();
         expect(wrapper.emitted('prettify')).toHaveLength(1);
@@ -278,7 +278,7 @@ describe('EditControls', () => {
           modified: true,
         });
 
-        await wrapper.find('.btn--reset').trigger('click');
+        await wrapper.find('[data-testid="reset-btn"]').trigger('click');
 
         expect(wrapper.emitted('reset')).toBeTruthy();
         expect(wrapper.emitted('reset')).toHaveLength(1);
@@ -290,7 +290,7 @@ describe('EditControls', () => {
           modified: false,
         });
 
-        await wrapper.find('.btn--reset').trigger('click');
+        await wrapper.find('[data-testid="reset-btn"]').trigger('click');
 
         expect(wrapper.emitted('reset')).toBeFalsy();
       });
@@ -302,7 +302,7 @@ describe('EditControls', () => {
           disabled: true,
         });
 
-        await wrapper.find('.btn--reset').trigger('click');
+        await wrapper.find('[data-testid="reset-btn"]').trigger('click');
 
         expect(wrapper.emitted('reset')).toBeFalsy();
       });
