@@ -139,31 +139,61 @@ const handleReset = () => {
 </script>
 
 <template>
-  <div class="edit-controls" :class="{ 'edit-controls--disabled': isDisabled }" data-testid="edit-controls">
+  <div
+    class="edit-controls"
+    :class="{ 'edit-controls--disabled': isDisabled }"
+    data-testid="edit-controls"
+  >
     <div class="controls-group">
-      <button type="button" class="btn btn--save" data-testid="save-btn" :disabled="isSaveResetDisabled"
-        :aria-label="t('editControls.saveAriaLabel', { fileName })" @click="handleSave">
+      <button
+        type="button"
+        class="btn btn--save"
+        data-testid="save-btn"
+        :disabled="isSaveResetDisabled"
+        :aria-label="t('editControls.saveAriaLabel', { fileName })"
+        @click="handleSave"
+      >
         <span class="btn__icon" aria-hidden="true">💾</span>
         <span class="btn__text">
           {{ t('editControls.save', { fileName }) }}
         </span>
       </button>
 
-      <button v-if="showPrettify" type="button" class="btn btn--prettify" data-testid="prettify-btn"
-        :disabled="isPrettifyDisabled" :aria-label="t('editControls.prettifyAriaLabel', { spaces: PRETTIFY_SPACES })
-          " @click="handlePrettify">
+      <button
+        v-if="showPrettify"
+        type="button"
+        class="btn btn--prettify"
+        data-testid="prettify-btn"
+        :disabled="isPrettifyDisabled"
+        :aria-label="
+          t('editControls.prettifyAriaLabel', { spaces: PRETTIFY_SPACES })
+        "
+        @click="handlePrettify"
+      >
         <span class="btn__icon" aria-hidden="true">✨</span>
         <span class="btn__text">{{ t('editControls.prettify') }}</span>
       </button>
 
-      <button type="button" class="btn btn--reset" data-testid="reset-btn" :disabled="isSaveResetDisabled"
-        :aria-label="t('editControls.resetAriaLabel')" @click="handleReset">
+      <button
+        type="button"
+        class="btn btn--reset"
+        data-testid="reset-btn"
+        :disabled="isSaveResetDisabled"
+        :aria-label="t('editControls.resetAriaLabel')"
+        @click="handleReset"
+      >
         <span class="btn__icon" aria-hidden="true">↩️</span>
         <span class="btn__text">{{ t('editControls.reset') }}</span>
       </button>
     </div>
 
-    <p v-if="modified" class="modified-indicator" data-testid="modified-indicator" role="status" aria-live="polite">
+    <p
+      v-if="modified"
+      class="modified-indicator"
+      data-testid="modified-indicator"
+      role="status"
+      aria-live="polite"
+    >
       {{ t('editControls.unsavedChanges') }}
     </p>
   </div>
