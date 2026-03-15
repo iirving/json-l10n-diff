@@ -4,10 +4,20 @@
  */
 
 // Mock localStorage if not properly available (fixes @vue/devtools-kit issue)
-if (
-  typeof globalThis.localStorage === 'undefined' ||
-  typeof globalThis.localStorage.getItem !== 'function'
-) {
+let hasLocalStorage = false;
+
+try {
+  hasLocalStorage =
+    typeof globalThis.localStorage !== 'undefined' &&
+    typeof globalThis.localStorage.getItem === 'function';
+} catch (error) {
+  // jsdom with opaque origin can throw a SecurityError when accessing localStorage
+  if (!error || error.name !== 'SecurityError') {
+    throw error;
+  }
+}
+
+if (!hasLocalStorage) {
   const store = new Map();
   globalThis.localStorage = {
     getItem: (key) => store.get(key) ?? null,
