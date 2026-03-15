@@ -98,7 +98,12 @@ const showAddButton = () => {
 </script>
 
 <template>
-  <div class="key-diff-item" :class="`status-${status}`" role="listitem" data-testid="key-diff-item">
+  <div
+    class="key-diff-item"
+    :class="`status-${status}`"
+    role="listitem"
+    data-testid="key-diff-item"
+  >
     <div class="key-path">
       {{ keyPath }}
     </div>
@@ -116,16 +121,27 @@ const showAddButton = () => {
     </div>
 
     <div class="actions">
-      <button v-if="showAddButton()" class="add-key-button" data-testid="add-key-btn" :aria-label="t('actions.addKeyAriaLabel', {
-        keyPath,
-        target: status === 'missing-left' ? 'left' : 'right',
-      })
-        " @click="handleAddKey">
+      <button
+        v-if="showAddButton()"
+        class="add-key-button"
+        data-testid="add-key-btn"
+        :aria-label="
+          t('actions.addKeyAriaLabel', {
+            keyPath,
+            target: status === 'missing-left' ? 'left' : 'right',
+          })
+        "
+        @click="handleAddKey"
+      >
         {{ t('actions.addKeyButton') }}
       </button>
 
-      <button v-if="status === 'different'" class="edit-value-button"
-        :aria-label="t('keyDiffItem.editAriaLabel', { keyPath })" @click="handleEditValue">
+      <button
+        v-if="status === 'different'"
+        class="edit-value-button"
+        :aria-label="t('keyDiffItem.editAriaLabel', { keyPath })"
+        @click="handleEditValue"
+      >
         {{ t('keyDiffItem.editButton') }}
       </button>
     </div>
