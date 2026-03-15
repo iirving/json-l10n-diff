@@ -798,4 +798,181 @@ describe('TreeViewer', () => {
       expect(wrapper.find('.edit-input').exists()).toBe(true);
     });
   });
+
+  describe('Modified State Visual Feedback', () => {
+    const simpleData = {
+      title: 'Hello World',
+      count: 42,
+      nested: {
+        child: 'value',
+      },
+    };
+
+    it('should not show modified indicators when modifiedKeys is empty', () => {
+      const wrapper = mount(TreeViewer, {
+        props: {
+          content: simpleData,
+          fileId: 'file1',
+          modifiedKeys: new Set(),
+        },
+      });
+
+      expect(wrapper.find('.modified-badge').exists()).toBe(false);
+      expect(wrapper.find('.tree-node.modified').exists()).toBe(false);
+    });
+
+    it('should show modified badge on modified leaf keys', async () => {
+      const wrapper = mount(TreeViewer, {
+        props: {
+          content: simpleData,
+          fileId: 'file1',
+          modifiedKeys: new Set(['title']),
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const modifiedNode = wrapper.find('[data-key-path="title"]');
+      expect(modifiedNode.classes()).toContain('modified');
+      expect(modifiedNode.find('.modified-badge').exists()).toBe(true);
+      expect(modifiedNode.find('.modified-badge').text()).toBe('*');
+    });
+
+    it('should add data-modified attribute on modified nodes', async () => {
+      const wrapper = mount(TreeViewer, {
+        props: {
+          content: simpleData,
+          fileId: 'file1',
+          modifiedKeys: new Set(['title']),
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const modifiedNode = wrapper.find('[data-key-path="title"]');
+      expect(modifiedNode.attributes('data-modified')).toBe('true');
+
+      const unmodifiedNode = wrapper.find('[data-key-path="count"]');
+      expect(unmodifiedNode.attributes('data-modified')).toBeUndefined();
+    });
+
+    it('should show modified badge on nested modified keys', async () => {
+      const wrapper = mount(TreeViewer, {
+        props: {
+          content: simpleData,
+          fileId: 'file1',
+          modifiedKeys: new Set(['nested.child']),
+          defaultExpanded: true,
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const modifiedNode = wrapper.find('[data-key-path="nested.child"]');
+      expect(modifiedNode.classes()).toContain('modified');
+      expect(modifiedNode.find('.modified-badge').exists()).toBe(true);
+    });
+
+    it('should show modified badge on multiple keys', async () => {
+      const wrapper = mount(TreeViewer, {
+        props: {
+          content: simpleData,
+          fileId: 'file1',
+          modifiedKeys: new Set(['title', 'count']),
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const badges = wrapper.findAll('.modified-badge');
+      expect(badges.length).toBe(2);
+
+      const titleNode = wrapper.find('[data-key-path="title"]');
+      expect(titleNode.classes()).toContain('modified');
+
+      const countNode = wrapper.find('[data-key-path="count"]');
+      expect(countNode.classes()).toContain('modified');
+    });
+
+    it('should not show modified badge on unmodified keys', async () => {
+      const wrapper = mount(TreeViewer, {
+        props: {
+          content: simpleData,
+          fileId: 'file1',
+          modifiedKeys: new Set(['title']),
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const countNode = wrapper.find('[data-key-path="count"]');
+      expect(countNode.classes()).not.toContain('modified');
+      expect(countNode.find('.modified-badge').exists()).toBe(false);
+    });
+
+    it('should have aria-label on modified badge for accessibility', async () => {
+      const wrapper = mount(TreeViewer, {
+        props: {
+          content: simpleData,
+          fileId: 'file1',
+          modifiedKeys: new Set(['title']),
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const badge = wrapper.find('.modified-badge');
+      expect(badge.attributes('aria-label')).toBe('Modified');
+    });
+
+    it('should reactively update when modifiedKeys changes', async () => {
+      const wrapper = mount(TreeViewer, {
+        props: {
+          content: simpleData,
+          fileId: 'file1',
+          modifiedKeys: new Set(),
+        },
+      });
+
+      expect(wrapper.find('.modified-badge').exists()).toBe(false);
+
+      await wrapper.setProps({ modifiedKeys: new Set(['title']) });
+      await wrapper.vm.$nextTick();
+
+      expect(wrapper.find('.modified-badge').exists()).toBe(true);
+      expect(wrapper.find('[data-key-path="title"]').classes()).toContain(
+        'modified'
+      );
+    });
+
+    it('should default modifiedKeys to empty Set', () => {
+      const wrapper = mount(TreeViewer, {
+        props: {
+          content: simpleData,
+          fileId: 'file1',
+        },
+      });
+
+      expect(wrapper.props('modifiedKeys')).toBeInstanceOf(Set);
+      expect(wrapper.props('modifiedKeys').size).toBe(0);
+      expect(wrapper.find('.modified-badge').exists()).toBe(false);
+    });
+
+    it('should show both modified badge and edit hint when editable and modified', async () => {
+      const wrapper = mount(TreeViewer, {
+        props: {
+          content: { name: 'value' },
+          fileId: 'file1',
+          editable: true,
+          modifiedKeys: new Set(['name']),
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const nameNode = wrapper.find('[data-key-path="name"]');
+      expect(nameNode.find('.modified-badge').exists()).toBe(true);
+      expect(nameNode.find('.edit-hint').exists()).toBe(true);
+    });
+  });
 });

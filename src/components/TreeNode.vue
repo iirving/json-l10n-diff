@@ -46,6 +46,7 @@ const emit = defineEmits(['value-edited']);
 const isExpandedFn = inject('isExpanded', () => false);
 const getDiffStatusFn = inject('getDiffStatus', () => null);
 const toggleNodeFn = inject('toggleNode', () => {});
+const isModifiedFn = inject('isModified', () => false);
 
 // Reactive state for inline editing
 const isEditing = ref(false);
@@ -65,6 +66,7 @@ const isArray = (val) => {
 const isParent = computed(() => isObject(props.value) || isArray(props.value));
 const isExpanded = computed(() => isExpandedFn(props.keyPath));
 const diffStatus = computed(() => getDiffStatusFn(props.keyPath));
+const modified = computed(() => isModifiedFn(props.keyPath));
 
 /**
  * Check if this node's value can be edited inline
@@ -205,12 +207,13 @@ const handleEditBlur = () => {
 <template>
   <div
     class="tree-node"
-    :class="{ expanded: isExpanded, editing: isEditing }"
+    :class="{ expanded: isExpanded, editing: isEditing, modified: modified }"
     data-testid="tree-node"
     :data-depth="depth"
     :data-key-path="keyPath"
     :data-status="diffStatus"
     :data-parent="parentPath"
+    :data-modified="modified || undefined"
   >
     <div
       class="tree-node-content"
@@ -232,6 +235,13 @@ const handleEditBlur = () => {
       ></span>
 
       <span class="node-key" data-testid="node-key">{{ nodeKey }}</span>
+      <span
+        v-if="modified"
+        class="modified-badge"
+        data-testid="modified-badge"
+        aria-label="Modified"
+        >*</span
+      >
       <span class="node-separator" data-testid="node-separator">: </span>
 
       <!-- Editable value display -->
@@ -445,5 +455,28 @@ const handleEditBlur = () => {
 /* Editing state */
 .tree-node.editing .tree-node-content {
   background-color: rgba(0, 102, 204, 0.1);
+}
+
+/* Modified state */
+.modified-badge {
+  color: #e67e00;
+  font-weight: 700;
+  font-size: 1rem;
+  margin-left: 2px;
+  margin-right: 2px;
+  line-height: 1;
+}
+
+.tree-node.modified > .tree-node-content {
+  background-color: rgba(230, 126, 0, 0.08);
+  border-left: 3px solid rgba(230, 126, 0, 0.6);
+}
+
+.tree-node.modified > .tree-node-content .node-key {
+  color: #b36200;
+}
+
+.tree-node.modified > .tree-node-content:hover {
+  background-color: rgba(230, 126, 0, 0.14);
 }
 </style>

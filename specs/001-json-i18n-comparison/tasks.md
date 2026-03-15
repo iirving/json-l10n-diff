@@ -108,8 +108,8 @@ description: 'Task list for JSON i18n Comparison and Diff Tool implementation'
 - [x] T024-TEST [US2] [TEST] Update KeyDiffItem tests in `tests/components/KeyDiffItem.test.js` (test add key button visibility, add-key event, keyPath tracking, aim for 90%+ coverage)
 - [x] T025 [US2] Wire edit events to useEditStore in `src/pages/Index.vue` (call editStore.addEdit, editStore.applyEdit on add-key/value-edited events, re-run fileStore.runComparison after edits)
 - [x] T025-TEST [US2] [TEST] Update Index.vue tests in `tests/pages/Index.test.js` (test edit event wiring, store interactions, comparison re-run, aim for 90%+ coverage)
-- [ ] T026 [US2] Add visual feedback for modified state in TreeViewer (e.g., asterisk or badge on modified keys, highlight modified values using editStore.file1Modified/file2Modified)
-- [ ] T026-TEST [US2] [TEST] Update TreeViewer tests in `tests/components/TreeViewer.test.js` (test modified state indicators, visual feedback, aim for 90%+ coverage)
+- [x] T026 [US2] Add visual feedback for modified state in TreeViewer (e.g., asterisk or badge on modified keys, highlight modified values using editStore.file1Modified/file2Modified)
+- [x] T026-TEST [US2] [TEST] Update TreeViewer tests in `tests/components/TreeViewer.test.js` (test modified state indicators, visual feedback, aim for 90%+ coverage)
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work - users can view differences and make edits
 

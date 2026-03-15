@@ -37,6 +37,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  modifiedKeys: {
+    type: Set,
+    default: () => new Set(),
+  },
 });
 
 // Composables
@@ -84,6 +88,15 @@ const toggleNode = (keyPath) => {
  */
 const getDiffStatus = (keyPath) => {
   return diffStatusMap.value.get(keyPath);
+};
+
+/**
+ * Check if a key path has been modified (has pending edits)
+ * @param {string} keyPath - Dot-notation key path
+ * @returns {boolean}
+ */
+const isModified = (keyPath) => {
+  return props.modifiedKeys.has(keyPath);
 };
 
 /**
@@ -158,6 +171,7 @@ const scrollToKey = (keyPath) => {
 provide('isExpanded', isExpanded);
 provide('getDiffStatus', getDiffStatus);
 provide('toggleNode', toggleNode);
+provide('isModified', isModified);
 
 // Lifecycle hooks
 onMounted(() => {

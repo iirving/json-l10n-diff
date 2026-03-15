@@ -38,7 +38,8 @@
     "noResults": "Aucun résultat de comparaison pour le moment"
   },
   "treeViewer": {
-    "noData": "Aucune donnée à afficher"
+    "noData": "Aucune donnée à afficher",
+    "modified": "Modifié"
   },
   "instructions": {
     "title": "Fonctionnalités :",
