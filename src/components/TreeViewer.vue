@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, onMounted, provide } from 'vue';
+import { useI18n } from 'vue-i18n';
 import TreeNode from '@/components/TreeNode.vue';
 
 /**
@@ -37,6 +38,9 @@ const props = defineProps({
     default: false,
   },
 });
+
+// Composables
+const { t } = useI18n();
 
 // Emits
 const emit = defineEmits(['node-toggled', 'value-edited']);
@@ -173,7 +177,7 @@ defineExpose({
 <template>
   <div class="tree-viewer" data-testid="tree-viewer">
     <div v-if="Object.keys(content).length === 0" class="empty-state">
-      No data to display
+      {{ t('treeViewer.noData') }}
     </div>
     <div v-for="(value, key) in content" :key="key" class="tree-node-container">
       <TreeNode

@@ -1,6 +1,10 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { mount } from '@vue/test-utils';
+import { mount, config } from '@vue/test-utils';
+import { createTestI18n } from '../utils/i18nTestHelper.js';
 import TreeViewer from '@/components/TreeViewer.vue';
+
+const i18n = createTestI18n();
+config.global.plugins = [i18n];
 
 describe('TreeViewer', () => {
   let wrapper;

@@ -37,6 +37,9 @@
     "emptyState": "Upload two JSON files to compare",
     "noResults": "No comparison results yet"
   },
+  "treeViewer": {
+    "noData": "No data to display"
+  },
   "instructions": {
     "title": "Features:",
     "step1Title": "Unified Tree Structure:",

@@ -37,6 +37,9 @@
     "emptyState": "Téléchargez deux fichiers JSON à comparer",
     "noResults": "Aucun résultat de comparaison pour le moment"
   },
+  "treeViewer": {
+    "noData": "Aucune donnée à afficher"
+  },
   "instructions": {
     "title": "Fonctionnalités :",
     "step1Title": "Structure Arborescente Unifiée :",
