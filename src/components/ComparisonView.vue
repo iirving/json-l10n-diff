@@ -38,6 +38,7 @@ const props = defineProps({
 const emit = defineEmits([
   'add-key-to-file1',
   'add-key-to-file2',
+  'value-edited',
   'node-toggled',
 ]);
 
@@ -60,6 +61,14 @@ function handleAddKeyToFile1(addKeyDetails) {
  */
 function handleAddKeyToFile2(addKeyDetails) {
   emit('add-key-to-file2', addKeyDetails);
+}
+
+/**
+ * Handle value edited from DualFileViewer
+ * @param {object} editDetails - Edit details with keyPath, newValue, oldValue, targetFile
+ */
+function handleValueEdited(editDetails) {
+  emit('value-edited', editDetails);
 }
 
 /**
@@ -86,6 +95,7 @@ function handleNodeToggled(toggleDetails) {
         :file2-name="file2Name"
         @add-key-to-file1="handleAddKeyToFile1"
         @add-key-to-file2="handleAddKeyToFile2"
+        @value-edited="handleValueEdited"
         @node-toggled="handleNodeToggled"
       />
     </div>

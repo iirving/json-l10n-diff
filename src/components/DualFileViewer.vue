@@ -38,7 +38,11 @@ const props = defineProps({
 });
 
 // Emits
-const emit = defineEmits(['add-key-to-file1', 'add-key-to-file2']);
+const emit = defineEmits([
+  'add-key-to-file1',
+  'add-key-to-file2',
+  'value-edited',
+]);
 
 // Composables
 const { t } = useI18n();
@@ -180,6 +184,14 @@ const handleAddToFile2 = (keyPath, value) => {
 };
 
 /**
+ * Handle value edited from DualTreeNode
+ * @param {Object} editDetails - Edit details with keyPath, newValue, oldValue, targetFile
+ */
+const handleValueEdited = (editDetails) => {
+  emit('value-edited', editDetails);
+};
+
+/**
  * Expand all nodes recursively
  */
 const expandAll = () => {
@@ -251,6 +263,7 @@ defineExpose({
           @toggle="toggleNode"
           @add-to-file1="handleAddToFile1"
           @add-to-file2="handleAddToFile2"
+          @value-edited="handleValueEdited"
         />
       </div>
     </div>

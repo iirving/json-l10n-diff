@@ -179,6 +179,36 @@ const handleAddKeyToFile2 = ({ keyPath, value }) => {
   }
 };
 
+/**
+ * Handle value edited from ComparisonView (inline editing of identical values)
+ * @param {Object} param0 - Edit details
+ * @param {string} param0.keyPath - Dot-notation path to the edited key
+ * @param {*} param0.newValue - New value after editing
+ * @param {*} param0.oldValue - Original value before editing
+ * @param {string} param0.targetFile - Which file was edited ('file1' or 'file2')
+ */
+const handleValueEdited = ({ keyPath, newValue, targetFile }) => {
+  const fileKey = targetFile;
+  const originalData =
+    fileKey === 'file1' ? fileStore.file1?.data : fileStore.file2?.data;
+
+  if (!originalData) {
+    console.error(`Cannot edit value: ${fileKey} not loaded`);
+    return;
+  }
+
+  editStore.addEdit(fileKey, keyPath, newValue, 'modify');
+  editStore.applyEdit(fileKey, originalData);
+
+  if (hasFiles.value) {
+    try {
+      runComparison();
+    } catch (error) {
+      console.error('Comparison failed after edit:', error);
+    }
+  }
+};
+
 const PRETTIFY_SPACES = 2;
 
 /**
@@ -349,6 +379,7 @@ const handleResetFile2 = () => {
           :file2-name="fileStore.file2?.fileName || t('defaults.file2')"
           @add-key-to-file1="handleAddKeyToFile1"
           @add-key-to-file2="handleAddKeyToFile2"
+          @value-edited="handleValueEdited"
         />
       </section>
 
