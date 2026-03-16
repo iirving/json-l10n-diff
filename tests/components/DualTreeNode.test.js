@@ -38,10 +38,10 @@ describe('DualTreeNode', () => {
     it('should render file1 and file2 values', () => {
       const wrapper = mountNode();
       expect(
-        wrapper.find('[data-testid="value-display-file1"]').text(),
+        wrapper.find('[data-testid="value-display-file1"]').text()
       ).toContain('Hello');
       expect(
-        wrapper.find('[data-testid="value-display-file2"]').text(),
+        wrapper.find('[data-testid="value-display-file2"]').text()
       ).toContain('Hello');
     });
 
@@ -138,13 +138,13 @@ describe('DualTreeNode', () => {
     it('should show ▶ when collapsed and ▼ when expanded', () => {
       const collapsedWrapper = mountNode(
         { isParent: true, value1: {}, value2: {}, children: [] },
-        { isExpanded: false },
+        { isExpanded: false }
       );
       expect(collapsedWrapper.find('.expand-icon').text()).toBe('▶');
 
       const expandedWrapper = mountNode(
         { isParent: true, value1: {}, value2: {}, children: [] },
-        { isExpanded: true },
+        { isExpanded: true }
       );
       expect(expandedWrapper.find('.expand-icon').text()).toBe('▼');
     });
@@ -185,12 +185,8 @@ describe('DualTreeNode', () => {
   describe('Inline Editing - Identical Status', () => {
     it('should show editable class on values with identical status', () => {
       const wrapper = mountNode({ status: 'identical' });
-      const file1Display = wrapper.find(
-        '[data-testid="value-display-file1"]',
-      );
-      const file2Display = wrapper.find(
-        '[data-testid="value-display-file2"]',
-      );
+      const file1Display = wrapper.find('[data-testid="value-display-file1"]');
+      const file2Display = wrapper.find('[data-testid="value-display-file2"]');
       expect(file1Display.classes()).toContain('editable');
       expect(file2Display.classes()).toContain('editable');
     });
@@ -201,9 +197,7 @@ describe('DualTreeNode', () => {
         value1: 'Hello',
         value2: 'Bonjour',
       });
-      const file1Display = wrapper.find(
-        '[data-testid="value-display-file1"]',
-      );
+      const file1Display = wrapper.find('[data-testid="value-display-file1"]');
       expect(file1Display.classes()).not.toContain('editable');
     });
 
@@ -216,9 +210,7 @@ describe('DualTreeNode', () => {
         children: [],
       });
       // Parent nodes show values but they should not be editable
-      const file1Display = wrapper.find(
-        '[data-testid="value-display-file1"]',
-      );
+      const file1Display = wrapper.find('[data-testid="value-display-file1"]');
       if (file1Display.exists()) {
         expect(file1Display.classes()).not.toContain('editable');
       }
@@ -246,9 +238,9 @@ describe('DualTreeNode', () => {
         .trigger('click');
       await wrapper.vm.$nextTick();
 
-      expect(
-        wrapper.find('[data-testid="edit-input-file1"]').exists(),
-      ).toBe(true);
+      expect(wrapper.find('[data-testid="edit-input-file1"]').exists()).toBe(
+        true
+      );
     });
 
     it('should enter edit mode for file2 when clicking file2 value', async () => {
@@ -258,9 +250,9 @@ describe('DualTreeNode', () => {
         .trigger('click');
       await wrapper.vm.$nextTick();
 
-      expect(
-        wrapper.find('[data-testid="edit-input-file2"]').exists(),
-      ).toBe(true);
+      expect(wrapper.find('[data-testid="edit-input-file2"]').exists()).toBe(
+        true
+      );
     });
 
     it('should populate edit input with current value', async () => {
@@ -371,9 +363,9 @@ describe('DualTreeNode', () => {
       await input.trigger('keydown', { key: 'Escape' });
 
       expect(wrapper.emitted('value-edited')).toBeFalsy();
-      expect(
-        wrapper.find('[data-testid="edit-input-file1"]').exists(),
-      ).toBe(false);
+      expect(wrapper.find('[data-testid="edit-input-file1"]').exists()).toBe(
+        false
+      );
     });
 
     it('should parse number values correctly', async () => {
@@ -441,26 +433,22 @@ describe('DualTreeNode', () => {
         .trigger('keydown.enter');
       await wrapper.vm.$nextTick();
 
-      expect(
-        wrapper.find('[data-testid="edit-input-file1"]').exists(),
-      ).toBe(true);
+      expect(wrapper.find('[data-testid="edit-input-file1"]').exists()).toBe(
+        true
+      );
     });
   });
 
   describe('Accessibility', () => {
     it('should have role=button on editable values', () => {
       const wrapper = mountNode({ status: 'identical' });
-      const file1Display = wrapper.find(
-        '[data-testid="value-display-file1"]',
-      );
+      const file1Display = wrapper.find('[data-testid="value-display-file1"]');
       expect(file1Display.attributes('role')).toBe('button');
     });
 
     it('should have tabindex=0 on editable values', () => {
       const wrapper = mountNode({ status: 'identical' });
-      const file1Display = wrapper.find(
-        '[data-testid="value-display-file1"]',
-      );
+      const file1Display = wrapper.find('[data-testid="value-display-file1"]');
       expect(file1Display.attributes('tabindex')).toBe('0');
     });
 
@@ -469,12 +457,12 @@ describe('DualTreeNode', () => {
       expect(
         wrapper
           .find('[data-testid="value-display-file1"]')
-          .attributes('aria-label'),
+          .attributes('aria-label')
       ).toBe('Edit File 1 value for title');
       expect(
         wrapper
           .find('[data-testid="value-display-file2"]')
-          .attributes('aria-label'),
+          .attributes('aria-label')
       ).toBe('Edit File 2 value for title');
     });
 
@@ -513,7 +501,7 @@ describe('DualTreeNode', () => {
           value2: { child: 'val' },
           children: [childNode],
         },
-        { isExpanded: true, expandedNodes: new Set(['app.title']) },
+        { isExpanded: true, expandedNodes: new Set(['app.title']) }
       );
       // Child should be visible via its node-row
       const rows = wrapper.findAll('.node-row');
@@ -532,7 +520,7 @@ describe('DualTreeNode', () => {
           value2: { child: 'val' },
           children: [childNode],
         },
-        { isExpanded: false },
+        { isExpanded: false }
       );
       // Only the parent row should be visible
       const rows = wrapper.findAll('.node-row');
@@ -557,13 +545,11 @@ describe('DualTreeNode', () => {
         {
           isExpanded: true,
           expandedNodes: new Set(['app.title']),
-        },
+        }
       );
 
       // Find the child's file1 value display (second value-display-file1)
-      const displays = wrapper.findAll(
-        '[data-testid="value-display-file1"]',
-      );
+      const displays = wrapper.findAll('[data-testid="value-display-file1"]');
       // The last one is the child's display
       const childDisplay = displays[displays.length - 1];
       await childDisplay.trigger('click');
