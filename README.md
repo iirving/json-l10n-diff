@@ -15,6 +15,7 @@ Compare and synchronize your translation files effortlessly. A fast, secure, bro
 - ✏️ Edit translations directly without switching tools
 - 💾 Keep translation files in sync across your project
 - 🔒 Work with sensitive data locally (nothing uploaded to servers)
+- 🌐 Multilingual interface (English and French)
 
 ## ✨ What You Can Do
 
@@ -29,7 +30,8 @@ Upload your JSON localization files (e.g., `en.json` and `fr.json`) and instantl
 ### Edit On-the-Spot
 
 - **Add missing keys** with one click to either file
-- **Edit translations** directly in the comparison view
+- **Inline editing** — click any identical-status primitive value (string, number, boolean, null) to edit it directly in the tree
+- **Type-safe parsing** — edited values are automatically converted back to the correct JSON type (e.g., `"true"` → `true`, `"42"` → `42`)
 - **Fix placeholders** without leaving your browser
 
 ### Export Your Updates
@@ -85,7 +87,7 @@ Sometimes placeholder text gets copied instead of translated.
 ✅ Upload en.json: { "welcome": "Welcome" }
 ✅ Upload fr.json: { "welcome": "Welcome" }
 🟡 Identical values highlighted in yellow
-✏️ Edit "Welcome" → "Bienvenue"
+✏️ Click the value to edit inline → "Bienvenue"
 💾 Save corrected fr.json
 ```
 
@@ -104,9 +106,9 @@ Multiple team members working on translations? Keep files in sync.
 
 1. **Upload** - Drag and drop or select your JSON files
 2. **Parse** - Files are validated and structured into a nested tree
-3. **Compare** - Differences are calculated and highlighted
-4. **Edit** - Make changes directly in the interface
-5. **Export** - Save your modified files
+3. **Compare** - Differences are calculated and color-coded (missing, identical, different)
+4. **Edit** - Click identical values to edit inline, or add missing keys with one click
+5. **Export** - Download your modified files with prettified JSON
 
 All processing happens in your browser—fast, secure, and private.
 
