@@ -1423,5 +1423,98 @@ describe('Index.vue', () => {
         });
       });
     });
+
+    describe('Value Edited Events', () => {
+      it('handles value-edited event from ComparisonView for file1', async () => {
+        await uploadBothFiles(wrapper);
+
+        const comparison = wrapper.findComponent(ComparisonView);
+        await comparison.vm.$emit('value-edited', {
+          keyPath: 'key1',
+          newValue: 'updated',
+          oldValue: 'value1',
+          targetFile: 'file1',
+        });
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.vm.file1).toHaveProperty('key1', 'updated');
+      });
+
+      it('handles value-edited event from ComparisonView for file2', async () => {
+        await uploadBothFiles(wrapper);
+
+        const comparison = wrapper.findComponent(ComparisonView);
+        await comparison.vm.$emit('value-edited', {
+          keyPath: 'key1',
+          newValue: 'modifié',
+          oldValue: 'valeur1',
+          targetFile: 'file2',
+        });
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.vm.file2).toHaveProperty('key1', 'modifié');
+      });
+
+      it('records modify edit in editStore', async () => {
+        await uploadBothFiles(wrapper);
+
+        const comparison = wrapper.findComponent(ComparisonView);
+        await comparison.vm.$emit('value-edited', {
+          keyPath: 'key1',
+          newValue: 'updated',
+          oldValue: 'value1',
+          targetFile: 'file1',
+        });
+        await wrapper.vm.$nextTick();
+
+        const edit = editStore.getEdit('file1', 'key1');
+        expect(edit).toBeDefined();
+        expect(edit.editType).toBe('modify');
+        expect(edit.newValue).toBe('updated');
+      });
+
+      it('does not edit when target file is not loaded', async () => {
+        // Only upload file1
+        const uploaders = wrapper.findAllComponents(FileUploader);
+        await uploaders[0].vm.$emit('file-loaded', {
+          data: { key1: 'value1' },
+          keyCount: 1,
+          fileName: 'en.json',
+          fileSize: 512,
+        });
+        await wrapper.vm.$nextTick();
+
+        const consoleSpy = vi.spyOn(console, 'error');
+        const comparison = wrapper.findComponent(ComparisonView);
+        await comparison.vm.$emit('value-edited', {
+          keyPath: 'key1',
+          newValue: 'updated',
+          oldValue: 'val',
+          targetFile: 'file2',
+        });
+
+        expect(consoleSpy).toHaveBeenCalledWith(
+          'Cannot edit value: file2 not loaded'
+        );
+        expect(editStore.hasFile2Edits).toBe(false);
+      });
+
+      it('marks file as modified after value edit', async () => {
+        await uploadBothFiles(wrapper);
+
+        const comparison = wrapper.findComponent(ComparisonView);
+        await comparison.vm.$emit('value-edited', {
+          keyPath: 'key1',
+          newValue: 'updated',
+          oldValue: 'value1',
+          targetFile: 'file1',
+        });
+        await wrapper.vm.$nextTick();
+
+        const editControlsComponents = wrapper.findAllComponents(EditControls);
+        expect(editControlsComponents[0].props('modified')).toBe(true);
+        expect(editControlsComponents[1].props('modified')).toBe(false);
+      });
+    });
   });
 });

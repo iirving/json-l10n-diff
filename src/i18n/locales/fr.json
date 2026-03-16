@@ -120,5 +120,10 @@
   "defaults": {
     "file1": "Fichier 1",
     "file2": "Fichier 2"
+  },
+  "dualTreeNode": {
+    "aria": {
+      "editValue": "Modifier la valeur du Fichier {file} pour {key}"
+    }
   }
 }

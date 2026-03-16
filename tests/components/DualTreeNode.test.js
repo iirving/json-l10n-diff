@@ -1,6 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { mount } from '@vue/test-utils';
+import { createTestI18n } from '../utils/i18nTestHelper.js';
 import DualTreeNode from '@/components/DualTreeNode.vue';
+
+const i18n = createTestI18n();
 
 describe('DualTreeNode', () => {
   /**
@@ -25,6 +28,9 @@ describe('DualTreeNode', () => {
         isExpanded: false,
         expandedNodes: new Set(),
         ...propsOverrides,
+      },
+      global: {
+        plugins: [i18n],
       },
     });
   };
@@ -483,6 +489,43 @@ describe('DualTreeNode', () => {
       hints.forEach((hint) => {
         expect(hint.attributes('aria-hidden')).toBe('true');
       });
+    });
+
+    it('should not be editable for array values', () => {
+      const wrapper = mountNode({
+        status: 'identical',
+        value1: [1, 2, 3],
+        value2: [1, 2, 3],
+      });
+      const file1Display = wrapper.find('[data-testid="value-display-file1"]');
+      expect(file1Display.classes()).not.toContain('editable');
+      expect(file1Display.attributes('role')).toBeUndefined();
+    });
+
+    it('should not be editable for object values', () => {
+      const wrapper = mountNode({
+        status: 'identical',
+        isParent: false,
+        value1: { nested: 'val' },
+        value2: { nested: 'val' },
+      });
+      const file1Display = wrapper.find('[data-testid="value-display-file1"]');
+      expect(file1Display.classes()).not.toContain('editable');
+    });
+
+    it('should not enter edit mode when clicking array values', async () => {
+      const wrapper = mountNode({
+        status: 'identical',
+        value1: [1, 2],
+        value2: [1, 2],
+      });
+      await wrapper
+        .find('[data-testid="value-display-file1"]')
+        .trigger('click');
+      await wrapper.vm.$nextTick();
+      expect(wrapper.find('[data-testid="edit-input-file1"]').exists()).toBe(
+        false
+      );
     });
   });
 

@@ -7,6 +7,7 @@
  */
 
 import { ref, computed, nextTick } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { formatValue } from '@/composables/useValueFormatter.js';
 import {
   DIFFERENT,
@@ -47,6 +48,8 @@ const props = defineProps({
   },
 });
 
+const { t } = useI18n();
+
 const emit = defineEmits([
   'toggle',
   'add-to-file1',
@@ -60,12 +63,30 @@ const editValue = ref('');
 const editInputRef = ref(null);
 
 /**
- * Check if a value is editable (leaf node with identical status)
- * @param {Object} node - The tree node
+ * Check if a value is a primitive JSON value (string, number, boolean, null)
+ * @param {*} value - The value to check
+ * @returns {boolean}
+ */
+const isPrimitiveJsonValue = (value) => {
+  if (value === null) return true;
+  const t = typeof value;
+  return t === 'string' || t === 'number' || t === 'boolean';
+};
+
+/**
+ * Check if a node's value is editable (leaf node with identical status
+ * and a primitive JSON value).
  * @returns {boolean}
  */
 const isEditable = computed(() => {
-  return props.node.status === IDENTICAL && !props.node.isParent;
+  if (props.node.status !== IDENTICAL || props.node.isParent) return false;
+  if ('value' in props.node) {
+    return isPrimitiveJsonValue(props.node.value);
+  }
+  if (props.node.value1 !== undefined) {
+    return isPrimitiveJsonValue(props.node.value1);
+  }
+  return true;
 });
 
 /**
@@ -75,6 +96,7 @@ const isEditable = computed(() => {
  */
 const startEditing = (fileKey, currentValue) => {
   if (!isEditable.value) return;
+  if (!isPrimitiveJsonValue(currentValue)) return;
 
   editingFile.value = fileKey;
   if (currentValue === null) {
@@ -255,7 +277,12 @@ const handleAddToFile2 = () => {
               :role="isEditable ? 'button' : undefined"
               :tabindex="isEditable ? 0 : undefined"
               :aria-label="
-                isEditable ? `Edit File 1 value for ${node.key}` : undefined
+                isEditable
+                  ? t('dualTreeNode.aria.editValue', {
+                      file: 1,
+                      key: node.key,
+                    })
+                  : undefined
               "
               data-testid="value-display-file1"
               @click="isEditable && startEditing('file1', node.value1)"
@@ -301,7 +328,12 @@ const handleAddToFile2 = () => {
               :role="isEditable ? 'button' : undefined"
               :tabindex="isEditable ? 0 : undefined"
               :aria-label="
-                isEditable ? `Edit File 2 value for ${node.key}` : undefined
+                isEditable
+                  ? t('dualTreeNode.aria.editValue', {
+                      file: 2,
+                      key: node.key,
+                    })
+                  : undefined
               "
               data-testid="value-display-file2"
               @click="isEditable && startEditing('file2', node.value2)"

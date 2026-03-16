@@ -130,6 +130,11 @@ const defaultEnglishMessages = {
     file1: 'File 1',
     file2: 'File 2',
   },
+  dualTreeNode: {
+    aria: {
+      editValue: 'Edit File {file} value for {key}',
+    },
+  },
 };
 
 /**
