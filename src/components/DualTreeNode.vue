@@ -6,7 +6,8 @@
  * Shows key and values from both files side-by-side
  */
 
-import { computed } from 'vue';
+import { ref, computed, nextTick } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { formatValue } from '@/composables/useValueFormatter.js';
 import {
   DIFFERENT,
@@ -47,7 +48,146 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['toggle', 'add-to-file1', 'add-to-file2']);
+const { t } = useI18n();
+
+const emit = defineEmits([
+  'toggle',
+  'add-to-file1',
+  'add-to-file2',
+  'value-edited',
+]);
+
+// Reactive state for inline editing
+const editingFile = ref(null);
+const editValue = ref('');
+const editInputRef = ref(null);
+
+/**
+ * Check if a value is a primitive JSON value (string, number, boolean, null)
+ * @param {*} value - The value to check
+ * @returns {boolean}
+ */
+const isPrimitiveJsonValue = (value) => {
+  if (value === null) return true;
+  const t = typeof value;
+  return t === 'string' || t === 'number' || t === 'boolean';
+};
+
+/**
+ * Check if a node's value is editable (leaf node with identical status
+ * and a primitive JSON value).
+ * @returns {boolean}
+ */
+const isEditable = computed(() => {
+  if (props.node.status !== IDENTICAL || props.node.isParent) return false;
+  if ('value' in props.node) {
+    return isPrimitiveJsonValue(props.node.value);
+  }
+  if (props.node.value1 !== undefined) {
+    return isPrimitiveJsonValue(props.node.value1);
+  }
+  return true;
+});
+
+/**
+ * Start inline editing for a specific file's value
+ * @param {'file1'|'file2'} fileKey - Which file's value to edit
+ * @param {*} currentValue - Current value to populate input
+ */
+const startEditing = (fileKey, currentValue) => {
+  if (!isEditable.value) return;
+  if (!isPrimitiveJsonValue(currentValue)) return;
+
+  editingFile.value = fileKey;
+  if (currentValue === null) {
+    editValue.value = 'null';
+  } else if (typeof currentValue === 'boolean') {
+    editValue.value = currentValue.toString();
+  } else if (typeof currentValue === 'number') {
+    editValue.value = currentValue.toString();
+  } else {
+    editValue.value = String(currentValue);
+  }
+
+  nextTick(() => {
+    if (editInputRef.value) {
+      editInputRef.value.focus();
+      editInputRef.value.select();
+    }
+  });
+};
+
+/**
+ * Parse the edited string value back to its appropriate type
+ * @param {string} str - The string value from the input
+ * @returns {*} Parsed value
+ */
+const parseEditedValue = (str) => {
+  const trimmed = str.trim();
+  if (trimmed === 'null') return null;
+  if (trimmed === 'true') return true;
+  if (trimmed === 'false') return false;
+  if (trimmed !== '' && !isNaN(Number(trimmed)) && isFinite(Number(trimmed))) {
+    return Number(trimmed);
+  }
+  return str;
+};
+
+/**
+ * Save the edited value and exit editing mode
+ */
+const saveEdit = () => {
+  if (!editingFile.value) return;
+
+  const newValue = parseEditedValue(editValue.value);
+  const oldValue =
+    editingFile.value === 'file1' ? props.node.value1 : props.node.value2;
+
+  if (newValue !== oldValue) {
+    emit('value-edited', {
+      keyPath: props.node.keyPath,
+      newValue,
+      oldValue,
+      targetFile: editingFile.value,
+    });
+  }
+
+  editingFile.value = null;
+  editValue.value = '';
+};
+
+/**
+ * Cancel editing and restore original value
+ */
+const cancelEdit = () => {
+  editingFile.value = null;
+  editValue.value = '';
+};
+
+/**
+ * Handle keyboard events in edit mode
+ * @param {KeyboardEvent} event
+ */
+const handleEditKeydown = (event) => {
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    saveEdit();
+  } else if (event.key === 'Escape') {
+    event.preventDefault();
+    cancelEdit();
+  }
+};
+
+/**
+ * Handle blur event - save on blur
+ */
+const handleEditBlur = () => {
+  nextTick(() => {
+    if (editingFile.value) {
+      saveEdit();
+    }
+  });
+};
 
 /**
  * Get background color based on status
@@ -116,9 +256,44 @@ const handleAddToFile2 = () => {
       <div class="node-values">
         <!-- File 1 Value -->
         <div class="value-cell file1-value">
-          <span v-if="node.value1 !== undefined">
-            {{ formatValue(node.value1) }}
-          </span>
+          <template v-if="node.value1 !== undefined">
+            <!-- Edit mode for file1 -->
+            <span v-if="editingFile === 'file1'" class="node-value-edit">
+              <input
+                ref="editInputRef"
+                v-model="editValue"
+                type="text"
+                class="edit-input"
+                data-testid="edit-input-file1"
+                @keydown="handleEditKeydown"
+                @blur="handleEditBlur"
+              />
+            </span>
+            <!-- View mode for file1 -->
+            <span
+              v-else
+              class="value-display"
+              :class="{ editable: isEditable }"
+              :role="isEditable ? 'button' : undefined"
+              :tabindex="isEditable ? 0 : undefined"
+              :aria-label="
+                isEditable
+                  ? t('dualTreeNode.aria.editValue', {
+                      file: 1,
+                      key: node.key,
+                    })
+                  : undefined
+              "
+              data-testid="value-display-file1"
+              @click="isEditable && startEditing('file1', node.value1)"
+              @keydown.enter="isEditable && startEditing('file1', node.value1)"
+            >
+              {{ formatValue(node.value1) }}
+              <span v-if="isEditable" class="edit-hint" aria-hidden="true"
+                >✏️</span
+              >
+            </span>
+          </template>
           <span v-else class="missing-indicator">
             <button
               v-if="node.isMissingInFile1"
@@ -132,9 +307,44 @@ const handleAddToFile2 = () => {
 
         <!-- File 2 Value -->
         <div class="value-cell file2-value">
-          <span v-if="node.value2 !== undefined">
-            {{ formatValue(node.value2) }}
-          </span>
+          <template v-if="node.value2 !== undefined">
+            <!-- Edit mode for file2 -->
+            <span v-if="editingFile === 'file2'" class="node-value-edit">
+              <input
+                ref="editInputRef"
+                v-model="editValue"
+                type="text"
+                class="edit-input"
+                data-testid="edit-input-file2"
+                @keydown="handleEditKeydown"
+                @blur="handleEditBlur"
+              />
+            </span>
+            <!-- View mode for file2 -->
+            <span
+              v-else
+              class="value-display"
+              :class="{ editable: isEditable }"
+              :role="isEditable ? 'button' : undefined"
+              :tabindex="isEditable ? 0 : undefined"
+              :aria-label="
+                isEditable
+                  ? t('dualTreeNode.aria.editValue', {
+                      file: 2,
+                      key: node.key,
+                    })
+                  : undefined
+              "
+              data-testid="value-display-file2"
+              @click="isEditable && startEditing('file2', node.value2)"
+              @keydown.enter="isEditable && startEditing('file2', node.value2)"
+            >
+              {{ formatValue(node.value2) }}
+              <span v-if="isEditable" class="edit-hint" aria-hidden="true"
+                >✏️</span
+              >
+            </span>
+          </template>
           <span v-else class="missing-indicator">
             <button
               v-if="node.isMissingInFile2"
@@ -164,6 +374,7 @@ const handleAddToFile2 = () => {
         @add-to-file2="
           (keyPath, value) => $emit('add-to-file2', keyPath, value)
         "
+        @value-edited="(details) => $emit('value-edited', details)"
       />
     </template>
   </div>
@@ -275,5 +486,63 @@ const handleAddToFile2 = () => {
 .add-btn:hover {
   background: var(--color-success-darker);
   transform: scale(1.05);
+}
+
+.value-display {
+  color: var(--color-link);
+  word-break: break-word;
+}
+
+.value-display.editable {
+  cursor: pointer;
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  transition:
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.value-display.editable:hover {
+  background-color: rgba(0, 102, 204, 0.1);
+  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
+}
+
+.value-display.editable:focus {
+  outline: 2px solid #0066cc;
+  outline-offset: 1px;
+}
+
+.edit-hint {
+  margin-left: 4px;
+  opacity: 0;
+  font-size: 0.75rem;
+  transition: opacity 0.15s ease;
+}
+
+.value-display.editable:hover .edit-hint,
+.value-display.editable:focus .edit-hint {
+  opacity: 0.7;
+}
+
+.node-value-edit {
+  display: inline-flex;
+  align-items: center;
+}
+
+.edit-input {
+  font-family: inherit;
+  font-size: inherit;
+  padding: 0.125rem 0.375rem;
+  border: 2px solid #0066cc;
+  border-radius: 0.25rem;
+  background-color: #ffffff;
+  color: #000000;
+  min-width: 100px;
+  max-width: 300px;
+}
+
+.edit-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.3);
 }
 </style>

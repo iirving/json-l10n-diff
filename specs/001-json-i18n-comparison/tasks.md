@@ -110,8 +110,8 @@ description: 'Task list for JSON i18n Comparison and Diff Tool implementation'
 - [x] T025-TEST [US2] [TEST] Update Index.vue tests in `tests/pages/Index.test.js` (test edit event wiring, store interactions, comparison re-run, aim for 90%+ coverage)
 - [x] T026 [US2] Add visual feedback for modified state in TreeViewer (e.g., asterisk or badge on modified keys, highlight modified values using editStore.file1Modified/file2Modified)
 - [x] T026-TEST [US2] [TEST] Update TreeViewer tests in `tests/components/TreeViewer.test.js` (test modified state indicators, visual feedback, aim for 90%+ coverage)
-- [ ] T026A [US2] Enable inline editing for identical-status values in `src/components/DualTreeNode.vue` (allow clicking on values with "identical" diff status to edit them, emit value-edited event with keyPath/newValue/targetFile, wire through DualFileViewer and ComparisonView to Index.vue)
-- [ ] T026A-TEST [US2] [TEST] Write tests for identical-value editing in `tests/components/DualTreeNode.test.js` (test edit trigger on identical values, value-edited event emission, integration with edit store, aim for 90%+ coverage)
+- [x] T026A [US2] Enable inline editing for identical-status values in `src/components/DualTreeNode.vue` (allow clicking on values with "identical" diff status to edit them, emit value-edited event with keyPath/newValue/targetFile, wire through DualFileViewer and ComparisonView to Index.vue)
+- [x] T026A-TEST [US2] [TEST] Write tests for identical-value editing in `tests/components/DualTreeNode.test.js` (test edit trigger on identical values, value-edited event emission, integration with edit store, aim for 90%+ coverage)
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work - users can view differences and make edits
 
