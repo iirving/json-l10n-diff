@@ -261,6 +261,8 @@ const confirmPrettify = () => {
   const target = pendingPrettifyTarget.value;
   pendingPrettifyTarget.value = null;
 
+  if (target !== 'file1' && target !== 'file2') return;
+
   const data = target === 'file1' ? file1.value : file2.value;
   if (!data) return;
 
