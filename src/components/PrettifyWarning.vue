@@ -7,7 +7,9 @@
  * Features:
  * - Modal overlay with warning message
  * - Confirm (Prettify) and Cancel buttons
- * - Accessibility attributes for screen readers
+ * - Accessibility attributes for screen readers (aria-labelledby, aria-describedby)
+ * - Keyboard support: Escape key dismisses the dialog
+ * - Focus management: focuses cancel button on open, restores prior focus on close
  * - Internationalization support
  *
  * @component
@@ -19,6 +21,7 @@
  * />
  */
 
+import { onMounted, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
@@ -34,6 +37,12 @@ const emit = defineEmits([
   'cancel',
 ]);
 
+/** Ref to the cancel button — receives initial focus when the dialog opens */
+const cancelBtnRef = ref(null);
+
+/** Element that held focus before the dialog opened, restored on close */
+let previousActiveElement = null;
+
 /**
  * Handle confirm button click
  */
@@ -47,6 +56,27 @@ const handleConfirm = () => {
 const handleCancel = () => {
   emit('cancel');
 };
+
+/**
+ * Dismiss dialog on Escape key press
+ * @param {KeyboardEvent} event
+ */
+const handleKeydown = (event) => {
+  if (event.key === 'Escape') {
+    handleCancel();
+  }
+};
+
+onMounted(() => {
+  previousActiveElement = document.activeElement;
+  cancelBtnRef.value?.focus();
+  document.addEventListener('keydown', handleKeydown);
+});
+
+onUnmounted(() => {
+  document.removeEventListener('keydown', handleKeydown);
+  previousActiveElement?.focus();
+});
 </script>
 
 <template>
@@ -55,14 +85,20 @@ const handleCancel = () => {
     data-testid="prettify-warning-overlay"
     role="dialog"
     aria-modal="true"
-    :aria-label="t('prettifyWarning.title')"
+    aria-labelledby="prettify-warning-title"
+    aria-describedby="prettify-warning-desc"
     @click.self="handleCancel"
   >
     <div class="prettify-warning-modal" data-testid="prettify-warning-modal">
-      <h3 class="prettify-warning__title" data-testid="prettify-warning-title">
+      <h3
+        id="prettify-warning-title"
+        class="prettify-warning__title"
+        data-testid="prettify-warning-title"
+      >
         {{ t('prettifyWarning.title') }}
       </h3>
       <p
+        id="prettify-warning-desc"
         class="prettify-warning__message"
         data-testid="prettify-warning-message"
       >
@@ -70,6 +106,7 @@ const handleCancel = () => {
       </p>
       <div class="prettify-warning__actions">
         <button
+          ref="cancelBtnRef"
           type="button"
           class="prettify-warning__cancel-btn"
           data-testid="prettify-warning-cancel"
