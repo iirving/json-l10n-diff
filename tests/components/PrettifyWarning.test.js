@@ -159,18 +159,15 @@ describe('PrettifyWarning', () => {
     });
 
     it('removes the keydown listener on unmount', async () => {
+      const removeSpy = vi.spyOn(document, 'removeEventListener');
+
       const wrapper = mountComponent();
       await wrapper.vm.$nextTick();
 
       wrapper.unmount();
 
-      // After unmount, Escape should no longer emit cancel (listener is cleaned up)
-      const event = new KeyboardEvent('keydown', { key: 'Escape' });
-      document.dispatchEvent(event);
-
-      // No way to check emit after unmount, but we verify removeEventListener was wired
-      // by checking no unhandled errors occur — this test validates cleanup doesn't throw
-      expect(true).toBe(true);
+      expect(removeSpy).toHaveBeenCalledWith('keydown', expect.any(Function));
+      removeSpy.mockRestore();
     });
 
     it('does not emit "cancel" for other key presses', async () => {

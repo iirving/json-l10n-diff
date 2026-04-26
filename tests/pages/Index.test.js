@@ -1489,6 +1489,7 @@ describe('Index.vue', () => {
         await uploadBothFiles(wrapper);
 
         const originalFile1 = wrapper.vm.file1;
+        const editControlsComponents = wrapper.findAllComponents(EditControls);
 
         // Open modal for file1
         await editControlsComponents[0].vm.$emit('prettify');
