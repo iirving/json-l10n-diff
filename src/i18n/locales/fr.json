@@ -117,6 +117,12 @@
     "parseJsonFailed": "Échec de l'analyse JSON : {message}",
     "readFileFailed": "Échec de la lecture du fichier"
   },
+  "prettifyWarning": {
+    "title": "Embellir le JSON",
+    "message": "L'embellissement peut causer du bruit supplémentaire dans les diffs git. Le fichier sera reformaté avec une indentation de 2 espaces.",
+    "confirm": "Embellir",
+    "cancel": "Annuler"
+  },
   "defaults": {
     "file1": "Fichier 1",
     "file2": "Fichier 2"

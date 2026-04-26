@@ -13,14 +13,18 @@ import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 import { useFileStore } from '@/stores/useFileStore.js';
 import { useEditStore } from '@/stores/useEditStore.js';
+import { useFileDownload } from '@/composables/useFileDownload.js';
 import ComparisonView from '@/components/ComparisonView.vue';
 import EditControls from '@/components/EditControls.vue';
 import FileUploader from '@/components/FileUploader.vue';
+import PrettifyWarning from '@/components/PrettifyWarning.vue';
+import { prettifyJson } from '@/utils/prettifyJson.js';
 
 // Composables and stores
 const { t } = useI18n();
 const fileStore = useFileStore();
 const editStore = useEditStore();
+const { downloadFile } = useFileDownload();
 const { hasFiles } = storeToRefs(fileStore);
 const { hasFile1Edits, hasFile2Edits } = storeToRefs(editStore);
 const { setFile1, setFile2, runComparison, reset } = fileStore;
@@ -28,6 +32,8 @@ const { setFile1, setFile2, runComparison, reset } = fileStore;
 // Reactive state
 const fileUploader1 = ref(null);
 const fileUploader2 = ref(null);
+const showPrettifyWarning = ref(false);
+const pendingPrettifyTarget = ref(null);
 
 // Computed properties
 
@@ -209,24 +215,6 @@ const handleValueEdited = ({ keyPath, newValue, targetFile }) => {
   }
 };
 
-const PRETTIFY_SPACES = 2;
-
-/**
- * Download a JSON file to the user's machine
- * @param {string} fileName - Name for the downloaded file
- * @param {Object} data - JSON data to save
- */
-const downloadJsonFile = (fileName, data) => {
-  const json = JSON.stringify(data, null, PRETTIFY_SPACES);
-  const blob = new Blob([json], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = fileName;
-  link.click();
-  URL.revokeObjectURL(url);
-};
-
 /**
  * Handle save for file1 — downloads the current (edited) data
  */
@@ -234,7 +222,7 @@ const handleSaveFile1 = () => {
   const data = file1.value;
   const fileName = fileStore.file1?.fileName || 'file1.json';
   if (!data) return;
-  downloadJsonFile(fileName, data);
+  downloadFile(fileName, data);
 };
 
 /**
@@ -244,29 +232,58 @@ const handleSaveFile2 = () => {
   const data = file2.value;
   const fileName = fileStore.file2?.fileName || 'file2.json';
   if (!data) return;
-  downloadJsonFile(fileName, data);
+  downloadFile(fileName, data);
 };
 
 /**
- * Handle prettify for file1 — re-applies edits with a formatted data pass
+ * Handle prettify for file1 — show warning modal before formatting
  */
 const handlePrettifyFile1 = () => {
-  const data = file1.value;
-  if (!data) return;
-  // Prettify by round-tripping through JSON stringify/parse
-  const prettified = JSON.parse(JSON.stringify(data, null, PRETTIFY_SPACES));
-  editStore.applyEdit('file1', prettified);
+  if (!file1.value) return;
+  pendingPrettifyTarget.value = 'file1';
+  showPrettifyWarning.value = true;
 };
 
 /**
- * Handle prettify for file2 — re-applies edits with a formatted data pass
+ * Handle prettify for file2 — show warning modal before formatting
  */
 const handlePrettifyFile2 = () => {
-  const data = file2.value;
+  if (!file2.value) return;
+  pendingPrettifyTarget.value = 'file2';
+  showPrettifyWarning.value = true;
+};
+
+/**
+ * Confirm prettify — applies formatting to the pending target file
+ */
+const confirmPrettify = () => {
+  showPrettifyWarning.value = false;
+  const target = pendingPrettifyTarget.value;
+  pendingPrettifyTarget.value = null;
+
+  if (target !== 'file1' && target !== 'file2') return;
+
+  const data = target === 'file1' ? file1.value : file2.value;
   if (!data) return;
-  // Prettify by round-tripping through JSON stringify/parse
-  const prettified = JSON.parse(JSON.stringify(data, null, PRETTIFY_SPACES));
-  editStore.applyEdit('file2', prettified);
+
+  const prettified = JSON.parse(prettifyJson(data));
+  editStore.applyEdit(target, prettified);
+
+  if (hasFiles.value) {
+    try {
+      runComparison();
+    } catch (error) {
+      console.error('Comparison failed after prettify:', error);
+    }
+  }
+};
+
+/**
+ * Cancel prettify — closes the warning modal without making changes
+ */
+const cancelPrettify = () => {
+  showPrettifyWarning.value = false;
+  pendingPrettifyTarget.value = null;
 };
 
 /**
@@ -446,6 +463,14 @@ const handleResetFile2 = () => {
         </ul>
       </section>
     </main>
+
+    <!-- Prettify Warning Modal -->
+    <PrettifyWarning
+      v-if="showPrettifyWarning"
+      data-testid="prettify-warning"
+      @confirm="confirmPrettify"
+      @cancel="cancelPrettify"
+    />
   </div>
 </template>
 

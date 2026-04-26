@@ -117,6 +117,12 @@
     "parseJsonFailed": "Failed to parse JSON: {message}",
     "readFileFailed": "Failed to read file"
   },
+  "prettifyWarning": {
+    "title": "Prettify JSON",
+    "message": "Prettification may cause extra git diff noise. The file will be reformatted with 2-space indentation.",
+    "confirm": "Prettify",
+    "cancel": "Cancel"
+  },
   "defaults": {
     "file1": "File 1",
     "file2": "File 2"

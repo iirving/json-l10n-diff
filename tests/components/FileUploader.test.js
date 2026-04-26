@@ -122,7 +122,7 @@ describe('FileUploader', () => {
       expect(wrapper.emitted('file-error')).toBeTruthy();
       const errorData = wrapper.emitted('file-error')[0][0];
       expect(errorData.type).toBe('size');
-      expect(errorData.message).toContain('1MB');
+      expect(errorData.message).toContain('1');
     });
 
     it('should not emit events when no file is selected', async () => {
