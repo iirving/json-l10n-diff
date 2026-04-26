@@ -125,8 +125,8 @@ description: 'Task list for JSON i18n Comparison and Diff Tool implementation'
 
 ### Implementation for User Story 3
 
-- [ ] T027 [P] [US3] Implement prettify utility in `src/utils/prettifyJson.js` (format JSON with 2-space indentation using JSON.stringify)
-- [ ] T027-TEST [P] [US3] [TEST] Write unit tests for prettifyJson in `tests/utils/prettifyJson.test.js` (test formatting, indentation, edge cases, aim for 90%+ coverage)
+- [x] T027 [P] [US3] Implement prettify utility in `src/utils/prettifyJson.js` (format JSON with 2-space indentation using JSON.stringify)
+- [x] T027-TEST [P] [US3] [TEST] Write unit tests for prettifyJson in `tests/utils/prettifyJson.test.js` (test formatting, indentation, edge cases, aim for 90%+ coverage)
 - [ ] T028 [P] [US3] Implement file download composable in `src/composables/useFileDownload.js` (downloadFile method using Blob API and createElement('a') with download attribute)
 - [ ] T028-TEST [P] [US3] [TEST] Write unit tests for useFileDownload in `tests/composables/useFileDownload.test.js` (test Blob creation, download trigger, filename handling, aim for 90%+ coverage)
 - [ ] T029 [US3] Wire EditControls save event to useFileDownload in `src/pages/Index.vue` (get file content from fileStore, convert to JSON string, trigger download with original filename)
