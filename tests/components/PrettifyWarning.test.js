@@ -137,7 +137,6 @@ describe('PrettifyWarning', () => {
       await wrapper.vm.$nextTick();
 
       wrapper.unmount();
-      await wrapper.vm.$nextTick();
 
       expect(document.activeElement).toBe(trigger);
       trigger.remove();
