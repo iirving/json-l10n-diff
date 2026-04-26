@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { mount } from '@vue/test-utils';
 import { createTestI18n } from '../utils/i18nTestHelper.js';
 import PrettifyWarning from '@/components/PrettifyWarning.vue';
@@ -30,16 +30,16 @@ describe('PrettifyWarning', () => {
 
     it('renders the modal', () => {
       const wrapper = mountComponent();
-      expect(
-        wrapper.find('[data-testid="prettify-warning-modal"]').exists()
-      ).toBe(true);
+      expect(wrapper.find('[data-testid="prettify-warning-modal"]').exists()).toBe(
+        true
+      );
     });
 
     it('renders the title', () => {
       const wrapper = mountComponent();
-      expect(
-        wrapper.find('[data-testid="prettify-warning-title"]').text()
-      ).toBe('Prettify JSON');
+      expect(wrapper.find('[data-testid="prettify-warning-title"]').text()).toBe(
+        'Prettify JSON'
+      );
     });
 
     it('renders the warning message', () => {
@@ -55,9 +55,9 @@ describe('PrettifyWarning', () => {
       expect(
         wrapper.find('[data-testid="prettify-warning-cancel"]').exists()
       ).toBe(true);
-      expect(
-        wrapper.find('[data-testid="prettify-warning-cancel"]').text()
-      ).toBe('Cancel');
+      expect(wrapper.find('[data-testid="prettify-warning-cancel"]').text()).toBe(
+        'Cancel'
+      );
     });
 
     it('renders confirm button', () => {
@@ -93,17 +93,13 @@ describe('PrettifyWarning', () => {
     it('has aria-labelledby referencing the title id', () => {
       const wrapper = mountComponent();
       const overlay = wrapper.find('[data-testid="prettify-warning-overlay"]');
-      expect(overlay.attributes('aria-labelledby')).toBe(
-        'prettify-warning-title'
-      );
+      expect(overlay.attributes('aria-labelledby')).toBe('prettify-warning-title');
     });
 
     it('has aria-describedby referencing the message id', () => {
       const wrapper = mountComponent();
       const overlay = wrapper.find('[data-testid="prettify-warning-overlay"]');
-      expect(overlay.attributes('aria-describedby')).toBe(
-        'prettify-warning-desc'
-      );
+      expect(overlay.attributes('aria-describedby')).toBe('prettify-warning-desc');
     });
 
     it('does not use aria-label (replaced by aria-labelledby)', () => {
@@ -185,25 +181,19 @@ describe('PrettifyWarning', () => {
   describe('events', () => {
     it('emits "confirm" when confirm button is clicked', async () => {
       const wrapper = mountComponent();
-      await wrapper
-        .find('[data-testid="prettify-warning-confirm"]')
-        .trigger('click');
+      await wrapper.find('[data-testid="prettify-warning-confirm"]').trigger('click');
       expect(wrapper.emitted('confirm')).toHaveLength(1);
     });
 
     it('emits "cancel" when cancel button is clicked', async () => {
       const wrapper = mountComponent();
-      await wrapper
-        .find('[data-testid="prettify-warning-cancel"]')
-        .trigger('click');
+      await wrapper.find('[data-testid="prettify-warning-cancel"]').trigger('click');
       expect(wrapper.emitted('cancel')).toHaveLength(1);
     });
 
     it('emits "cancel" when overlay is clicked (self)', async () => {
       const wrapper = mountComponent();
-      await wrapper
-        .find('[data-testid="prettify-warning-overlay"]')
-        .trigger('click');
+      await wrapper.find('[data-testid="prettify-warning-overlay"]').trigger('click');
       expect(wrapper.emitted('cancel')).toHaveLength(1);
     });
 
@@ -211,9 +201,7 @@ describe('PrettifyWarning', () => {
       const wrapper = mountComponent();
       // Click on the modal itself (child of overlay), should NOT trigger cancel
       // because @click.self only fires on self not children
-      await wrapper
-        .find('[data-testid="prettify-warning-modal"]')
-        .trigger('click');
+      await wrapper.find('[data-testid="prettify-warning-modal"]').trigger('click');
       expect(wrapper.emitted('cancel')).toBeFalsy();
     });
 
@@ -224,9 +212,7 @@ describe('PrettifyWarning', () => {
 
     it('can emit confirm multiple times', async () => {
       const wrapper = mountComponent();
-      const confirmBtn = wrapper.find(
-        '[data-testid="prettify-warning-confirm"]'
-      );
+      const confirmBtn = wrapper.find('[data-testid="prettify-warning-confirm"]');
       await confirmBtn.trigger('click');
       await confirmBtn.trigger('click');
       expect(wrapper.emitted('confirm')).toHaveLength(2);
