@@ -74,8 +74,8 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  previousActiveElement?.focus();
   document.removeEventListener('keydown', handleKeydown);
+  previousActiveElement?.focus();
 });
 </script>
 
