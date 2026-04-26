@@ -104,6 +104,40 @@ describe('prettifyJson', () => {
     });
   });
 
+  describe('non-serializable object input', () => {
+    it('should throw for a circular reference', () => {
+      const circular = {};
+      circular.self = circular;
+      expect(() => prettifyJson(circular)).toThrow(
+        'Invalid JSON provided for formatting'
+      );
+    });
+
+    it('should throw for a BigInt value', () => {
+      expect(() => prettifyJson({ n: BigInt(1) })).toThrow(
+        'Invalid JSON provided for formatting'
+      );
+    });
+
+    it('should throw for undefined input', () => {
+      expect(() => prettifyJson(undefined)).toThrow(
+        'Invalid JSON provided for formatting'
+      );
+    });
+
+    it('should throw for a function input', () => {
+      expect(() => prettifyJson(() => {})).toThrow(
+        'Invalid JSON provided for formatting'
+      );
+    });
+
+    it('should throw for a Symbol input', () => {
+      expect(() => prettifyJson(Symbol('s'))).toThrow(
+        'Invalid JSON provided for formatting'
+      );
+    });
+  });
+
   describe('output format', () => {
     it('should use exactly 2 spaces for indentation', () => {
       const result = prettifyJson({ key: 'value' });
