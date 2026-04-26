@@ -1481,7 +1481,6 @@ describe('Index.vue', () => {
       });
 
       it('does not show modal when file1 is not loaded', async () => {
-        const editControlsComponents = wrapper.findAllComponents(EditControls);
         // No files uploaded - EditControls won't even render, but guard handles it
         expect(wrapper.findComponent(PrettifyWarning).exists()).toBe(false);
       });
@@ -1490,7 +1489,6 @@ describe('Index.vue', () => {
         await uploadBothFiles(wrapper);
 
         const originalFile1 = wrapper.vm.file1;
-        const editControlsComponents = wrapper.findAllComponents(EditControls);
 
         // Open modal for file1
         await editControlsComponents[0].vm.$emit('prettify');
