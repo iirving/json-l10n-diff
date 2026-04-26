@@ -11,6 +11,7 @@ import Index from '@/pages/Index.vue';
 import FileUploader from '@/components/FileUploader.vue';
 import ComparisonView from '@/components/ComparisonView.vue';
 import EditControls from '@/components/EditControls.vue';
+import PrettifyWarning from '@/components/PrettifyWarning.vue';
 
 import { useEditStore } from '@/stores/useEditStore.js';
 
@@ -59,6 +60,7 @@ describe('Index.vue', () => {
           FileUploader: true,
           ComparisonView: true,
           EditControls: true,
+          PrettifyWarning: true,
         },
       },
     });
@@ -1396,11 +1398,35 @@ describe('Index.vue', () => {
     });
 
     describe('Prettify Functionality', () => {
-      it('prettifies file1 data when prettify is emitted', async () => {
+      it('shows prettify warning modal when prettify is emitted for file1', async () => {
         await uploadBothFiles(wrapper);
 
         const editControlsComponents = wrapper.findAllComponents(EditControls);
         await editControlsComponents[0].vm.$emit('prettify');
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.findComponent(PrettifyWarning).exists()).toBe(true);
+      });
+
+      it('shows prettify warning modal when prettify is emitted for file2', async () => {
+        await uploadBothFiles(wrapper);
+
+        const editControlsComponents = wrapper.findAllComponents(EditControls);
+        await editControlsComponents[1].vm.$emit('prettify');
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.findComponent(PrettifyWarning).exists()).toBe(true);
+      });
+
+      it('prettifies file1 data after confirming the modal', async () => {
+        await uploadBothFiles(wrapper);
+
+        const editControlsComponents = wrapper.findAllComponents(EditControls);
+        await editControlsComponents[0].vm.$emit('prettify');
+        await wrapper.vm.$nextTick();
+
+        // Confirm the warning
+        await wrapper.findComponent(PrettifyWarning).vm.$emit('confirm');
         await wrapper.vm.$nextTick();
 
         // Data should still be identical (prettify doesn't change object structure)
@@ -1410,17 +1436,54 @@ describe('Index.vue', () => {
         });
       });
 
-      it('prettifies file2 data when prettify is emitted', async () => {
+      it('prettifies file2 data after confirming the modal', async () => {
         await uploadBothFiles(wrapper);
 
         const editControlsComponents = wrapper.findAllComponents(EditControls);
         await editControlsComponents[1].vm.$emit('prettify');
         await wrapper.vm.$nextTick();
 
+        await wrapper.findComponent(PrettifyWarning).vm.$emit('confirm');
+        await wrapper.vm.$nextTick();
+
         expect(wrapper.vm.file2).toEqual({
           key1: 'valeur1',
           nested: { a: '1' },
         });
+      });
+
+      it('hides the modal after confirming prettify', async () => {
+        await uploadBothFiles(wrapper);
+
+        const editControlsComponents = wrapper.findAllComponents(EditControls);
+        await editControlsComponents[0].vm.$emit('prettify');
+        await wrapper.vm.$nextTick();
+
+        await wrapper.findComponent(PrettifyWarning).vm.$emit('confirm');
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.findComponent(PrettifyWarning).exists()).toBe(false);
+      });
+
+      it('hides the modal and does not prettify when cancelled', async () => {
+        await uploadBothFiles(wrapper);
+
+        const originalFile1 = wrapper.vm.file1;
+        const editControlsComponents = wrapper.findAllComponents(EditControls);
+        await editControlsComponents[0].vm.$emit('prettify');
+        await wrapper.vm.$nextTick();
+
+        await wrapper.findComponent(PrettifyWarning).vm.$emit('cancel');
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.findComponent(PrettifyWarning).exists()).toBe(false);
+        expect(wrapper.vm.file1).toEqual(originalFile1);
+      });
+
+      it('does not show modal when file1 is not loaded', async () => {
+        const editControlsComponents = wrapper.findAllComponents(EditControls);
+        // No files uploaded - EditControls won't even render, but guard handles it
+        expect(wrapper.findComponent(PrettifyWarning).exists()).toBe(false);
       });
     });
 

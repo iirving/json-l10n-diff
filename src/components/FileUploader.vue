@@ -16,7 +16,7 @@ import { ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useJsonParser } from '@/composables/useJsonParser.js';
 import { MAX_FILE_SIZE, MAX_FILE_SIZE_MB } from '@/constants/fileUpload.js';
-import { bytesToMB, bytesToKB } from '@/utils/fileSize.js';
+import { bytesToKB } from '@/utils/fileSize.js';
 import { sanitizeFileName, sanitizeFileSize } from '@/utils/sanitize.js';
 
 // Props
@@ -85,8 +85,7 @@ const validateFileSize = (file) => {
   const sizeValidation = sanitizeFileSize(file.size, MAX_FILE_SIZE);
 
   if (!sizeValidation.valid) {
-    const fileSizeMB = bytesToMB(file.size);
-    errorMessage.value = `File size (${fileSizeMB}MB) exceeds the maximum allowed size of ${MAX_FILE_SIZE_MB}MB`;
+    errorMessage.value = t('upload.maxSize', { size: MAX_FILE_SIZE_MB });
     errorType.value = 'size';
     emit('file-error', { type: 'size', message: errorMessage.value, file });
     return false;
