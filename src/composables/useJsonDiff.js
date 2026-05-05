@@ -37,8 +37,6 @@ export const useJsonDiff = () => {
    */
   const _compare = (o1, o2, path, seen) => {
     // --- Circular reference detection ---
-    const isObj1 = o1 !== null && typeof o1 === 'object' && !Array.isArray(o1);
-    const isObj2 = o2 !== null && typeof o2 === 'object' && !Array.isArray(o2);
     const isTrackable1 = isTrackableRef(o1);
     const isTrackable2 = isTrackableRef(o2);
 
