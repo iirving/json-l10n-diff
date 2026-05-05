@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, provide } from 'vue';
+import { ref, computed, onMounted, provide, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import TreeNode from '@/components/TreeNode.vue';
 
@@ -51,6 +51,7 @@ const emit = defineEmits(['node-toggled', 'value-edited']);
 
 // Reactive state
 const expandedNodes = ref(new Set());
+const activeTreeItem = ref('');
 
 // Computed properties
 const diffStatusMap = computed(() => {
@@ -81,6 +82,14 @@ const toggleNode = (keyPath) => {
   // Trigger reactivity
   expandedNodes.value = new Set(expandedNodes.value);
   emit('node-toggled', keyPath);
+};
+
+/**
+ * Set which tree item is in the roving tabindex focus slot.
+ * @param {string} keyPath - Dot-notation key path
+ */
+const setActiveTreeItem = (keyPath) => {
+  activeTreeItem.value = keyPath;
 };
 
 /**
@@ -172,6 +181,25 @@ provide('isExpanded', isExpanded);
 provide('getDiffStatus', getDiffStatus);
 provide('toggleNode', toggleNode);
 provide('isModified', isModified);
+provide('activeTreeItem', activeTreeItem);
+provide('setActiveTreeItem', setActiveTreeItem);
+
+watch(
+  () => props.content,
+  (content) => {
+    const rootKeys = Object.keys(content || {});
+    if (rootKeys.length === 0) {
+      activeTreeItem.value = '';
+      return;
+    }
+
+    // Keep the current active key if still present at root, otherwise reset
+    if (!rootKeys.includes(activeTreeItem.value)) {
+      activeTreeItem.value = String(rootKeys[0]);
+    }
+  },
+  { immediate: true }
+);
 
 // Lifecycle hooks
 onMounted(() => {
@@ -189,7 +217,12 @@ defineExpose({
 </script>
 
 <template>
-  <div class="tree-viewer" data-testid="tree-viewer">
+  <div
+    class="tree-viewer"
+    data-testid="tree-viewer"
+    role="tree"
+    :aria-label="t('treeViewer.ariaLabel')"
+  >
     <div v-if="Object.keys(content).length === 0" class="empty-state">
       {{ t('treeViewer.noData') }}
     </div>

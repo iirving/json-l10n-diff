@@ -975,4 +975,123 @@ describe('TreeViewer', () => {
       expect(nameNode.find('.edit-hint').exists()).toBe(true);
     });
   });
+
+  describe('Keyboard Navigation', () => {
+    it('should use roving tabindex with a single tabbable tree item', () => {
+      const nodeContents = wrapper.findAll('.tree-node-content');
+
+      const zeroTabItems = nodeContents.filter(
+        (el) => el.attributes('tabindex') === '0'
+      );
+      const negativeTabItems = nodeContents.filter(
+        (el) => el.attributes('tabindex') === '-1'
+      );
+
+      expect(zeroTabItems.length).toBe(1);
+      expect(negativeTabItems.length).toBe(nodeContents.length - 1);
+    });
+
+    it('should move roving tabindex ownership on focus change', async () => {
+      const nodeContents = wrapper.findAll('.tree-node-content');
+      expect(nodeContents.length).toBeGreaterThan(1);
+
+      await nodeContents[1].trigger('focus');
+      await wrapper.vm.$nextTick();
+
+      expect(nodeContents[1].attributes('tabindex')).toBe('0');
+      expect(nodeContents[0].attributes('tabindex')).toBe('-1');
+    });
+
+    it('should expand a collapsed parent node on ArrowRight', async () => {
+      await wrapper.vm.collapseAll();
+      await wrapper.vm.$nextTick();
+
+      const appNode = wrapper.find('[data-key-path="app"]');
+      expect(appNode.classes()).not.toContain('expanded');
+
+      const appContent = appNode.find('.tree-node-content');
+      await appContent.trigger('keydown', { key: 'ArrowRight' });
+      await wrapper.vm.$nextTick();
+
+      expect(appNode.classes()).toContain('expanded');
+    });
+
+    it('should collapse an expanded parent node on ArrowLeft', async () => {
+      await wrapper.vm.expandAll();
+      await wrapper.vm.$nextTick();
+
+      const appNode = wrapper.find('[data-key-path="app"]');
+      expect(appNode.classes()).toContain('expanded');
+
+      const appContent = appNode.find('.tree-node-content');
+      await appContent.trigger('keydown', { key: 'ArrowLeft' });
+      await wrapper.vm.$nextTick();
+
+      expect(appNode.classes()).not.toContain('expanded');
+    });
+
+    it('should toggle parent node on Enter key', async () => {
+      await wrapper.vm.expandAll();
+      await wrapper.vm.$nextTick();
+
+      const appNode = wrapper.find('[data-key-path="app"]');
+      const wasExpanded = appNode.classes().includes('expanded');
+
+      const appContent = appNode.find('.tree-node-content');
+      await appContent.trigger('keydown', { key: 'Enter' });
+      await wrapper.vm.$nextTick();
+
+      expect(appNode.classes().includes('expanded')).toBe(!wasExpanded);
+    });
+
+    it('should toggle parent node on Space key', async () => {
+      await wrapper.vm.expandAll();
+      await wrapper.vm.$nextTick();
+
+      const appNode = wrapper.find('[data-key-path="app"]');
+      const wasExpanded = appNode.classes().includes('expanded');
+
+      const appContent = appNode.find('.tree-node-content');
+      await appContent.trigger('keydown', { key: ' ' });
+      await wrapper.vm.$nextTick();
+
+      expect(appNode.classes().includes('expanded')).toBe(!wasExpanded);
+    });
+  });
+
+  describe('Accessibility', () => {
+    it('should have role=tree on the tree viewer container', () => {
+      expect(wrapper.find('[role="tree"]').exists()).toBe(true);
+    });
+
+    it('should have aria-label on the tree viewer', () => {
+      const treeEl = wrapper.find('[role="tree"]');
+      expect(treeEl.attributes('aria-label')).toBeTruthy();
+    });
+
+    it('should have role=treeitem on each node content', () => {
+      const nodeContents = wrapper.findAll('.tree-node-content');
+      nodeContents.forEach((el) => {
+        expect(el.attributes('role')).toBe('treeitem');
+      });
+    });
+
+    it('should have aria-expanded on parent nodes', () => {
+      const expandIcons = wrapper.findAll('.expand-icon');
+      expandIcons.forEach((icon) => {
+        const nodeContent = icon.element.closest('.tree-node-content');
+        expect(nodeContent.getAttribute('aria-expanded')).not.toBeNull();
+      });
+    });
+
+    it('should have aria-level attribute reflecting depth', () => {
+      // Root nodes are at depth 0, which maps to aria-level="1"
+      const rootContents = wrapper.findAll(
+        '[data-depth="0"] > .tree-node-content'
+      );
+      rootContents.forEach((el) => {
+        expect(el.attributes('aria-level')).toBe('1');
+      });
+    });
+  });
 });

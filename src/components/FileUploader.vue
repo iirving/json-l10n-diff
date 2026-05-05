@@ -189,6 +189,15 @@ defineExpose({
       class="file-uploader__button"
       data-testid="file-upload-btn"
       :class="{ 'has-error': hasError, 'has-file': hasFile && !hasError }"
+      :aria-busy="isValidating"
+      :aria-invalid="hasError || undefined"
+      :aria-label="
+        hasError
+          ? errorMessage
+          : hasFile
+            ? `${selectedFile.name}, ${keyCount} ${t('upload.keys')}, ${fileSizeKB} KB`
+            : label
+      "
       @click="triggerFileInput"
     >
       <svg
@@ -282,6 +291,25 @@ defineExpose({
         >
       </span>
     </button>
+    <!-- Live region for screen reader announcements -->
+    <div
+      v-if="hasError"
+      role="alert"
+      aria-live="assertive"
+      class="file-uploader__live-region"
+      data-testid="file-uploader-error-alert"
+    >
+      {{ errorMessage }}
+    </div>
+    <div
+      v-else-if="isValidating"
+      role="status"
+      aria-live="polite"
+      class="file-uploader__live-region"
+      data-testid="file-uploader-status"
+    >
+      {{ t('common.loading') }}
+    </div>
   </div>
 </template>
 
@@ -398,7 +426,18 @@ defineExpose({
 .file-uploader__error-message {
   font-size: 0.75rem;
   color: var(--error-color, #ef4444);
-  font-weight: 400;
-  line-height: 1.4;
+}
+
+/* Visually hidden but readable by screen readers */
+.file-uploader__live-region {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 </style>

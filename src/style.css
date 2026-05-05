@@ -55,7 +55,12 @@
   --bg-missing-alt: #ffebee; /* Alternate missing key highlight */
   --bg-identical: rgba(234, 179, 8, 0.1); /* Identical value highlight */
   --bg-identical-alt: #fff9c4; /* Alternate identical value highlight */
-  --bg-different: rgba(34, 197, 94, 0.1); /* Different value highlight (green) */
+  --bg-different: rgba(
+    34,
+    197,
+    94,
+    0.1
+  ); /* Different value highlight (green) */
   --bg-different-alt: #dcfce7; /* Alternate different value highlight (light green) */
   --bg-temporary: rgba(59, 130, 246, 0.1); /* Temporary key highlight (blue) */
   --bg-temporary-alt: #e3f2fd; /* Alternate temporary key highlight (light blue) */
@@ -63,7 +68,12 @@
   --bg-success: rgba(16, 185, 129, 0.1); /* Success state background */
   --bg-error: rgba(239, 68, 68, 0.1); /* Error state background */
   --bg-primary-faded: rgba(100, 108, 255, 0.05); /* Faded primary background */
-  --bg-primary-faded-alt: rgba(100, 108, 255, 0.1); /* Alternate faded primary background */
+  --bg-primary-faded-alt: rgba(
+    100,
+    108,
+    255,
+    0.1
+  ); /* Alternate faded primary background */
 
   /* ===== Border Colors ===== */
   --border-primary: rgba(255, 255, 255, 0.1); /* Primary border */
@@ -274,6 +284,53 @@ nav a.active {
 
   .tree-node {
     margin-left: var(--spacing-md);
+  }
+
+  /* Touch-friendly: ensure minimum tap target sizes (44×44px) */
+  button,
+  [role='button'],
+  a,
+  input[type='file'] {
+    min-height: 44px;
+  }
+
+  /* Stack file uploaders vertically on mobile */
+  .file-uploaders {
+    flex-direction: column;
+  }
+
+  /* Increase tree node tap area */
+  .tree-node-content {
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+
+  .expand-icon {
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Edit controls: wrap buttons on small screens */
+  .edit-controls {
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.8em;
+  }
+
+  .comparison-panel {
+    padding: var(--spacing-sm);
+  }
+
+  .tree-viewer {
+    font-size: 0.8rem;
   }
 }
 

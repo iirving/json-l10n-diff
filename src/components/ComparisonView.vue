@@ -82,10 +82,19 @@ function handleNodeToggled(toggleDetails) {
 </script>
 
 <template>
-  <div class="comparison-view" data-testid="comparison-view">
-    <div v-if="!file1 && !file2" class="empty-state" data-testid="empty-state">
-      <p>{{ t('comparison.emptyState') }}</p>
-    </div>
+  <section
+    class="comparison-view"
+    data-testid="comparison-view"
+    aria-label="JSON file comparison"
+  >
+    <p
+      v-if="!file1 && !file2"
+      class="empty-state"
+      data-testid="empty-state"
+      role="status"
+    >
+      {{ t('comparison.emptyState') }}
+    </p>
 
     <div v-else class="comparison-container" data-testid="comparison-container">
       <DualFileViewer
@@ -99,7 +108,7 @@ function handleNodeToggled(toggleDetails) {
         @node-toggled="handleNodeToggled"
       />
     </div>
-  </div>
+  </section>
 </template>
 
 <style scoped>

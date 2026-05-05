@@ -524,4 +524,47 @@ describe('FileUploader', () => {
       expect(testWrapper2.text()).toContain('valid.json');
     });
   });
+
+  describe('Accessibility', () => {
+    it('should render an error live region when file is invalid', async () => {
+      const testWrapper = mount(FileUploader, {
+        global: { plugins: [i18n] },
+        props: { label: 'Upload File', accept: '.json' },
+      });
+
+      const input = testWrapper.find('input[type="file"]');
+      const largeFile = new File(
+        [new ArrayBuffer(6 * 1024 * 1024)],
+        'big.json',
+        {
+          type: 'application/json',
+        }
+      );
+      Object.defineProperty(input.element, 'files', {
+        value: [largeFile],
+        writable: false,
+        configurable: true,
+      });
+      await input.trigger('change');
+      await testWrapper.vm.$nextTick();
+
+      const errorAlert = testWrapper.find(
+        '[data-testid="file-uploader-error-alert"]'
+      );
+      expect(errorAlert.exists()).toBe(true);
+      expect(errorAlert.attributes('role')).toBe('alert');
+      expect(errorAlert.attributes('aria-live')).toBe('assertive');
+    });
+
+    it('should not show error live region when no error', () => {
+      const testWrapper = mount(FileUploader, {
+        global: { plugins: [i18n] },
+        props: { label: 'Upload File', accept: '.json' },
+      });
+
+      expect(
+        testWrapper.find('[data-testid="file-uploader-error-alert"]').exists()
+      ).toBe(false);
+    });
+  });
 });
