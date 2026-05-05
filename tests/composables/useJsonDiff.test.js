@@ -135,45 +135,131 @@ describe('useJsonDiff', () => {
     });
 
     describe('array handling', () => {
-      it('should compare array values', () => {
+      it('should compare identical primitive arrays using index-based keys', () => {
         const obj1 = { items: [1, 2, 3] };
         const obj2 = { items: [1, 2, 3] };
 
         const results = jsonDiff.compareFiles(obj1, obj2);
 
-        const itemsDiff = results.find((r) => r.keyPath === 'items');
-        expect(itemsDiff.status).toBe('identical');
+        // Each element gets its own result with index-based key path
+        expect(results.length).toBe(3);
+        results.forEach((r) => expect(r.status).toBe('identical'));
+        expect(results.map((r) => r.keyPath)).toEqual([
+          'items.0',
+          'items.1',
+          'items.2',
+        ]);
       });
 
-      it('should detect different arrays', () => {
+      it('should detect different array elements using index-based keys', () => {
         const obj1 = { items: [1, 2, 3] };
         const obj2 = { items: [1, 2, 4] };
 
         const results = jsonDiff.compareFiles(obj1, obj2);
 
-        const itemsDiff = results.find((r) => r.keyPath === 'items');
-        expect(itemsDiff.status).toBe('different');
+        expect(results.find((r) => r.keyPath === 'items.0').status).toBe(
+          'identical'
+        );
+        expect(results.find((r) => r.keyPath === 'items.1').status).toBe(
+          'identical'
+        );
+        expect(results.find((r) => r.keyPath === 'items.2').status).toBe(
+          'different'
+        );
       });
 
-      it('should detect different array lengths', () => {
+      it('should report missing-right for extra left-array elements', () => {
         const obj1 = { items: [1, 2, 3] };
         const obj2 = { items: [1, 2] };
 
         const results = jsonDiff.compareFiles(obj1, obj2);
 
-        const itemsDiff = results.find((r) => r.keyPath === 'items');
-        expect(itemsDiff.status).toBe('different');
+        expect(results.find((r) => r.keyPath === 'items.2').status).toBe(
+          'missing-right'
+        );
       });
 
-      it('should not recurse into arrays', () => {
+      it('should recurse into object elements of arrays', () => {
         const obj1 = { items: [{ id: 1 }, { id: 2 }] };
         const obj2 = { items: [{ id: 1 }, { id: 3 }] };
 
         const results = jsonDiff.compareFiles(obj1, obj2);
 
-        // Should compare arrays as values, not recurse into elements
+        // Recurses into each element: items.0.id and items.1.id
+        const id0 = results.find((r) => r.keyPath === 'items.0.id');
+        expect(id0.status).toBe('identical');
+
+        const id1 = results.find((r) => r.keyPath === 'items.1.id');
+        expect(id1.status).toBe('different');
+      });
+
+      it('should report missing-left when right array is longer', () => {
+        const obj1 = { items: [1] };
+        const obj2 = { items: [1, 2] };
+
+        const results = jsonDiff.compareFiles(obj1, obj2);
+
+        expect(results.find((r) => r.keyPath === 'items.1').status).toBe(
+          'missing-left'
+        );
+      });
+    });
+
+    describe('circular reference handling', () => {
+      it('should detect a circular reference in the left value', () => {
+        const circular = {};
+        circular.self = circular;
+
+        const results = jsonDiff.compareFiles(circular, {});
+
         expect(results.length).toBe(1);
-        expect(results[0].keyPath).toBe('items');
+        expect(results[0].status).toBe('circular');
+        expect(results[0].leftValue).toBe('[Circular Reference]');
+      });
+
+      it('should detect a circular reference in the right value', () => {
+        const circular = {};
+        circular.self = circular;
+
+        const results = jsonDiff.compareFiles({}, circular);
+
+        expect(results.length).toBe(1);
+        expect(results[0].status).toBe('circular');
+        expect(results[0].rightValue).toBe('[Circular Reference]');
+      });
+
+      it('should detect deep circular references', () => {
+        const a = { b: { c: {} } };
+        a.b.c.back = a;
+
+        const results = jsonDiff.compareFiles(a, { b: { c: {} } });
+
+        const circularResult = results.find((r) => r.status === 'circular');
+        expect(circularResult).toBeDefined();
+      });
+
+      it('should detect circular references in arrays', () => {
+        const circularArray = [];
+        circularArray.push(circularArray);
+
+        const results = jsonDiff.compareFiles(
+          { items: circularArray },
+          { items: [] }
+        );
+
+        expect(results.length).toBe(1);
+        expect(results[0].keyPath).toBe('items.0');
+        expect(results[0].status).toBe('circular');
+        expect(results[0].leftValue).toBe('[Circular Reference]');
+      });
+
+      it('should not flag shared objects (non-circular) as circular', () => {
+        const obj1 = { a: 'value', b: 'other' };
+        const obj2 = { a: 'value', b: 'other' };
+
+        const results = jsonDiff.compareFiles(obj1, obj2);
+
+        expect(results.every((r) => r.status !== 'circular')).toBe(true);
       });
     });
 
@@ -457,9 +543,11 @@ describe('useJsonDiff', () => {
         );
         expect(experimental.status).toBe('missing-left');
 
-        // Tags identical (array comparison)
-        const tags = results.find((r) => r.keyPath === 'tags');
-        expect(tags.status).toBe('identical');
+        // Tags identical (array element comparison via index-based keys)
+        const tag0 = results.find((r) => r.keyPath === 'tags.0');
+        expect(tag0.status).toBe('identical');
+        const tag1 = results.find((r) => r.keyPath === 'tags.1');
+        expect(tag1.status).toBe('identical');
       });
     });
 

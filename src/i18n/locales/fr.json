@@ -39,7 +39,8 @@
   },
   "treeViewer": {
     "noData": "Aucune donnée à afficher",
-    "modified": "Modifié"
+    "modified": "Modifié",
+    "ariaLabel": "Arborescence des clés JSON"
   },
   "instructions": {
     "title": "Fonctionnalités :",

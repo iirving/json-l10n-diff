@@ -47,6 +47,8 @@ const isExpandedFn = inject('isExpanded', () => false);
 const getDiffStatusFn = inject('getDiffStatus', () => null);
 const toggleNodeFn = inject('toggleNode', () => {});
 const isModifiedFn = inject('isModified', () => false);
+const activeTreeItemRef = inject('activeTreeItem', ref(''));
+const setActiveTreeItemFn = inject('setActiveTreeItem', () => {});
 
 // Reactive state for inline editing
 const isEditing = ref(false);
@@ -67,6 +69,9 @@ const isParent = computed(() => isObject(props.value) || isArray(props.value));
 const isExpanded = computed(() => isExpandedFn(props.keyPath));
 const diffStatus = computed(() => getDiffStatusFn(props.keyPath));
 const modified = computed(() => isModifiedFn(props.keyPath));
+const treeItemTabIndex = computed(() => {
+  return activeTreeItemRef.value === props.keyPath ? 0 : -1;
+});
 
 /**
  * Check if this node's value can be edited inline
@@ -83,6 +88,104 @@ const buildKeyPath = (parentPath, key) => {
 const handleToggle = () => {
   if (isParent.value) {
     toggleNodeFn(props.keyPath);
+  }
+};
+
+/**
+ * Keep roving tabindex state in sync when this node receives focus.
+ */
+const handleNodeFocus = () => {
+  setActiveTreeItemFn(props.keyPath);
+};
+
+/**
+ * Focus a tree item and update roving tabindex ownership.
+ * @param {HTMLElement|undefined|null} element
+ */
+const focusTreeItem = (element) => {
+  if (!element) return;
+  const keyPath = element.getAttribute('data-key-path');
+  if (keyPath) {
+    setActiveTreeItemFn(keyPath);
+  }
+  element.focus();
+};
+
+/**
+ * Handle keyboard navigation on the tree node content element.
+ * Implements ARIA tree widget keyboard interaction pattern.
+ * @param {KeyboardEvent} event
+ */
+const handleNodeKeyDown = (event) => {
+  switch (event.key) {
+    case 'ArrowRight':
+      event.preventDefault();
+      if (isParent.value && !isExpanded.value) {
+        // Expand collapsed node
+        toggleNodeFn(props.keyPath);
+      } else if (isParent.value && isExpanded.value) {
+        // Move focus to first child
+        const firstChild = event.currentTarget
+          .closest('.tree-node')
+          ?.querySelector('.tree-node > .tree-node-content');
+        focusTreeItem(firstChild);
+      }
+      break;
+    case 'ArrowLeft':
+      event.preventDefault();
+      if (isParent.value && isExpanded.value) {
+        // Collapse expanded node
+        toggleNodeFn(props.keyPath);
+      } else {
+        // Move focus to parent node
+        const parentContent = event.currentTarget
+          .closest('.tree-node')
+          ?.parentElement?.closest('.tree-node')
+          ?.querySelector(':scope > .tree-node-content');
+        focusTreeItem(parentContent);
+      }
+      break;
+    case 'ArrowDown': {
+      event.preventDefault();
+      const treeRoot = event.currentTarget.closest('[role="tree"]');
+      if (!treeRoot) break;
+      const allItems = [...treeRoot.querySelectorAll('.tree-node-content')];
+      const idx = allItems.indexOf(event.currentTarget);
+      focusTreeItem(allItems[idx + 1]);
+      break;
+    }
+    case 'ArrowUp': {
+      event.preventDefault();
+      const treeRoot = event.currentTarget.closest('[role="tree"]');
+      if (!treeRoot) break;
+      const allItems = [...treeRoot.querySelectorAll('.tree-node-content')];
+      const idx = allItems.indexOf(event.currentTarget);
+      focusTreeItem(allItems[idx - 1]);
+      break;
+    }
+    case 'Home': {
+      event.preventDefault();
+      const treeRoot = event.currentTarget.closest('[role="tree"]');
+      focusTreeItem(treeRoot?.querySelector('.tree-node-content'));
+      break;
+    }
+    case 'End': {
+      event.preventDefault();
+      const treeRoot = event.currentTarget.closest('[role="tree"]');
+      if (!treeRoot) break;
+      const allItems = [...treeRoot.querySelectorAll('.tree-node-content')];
+      focusTreeItem(allItems[allItems.length - 1]);
+      break;
+    }
+    case 'Enter':
+    case ' ':
+      if (isParent.value) {
+        event.preventDefault();
+        toggleNodeFn(props.keyPath);
+      }
+      break;
+    default:
+      break;
   }
 };
 
@@ -218,12 +321,21 @@ const handleEditBlur = () => {
     <div
       class="tree-node-content"
       data-testid="tree-node-content"
+      :data-key-path="keyPath"
       :style="{ paddingLeft: depth * 4 + 'px' }"
+      role="treeitem"
+      :tabindex="treeItemTabIndex"
+      :aria-expanded="isParent ? isExpanded : undefined"
+      :aria-level="depth + 1"
+      :aria-label="nodeKey"
+      @focus="handleNodeFocus"
+      @keydown="handleNodeKeyDown"
     >
       <span
         v-if="isParent"
         class="expand-icon"
         data-testid="expand-icon"
+        aria-hidden="true"
         @click="handleToggle"
       >
         {{ isExpanded ? '▼' : '▶' }}

@@ -68,7 +68,7 @@ describe('ComparisonView', () => {
         },
       });
       expect(emptyWrapper.find('.empty-state').exists()).toBe(true);
-      expect(emptyWrapper.find('.empty-state p').text()).toBe(
+      expect(emptyWrapper.find('.empty-state').text()).toBe(
         'Upload two JSON files to compare'
       );
     });
