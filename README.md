@@ -1,5 +1,9 @@
 # JSON l10n Diff Tool
 
+<p align="center">
+    <img src="public/favicon.png" alt="JSON l10n Diff logo" width="128" />
+</p>
+
 [![CI](https://github.com/iirving/json-l10n-diff/actions/workflows/ci.yml/badge.svg)](https://github.com/iirving/json-l10n-diff/actions/workflows/ci.yml)
 
 > **⚠️ Status**: Coming Soon - In Active Development
