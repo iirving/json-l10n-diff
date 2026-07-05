@@ -15,6 +15,7 @@ import { useI18n } from 'vue-i18n';
 import Index from '@/pages/Index.vue';
 import About from '@/pages/About.vue';
 import LanguageSwitcher from '@/components/LanguageSwitcher.vue';
+import logo from '@/assets/logo.png';
 
 // Composables
 const { t } = useI18n();
@@ -54,6 +55,7 @@ const isActive = (path) => {
     <nav class="main-nav">
       <div class="nav-brand">
         <a href="#/" @click.prevent="navigate('/')">
+          <img :src="logo" alt="JSON l10n Diff logo" class="nav-logo" />
           <h1>{{ t('app.title') }}</h1>
         </a>
       </div>
@@ -113,6 +115,15 @@ const isActive = (path) => {
 
 .nav-brand a {
   text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.nav-logo {
+  height: 2rem;
+  width: 2rem;
+  object-fit: contain;
 }
 
 .nav-brand h1:hover {
