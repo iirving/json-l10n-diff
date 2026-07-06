@@ -11,10 +11,10 @@ app.use(pinia);
 app.use(i18n);
 app.mount('#app');
 
-if ('serviceWorker' in navigator) {
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     const appVersion = import.meta.env.VITE_APP_VERSION || 'dev';
-    const swUrl = `/sw.js?appVersion=${encodeURIComponent(appVersion)}`;
+    const swUrl = `${import.meta.env.BASE_URL}sw.js?appVersion=${encodeURIComponent(appVersion)}`;
 
     navigator.serviceWorker.register(swUrl).catch((error) => {
       console.error('Service worker registration failed:', error);
