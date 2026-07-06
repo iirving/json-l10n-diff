@@ -9,6 +9,7 @@
     "about": "About"
   },
   "upload": {
+    "defaultLabel": "Upload JSON File",
     "file1": "Upload File 1",
     "file2": "Upload File 2",
     "dragDrop": "Drag & drop a JSON file here, or click to select",
@@ -35,6 +36,7 @@
     "identical": "Identical Values (Yellow)"
   },
   "comparison": {
+    "ariaLabel": "JSON file comparison",
     "emptyState": "Upload two JSON files to compare",
     "noResults": "No comparison results yet"
   },
@@ -71,6 +73,7 @@
   },
   "about": {
     "title": "About JSON l10n Diff Tool",
+    "subtitle": "Privacy-first localization comparison tool",
     "description": "A powerful tool for comparing and analyzing differences between JSON localization files.",
     "features": "Features",
     "feature1": "Side-by-side comparison of JSON files",
@@ -79,7 +82,133 @@
     "feature4": "Support for nested JSON structures",
     "version": "Version",
     "license": "License",
-    "author": "Author"
+    "author": "Author",
+    "sections": {
+      "features": "Features",
+      "howItWorks": "How It Works",
+      "technicalDetails": "Technical Details",
+      "privacySecurity": "Privacy & Security",
+      "useCases": "Use Cases"
+    },
+    "featureCards": {
+      "uploadCompare": {
+        "title": "Upload & Compare",
+        "description": "Drag-and-drop or select two JSON localization files to compare instantly"
+      },
+      "visualTree": {
+        "title": "Visual Tree Structure",
+        "description": "View nested key hierarchy with expandable/collapsible nodes"
+      },
+      "smartDiff": {
+        "title": "Smart Diff Highlighting",
+        "description": "Color-coded differences: red for missing keys, yellow for identical values, green for different values"
+      },
+      "inlineEditing": {
+        "title": "Inline Editing",
+        "description": "Edit translations directly in the comparison view"
+      },
+      "addMissingKeys": {
+        "title": "Add Missing Keys",
+        "description": "One-click to add missing keys to either file"
+      },
+      "saveDownload": {
+        "title": "Save & Download",
+        "description": "Export modified files with all your changes"
+      },
+      "jsonPrettify": {
+        "title": "JSON Prettify",
+        "description": "Format with consistent 2-space indentation"
+      },
+      "privacyFirst": {
+        "title": "Privacy-First",
+        "description": "100% client-side processing, no server uploads"
+      }
+    },
+    "steps": {
+      "upload": {
+        "title": "Upload",
+        "description": "Drag and drop or select your JSON localization files"
+      },
+      "parse": {
+        "title": "Parse",
+        "description": "Files are validated and structured into a nested tree"
+      },
+      "compare": {
+        "title": "Compare",
+        "description": "Differences are calculated and highlighted with color coding"
+      },
+      "edit": {
+        "title": "Edit",
+        "description": "Make changes directly in the interface"
+      },
+      "export": {
+        "title": "Export",
+        "description": "Download your modified files"
+      },
+      "highlight": "All processing happens in your browser-fast, secure, and private."
+    },
+    "tech": {
+      "framework": {
+        "label": "Framework",
+        "value": "Vue 3.5.22 with Composition API"
+      },
+      "buildTool": {
+        "label": "Build Tool",
+        "value": "Vite 7.1.14 (Rolldown variant)"
+      },
+      "stateManagement": {
+        "label": "State Management",
+        "value": "Pinia 2.2.8"
+      },
+      "language": {
+        "label": "Language",
+        "value": "JavaScript ES6+"
+      },
+      "fileSizeLimit": {
+        "label": "File Size Limit",
+        "value": "10 MB per file"
+      },
+      "supportedFormat": {
+        "label": "Supported Format",
+        "value": "Valid JSON files only"
+      }
+    },
+    "privacy": {
+      "clientSide": {
+        "title": "100% Client-Side Processing",
+        "description": "All file processing happens entirely in your browser"
+      },
+      "noServerUploads": {
+        "title": "No Server Uploads",
+        "description": "Your files never leave your computer"
+      },
+      "noTracking": {
+        "title": "No Tracking",
+        "description": "We don't collect or store your data"
+      },
+      "openSource": {
+        "title": "Open Source",
+        "descriptionPrefix": "Inspect the code yourself on",
+        "linkLabel": "GitHub"
+      }
+    },
+    "useCases": {
+      "missingTranslations": {
+        "title": "Finding Missing Translations",
+        "description": "You've added new features to your app and need to ensure all languages are up to date.",
+        "exampleLines": "✅ Upload en.json (your main language file)\n✅ Upload fr.json (French translations)\n🔴 Missing keys highlighted instantly\n➕ Add missing keys with one click\n💾 Save updated fr.json"
+      },
+      "untranslatedPlaceholders": {
+        "title": "Catching Untranslated Placeholders",
+        "description": "Sometimes placeholder text gets copied instead of translated.",
+        "exampleLines": "✅ Upload en.json: { \"welcome\": \"Welcome\" }\n✅ Upload fr.json: { \"welcome\": \"Welcome\" }\n🟡 Identical values highlighted in yellow\n✏️ Edit \"Welcome\" -> \"Bienvenue\"\n💾 Save corrected fr.json"
+      },
+      "teamSynchronization": {
+        "title": "Team Synchronization",
+        "description": "Multiple team members working on translations? Keep files in sync.",
+        "exampleLines": "✅ Compare your local changes against the main branch\n🔴 See what others added that you're missing\n➕ Add new keys to your file\n💾 Export and commit synchronized files"
+      }
+    }
   },
   "common": {
     "loading": "Loading...",
@@ -130,8 +259,23 @@
     "file2": "File 2"
   },
   "dualTreeNode": {
+    "addButton": "+ Add",
     "aria": {
       "editValue": "Edit File {file} value for {key}"
     }
+  },
+  "treeNode": {
+    "modifiedAriaLabel": "Modified",
+    "editValueAriaLabel": "Edit value for {key}"
+  },
+  "languageSwitcher": {
+    "languages": {
+      "en": "English",
+      "fr": "Français"
+    }
+  },
+  "tierGate": {
+    "placeholder": "TierGate placeholder - to be implemented in Phase 6",
+    "currentTier": "Current tier: {tier} ({count} / {limit} keys)"
   }
 }

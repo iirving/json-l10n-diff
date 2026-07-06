@@ -29,11 +29,11 @@ const props = defineProps({
   },
   file1Name: {
     type: String,
-    default: 'File 1',
+    default: null,
   },
   file2Name: {
     type: String,
-    default: 'File 2',
+    default: null,
   },
 });
 
@@ -47,6 +47,12 @@ const emit = defineEmits([
 // Composables
 const { t } = useI18n();
 const { compareFiles } = useJsonDiff();
+const resolvedFile1Name = computed(
+  () => props.file1Name || t('defaults.file1')
+);
+const resolvedFile2Name = computed(
+  () => props.file2Name || t('defaults.file2')
+);
 
 // Reactive state
 const expandedNodes = ref(new Set());
@@ -246,8 +252,8 @@ defineExpose({
           </button>
         </div>
         <div class="file-labels">
-          <div class="label-file1">{{ file1Name }}</div>
-          <div class="label-file2">{{ file2Name }}</div>
+          <div class="label-file1">{{ resolvedFile1Name }}</div>
+          <div class="label-file2">{{ resolvedFile2Name }}</div>
         </div>
       </div>
 

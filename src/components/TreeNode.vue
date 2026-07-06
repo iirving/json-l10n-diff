@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, inject, nextTick } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { formatValue } from '@/composables/useValueFormatter.js';
 
 /**
@@ -41,6 +42,7 @@ const props = defineProps({
 
 // Emits
 const emit = defineEmits(['value-edited']);
+const { t } = useI18n();
 
 // Composables (inject)
 const isExpandedFn = inject('isExpanded', () => false);
@@ -351,7 +353,7 @@ const handleEditBlur = () => {
         v-if="modified"
         class="modified-badge"
         data-testid="modified-badge"
-        aria-label="Modified"
+        :aria-label="t('treeNode.modifiedAriaLabel')"
         >*</span
       >
       <span class="node-separator" data-testid="node-separator">: </span>
@@ -378,7 +380,11 @@ const handleEditBlur = () => {
           :class="{ editable: canEdit }"
           :role="canEdit ? 'button' : undefined"
           :tabindex="canEdit ? 0 : undefined"
-          :aria-label="canEdit ? `Edit value for ${nodeKey}` : undefined"
+          :aria-label="
+            canEdit
+              ? t('treeNode.editValueAriaLabel', { key: nodeKey })
+              : undefined
+          "
           @click="canEdit && startEditing()"
           @keydown.enter="canEdit && startEditing()"
         >

@@ -20,11 +20,10 @@ import { bytesToKB } from '@/utils/fileSize.js';
 import { sanitizeFileName, sanitizeFileSize } from '@/utils/sanitize.js';
 
 // Props
-// eslint-disable-next-line no-unused-vars
 const props = defineProps({
   label: {
     type: String,
-    default: 'Upload JSON File',
+    default: null,
   },
   accept: {
     type: String,
@@ -62,6 +61,7 @@ const hasFile = computed(() => !!selectedFile.value && !hasError.value);
 const hasNoError = computed(
   () => !hasFile.value && !isValidating.value && !hasError.value
 );
+const resolvedLabel = computed(() => props.label || t('upload.defaultLabel'));
 
 const fileSizeKB = computed(() => {
   if (!parsedData.value) return 0;
@@ -196,7 +196,7 @@ defineExpose({
           ? errorMessage
           : hasFile
             ? `${selectedFile.name}, ${keyCount} ${t('upload.keys')}, ${fileSizeKB} KB`
-            : label
+            : resolvedLabel
       "
       @click="triggerFileInput"
     >
@@ -271,7 +271,7 @@ defineExpose({
       </svg>
 
       <span v-if="hasNoError" class="file-uploader__text">
-        {{ label }}
+        {{ resolvedLabel }}
       </span>
       <span v-else-if="hasError" class="file-uploader__text">
         <span class="file-uploader__error-type">

@@ -300,7 +300,7 @@ const handleAddToFile2 = () => {
               class="add-btn"
               @click="handleAddToFile1"
             >
-              + Add
+              {{ t('dualTreeNode.addButton') }}
             </button>
           </span>
         </div>
@@ -351,7 +351,7 @@ const handleAddToFile2 = () => {
               class="add-btn"
               @click="handleAddToFile2"
             >
-              + Add
+              {{ t('dualTreeNode.addButton') }}
             </button>
           </span>
         </div>

@@ -9,6 +9,7 @@
     "about": "À propos"
   },
   "upload": {
+    "defaultLabel": "Télécharger un fichier JSON",
     "file1": "Télécharger Fichier 1",
     "file2": "Télécharger Fichier 2",
     "dragDrop": "Glissez-déposez un fichier JSON ici, ou cliquez pour sélectionner",
@@ -35,6 +36,7 @@
     "identical": "Valeurs Identiques (Jaune)"
   },
   "comparison": {
+    "ariaLabel": "Comparaison de fichiers JSON",
     "emptyState": "Téléchargez deux fichiers JSON à comparer",
     "noResults": "Aucun résultat de comparaison pour le moment"
   },
@@ -71,6 +73,7 @@
   },
   "about": {
     "title": "À propos de l'outil de comparaison JSON l10n",
+    "subtitle": "Outil de comparaison de localisation respectueux de la vie privée",
     "description": "Un outil puissant pour comparer et analyser les différences entre les fichiers de localisation JSON.",
     "features": "Fonctionnalités",
     "feature1": "Comparaison côte à côte des fichiers JSON",
@@ -79,7 +82,133 @@
     "feature4": "Support des structures JSON imbriquées",
     "version": "Version",
     "license": "Licence",
-    "author": "Auteur"
+    "author": "Auteur",
+    "sections": {
+      "features": "Fonctionnalités",
+      "howItWorks": "Comment ça fonctionne",
+      "technicalDetails": "Détails techniques",
+      "privacySecurity": "Confidentialité et sécurité",
+      "useCases": "Cas d'usage"
+    },
+    "featureCards": {
+      "uploadCompare": {
+        "title": "Télécharger et comparer",
+        "description": "Glissez-déposez ou sélectionnez deux fichiers de localisation JSON pour les comparer instantanément"
+      },
+      "visualTree": {
+        "title": "Arborescence visuelle",
+        "description": "Affichez la hiérarchie des clés imbriquées avec des nœuds développables/réductibles"
+      },
+      "smartDiff": {
+        "title": "Mise en évidence intelligente",
+        "description": "Différences codées par couleur : rouge pour les clés manquantes, jaune pour les valeurs identiques, vert pour les valeurs différentes"
+      },
+      "inlineEditing": {
+        "title": "Édition en ligne",
+        "description": "Modifiez les traductions directement dans la vue de comparaison"
+      },
+      "addMissingKeys": {
+        "title": "Ajouter les clés manquantes",
+        "description": "Un clic pour ajouter les clés manquantes à l'un ou l'autre fichier"
+      },
+      "saveDownload": {
+        "title": "Enregistrer et télécharger",
+        "description": "Exportez les fichiers modifiés avec toutes vos modifications"
+      },
+      "jsonPrettify": {
+        "title": "Mise en forme JSON",
+        "description": "Formatez avec une indentation cohérente de 2 espaces"
+      },
+      "privacyFirst": {
+        "title": "Confidentialité d'abord",
+        "description": "Traitement 100 % côté client, aucun envoi au serveur"
+      }
+    },
+    "steps": {
+      "upload": {
+        "title": "Téléverser",
+        "description": "Glissez-déposez ou sélectionnez vos fichiers de localisation JSON"
+      },
+      "parse": {
+        "title": "Analyser",
+        "description": "Les fichiers sont validés et structurés dans une arborescence imbriquée"
+      },
+      "compare": {
+        "title": "Comparer",
+        "description": "Les différences sont calculées et mises en évidence par couleur"
+      },
+      "edit": {
+        "title": "Modifier",
+        "description": "Effectuez des changements directement dans l'interface"
+      },
+      "export": {
+        "title": "Exporter",
+        "description": "Téléchargez vos fichiers modifiés"
+      },
+      "highlight": "Tout le traitement s'effectue dans votre navigateur-rapide, sécurisé et privé."
+    },
+    "tech": {
+      "framework": {
+        "label": "Framework",
+        "value": "Vue 3.5.22 avec Composition API"
+      },
+      "buildTool": {
+        "label": "Outil de build",
+        "value": "Vite 7.1.14 (variante Rolldown)"
+      },
+      "stateManagement": {
+        "label": "Gestion d'état",
+        "value": "Pinia 2.2.8"
+      },
+      "language": {
+        "label": "Langage",
+        "value": "JavaScript ES6+"
+      },
+      "fileSizeLimit": {
+        "label": "Limite de taille",
+        "value": "10 Mo par fichier"
+      },
+      "supportedFormat": {
+        "label": "Format pris en charge",
+        "value": "Fichiers JSON valides uniquement"
+      }
+    },
+    "privacy": {
+      "clientSide": {
+        "title": "Traitement 100 % côté client",
+        "description": "Tout le traitement des fichiers s'effectue entièrement dans votre navigateur"
+      },
+      "noServerUploads": {
+        "title": "Aucun envoi au serveur",
+        "description": "Vos fichiers ne quittent jamais votre ordinateur"
+      },
+      "noTracking": {
+        "title": "Aucun suivi",
+        "description": "Nous ne collectons ni ne stockons vos données"
+      },
+      "openSource": {
+        "title": "Open source",
+        "descriptionPrefix": "Consultez le code sur",
+        "linkLabel": "GitHub"
+      }
+    },
+    "useCases": {
+      "missingTranslations": {
+        "title": "Trouver les traductions manquantes",
+        "description": "Vous avez ajouté de nouvelles fonctionnalités et devez vérifier que toutes les langues sont à jour.",
+        "exampleLines": "✅ Téléchargez en.json (votre fichier de langue principal)\n✅ Téléchargez fr.json (traductions françaises)\n🔴 Les clés manquantes sont mises en évidence instantanément\n➕ Ajoutez les clés manquantes en un clic\n💾 Enregistrez le fichier fr.json mis à jour"
+      },
+      "untranslatedPlaceholders": {
+        "title": "Repérer les textes non traduits",
+        "description": "Il arrive que du texte d'exemple soit copié au lieu d'être traduit.",
+        "exampleLines": "✅ Téléchargez en.json : { \"welcome\": \"Welcome\" }\n✅ Téléchargez fr.json : { \"welcome\": \"Welcome\" }\n🟡 Les valeurs identiques sont surlignées en jaune\n✏️ Modifiez \"Welcome\" -> \"Bienvenue\"\n💾 Enregistrez le fichier fr.json corrigé"
+      },
+      "teamSynchronization": {
+        "title": "Synchronisation d'équipe",
+        "description": "Plusieurs membres de l'équipe travaillent sur les traductions ? Gardez les fichiers synchronisés.",
+        "exampleLines": "✅ Comparez vos modifications locales avec la branche principale\n🔴 Voyez ce que les autres ont ajouté et qu'il vous manque\n➕ Ajoutez les nouvelles clés à votre fichier\n💾 Exportez et committez les fichiers synchronisés"
+      }
+    }
   },
   "common": {
     "loading": "Chargement...",
@@ -130,8 +259,23 @@
     "file2": "Fichier 2"
   },
   "dualTreeNode": {
+    "addButton": "+ Ajouter",
     "aria": {
       "editValue": "Modifier la valeur du Fichier {file} pour {key}"
     }
+  },
+  "treeNode": {
+    "modifiedAriaLabel": "Modifié",
+    "editValueAriaLabel": "Modifier la valeur de {key}"
+  },
+  "languageSwitcher": {
+    "languages": {
+      "en": "Anglais",
+      "fr": "Français"
+    }
+  },
+  "tierGate": {
+    "placeholder": "Espace réservé TierGate - à implémenter en phase 6",
+    "currentTier": "Niveau actuel : {tier} ({count} / {limit} clés)"
   }
 }

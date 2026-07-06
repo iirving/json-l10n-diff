@@ -8,11 +8,12 @@
 import { useI18n } from 'vue-i18n';
 import { sanitizeLocale } from '@/utils/sanitize.js';
 
-const { locale, availableLocales } = useI18n();
+const { locale, availableLocales, t } = useI18n();
 
-const languages = {
-  en: 'English',
-  fr: 'Français',
+const getLanguageLabel = (lang) => {
+  return lang === 'fr'
+    ? 'languageSwitcher.languages.fr'
+    : 'languageSwitcher.languages.en';
 };
 
 const switchLanguage = (lang) => {
@@ -31,7 +32,7 @@ const switchLanguage = (lang) => {
       @change="switchLanguage($event.target.value)"
     >
       <option v-for="lang in availableLocales" :key="lang" :value="lang">
-        {{ languages[lang] }}
+        {{ t(getLanguageLabel(lang)) }}
       </option>
     </select>
   </div>
