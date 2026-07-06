@@ -51,14 +51,18 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       fetch(event.request)
         .then((response) => {
+          if (!response || !response.ok) {
+            return response;
+          }
+
           const responseClone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put('/index.html', responseClone);
-          });
-          return response;
+          return caches
+            .open(CACHE_NAME)
+            .then((cache) => cache.put('/index.html', responseClone))
+            .catch(() => undefined)
+            .then(() => response);
         })
         .catch(() => caches.match('/index.html'))
-    );
     return;
   }
 
