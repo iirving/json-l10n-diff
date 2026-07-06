@@ -1,6 +1,7 @@
 {
   "app": {
     "title": "JSON l10n Diff Tool",
+    "logoAlt": "JSON l10n Diff logo",
     "subtitle": "Side-by-side JSON comparison with unified tree view"
   },
   "nav": {

@@ -1,6 +1,7 @@
 {
   "app": {
     "title": "Outil de Comparaison JSON l10n",
+    "logoAlt": "Logo de JSON l10n Diff",
     "subtitle": "Comparaison JSON côte à côte avec vue arborescente unifiée"
   },
   "nav": {
