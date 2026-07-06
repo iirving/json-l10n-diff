@@ -63,6 +63,7 @@ self.addEventListener('fetch', (event) => {
             .then(() => response);
         })
         .catch(() => caches.match('/index.html'))
+    );
     return;
   }
 
