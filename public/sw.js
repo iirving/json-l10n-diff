@@ -73,11 +73,16 @@ self.addEventListener('fetch', (event) => {
       }
 
       return fetch(event.request).then((response) => {
+        if (!response || !response.ok) {
+          return response;
+        }
+
         const responseClone = response.clone();
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, responseClone);
-        });
-        return response;
+        return caches
+          .open(CACHE_NAME)
+          .then((cache) => cache.put(event.request, responseClone))
+          .catch(() => undefined)
+          .then(() => response);
       });
     })
   );
