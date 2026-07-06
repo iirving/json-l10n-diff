@@ -26,8 +26,7 @@ self.addEventListener('activate', (event) => {
         return Promise.all(
           keys
             .filter(
-              (key) =>
-                key.startsWith('json-l10n-diff-') && key !== CACHE_NAME
+              (key) => key.startsWith('json-l10n-diff-') && key !== CACHE_NAME
             )
             .map((key) => caches.delete(key))
         );
