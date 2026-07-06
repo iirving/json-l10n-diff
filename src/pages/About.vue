@@ -9,202 +9,222 @@
  * - Technical details
  * - Privacy & security information
  */
+
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
+
+const featureCards = [
+  {
+    icon: '📤',
+    titleKey: 'about.featureCards.uploadCompare.title',
+    descriptionKey: 'about.featureCards.uploadCompare.description',
+  },
+  {
+    icon: '🌳',
+    titleKey: 'about.featureCards.visualTree.title',
+    descriptionKey: 'about.featureCards.visualTree.description',
+  },
+  {
+    icon: '🎨',
+    titleKey: 'about.featureCards.smartDiff.title',
+    descriptionKey: 'about.featureCards.smartDiff.description',
+  },
+  {
+    icon: '✏️',
+    titleKey: 'about.featureCards.inlineEditing.title',
+    descriptionKey: 'about.featureCards.inlineEditing.description',
+  },
+  {
+    icon: '➕',
+    titleKey: 'about.featureCards.addMissingKeys.title',
+    descriptionKey: 'about.featureCards.addMissingKeys.description',
+  },
+  {
+    icon: '💾',
+    titleKey: 'about.featureCards.saveDownload.title',
+    descriptionKey: 'about.featureCards.saveDownload.description',
+  },
+  {
+    icon: '🎨',
+    titleKey: 'about.featureCards.jsonPrettify.title',
+    descriptionKey: 'about.featureCards.jsonPrettify.description',
+  },
+  {
+    icon: '🔒',
+    titleKey: 'about.featureCards.privacyFirst.title',
+    descriptionKey: 'about.featureCards.privacyFirst.description',
+  },
+];
+
+const steps = [
+  {
+    number: 1,
+    titleKey: 'about.steps.upload.title',
+    descriptionKey: 'about.steps.upload.description',
+  },
+  {
+    number: 2,
+    titleKey: 'about.steps.parse.title',
+    descriptionKey: 'about.steps.parse.description',
+  },
+  {
+    number: 3,
+    titleKey: 'about.steps.compare.title',
+    descriptionKey: 'about.steps.compare.description',
+  },
+  {
+    number: 4,
+    titleKey: 'about.steps.edit.title',
+    descriptionKey: 'about.steps.edit.description',
+  },
+  {
+    number: 5,
+    titleKey: 'about.steps.export.title',
+    descriptionKey: 'about.steps.export.description',
+  },
+];
+
+const techItems = [
+  {
+    labelKey: 'about.tech.framework.label',
+    valueKey: 'about.tech.framework.value',
+  },
+  {
+    labelKey: 'about.tech.buildTool.label',
+    valueKey: 'about.tech.buildTool.value',
+  },
+  {
+    labelKey: 'about.tech.stateManagement.label',
+    valueKey: 'about.tech.stateManagement.value',
+  },
+  {
+    labelKey: 'about.tech.language.label',
+    valueKey: 'about.tech.language.value',
+  },
+  {
+    labelKey: 'about.tech.fileSizeLimit.label',
+    valueKey: 'about.tech.fileSizeLimit.value',
+  },
+  {
+    labelKey: 'about.tech.supportedFormat.label',
+    valueKey: 'about.tech.supportedFormat.value',
+  },
+];
+
+const privacyItems = [
+  {
+    titleKey: 'about.privacy.clientSide.title',
+    descriptionKey: 'about.privacy.clientSide.description',
+  },
+  {
+    titleKey: 'about.privacy.noServerUploads.title',
+    descriptionKey: 'about.privacy.noServerUploads.description',
+  },
+  {
+    titleKey: 'about.privacy.noTracking.title',
+    descriptionKey: 'about.privacy.noTracking.description',
+  },
+];
+
+const useCases = [
+  {
+    titleKey: 'about.useCases.missingTranslations.title',
+    descriptionKey: 'about.useCases.missingTranslations.description',
+    exampleLinesKey: 'about.useCases.missingTranslations.exampleLines',
+  },
+  {
+    titleKey: 'about.useCases.untranslatedPlaceholders.title',
+    descriptionKey: 'about.useCases.untranslatedPlaceholders.description',
+    exampleLinesKey: 'about.useCases.untranslatedPlaceholders.exampleLines',
+  },
+  {
+    titleKey: 'about.useCases.teamSynchronization.title',
+    descriptionKey: 'about.useCases.teamSynchronization.description',
+    exampleLinesKey: 'about.useCases.teamSynchronization.exampleLines',
+  },
+];
 </script>
 
 <template>
   <div class="about-page">
     <header class="page-header">
-      <h1>About JSON l10n Diff Tool</h1>
-      <p class="subtitle">Privacy-first localization comparison tool</p>
+      <h1>{{ t('about.title') }}</h1>
+      <p class="subtitle">{{ t('about.subtitle') }}</p>
     </header>
 
     <main class="page-content">
       <!-- Features Section -->
       <section class="content-section">
-        <h2>✨ Features</h2>
+        <h2>✨ {{ t('about.sections.features') }}</h2>
         <div class="feature-grid">
-          <div class="feature-card">
-            <div class="feature-icon">📤</div>
-            <h3>Upload & Compare</h3>
-            <p>
-              Drag-and-drop or select two JSON localization files to compare
-              instantly
-            </p>
-          </div>
-
-          <div class="feature-card">
-            <div class="feature-icon">🌳</div>
-            <h3>Visual Tree Structure</h3>
-            <p>View nested key hierarchy with expandable/collapsible nodes</p>
-          </div>
-
-          <div class="feature-card">
-            <div class="feature-icon">🎨</div>
-            <h3>Smart Diff Highlighting</h3>
-            <p>
-              Color-coded differences: red for missing keys, yellow for
-              identical values, green for different values
-            </p>
-          </div>
-
-          <div class="feature-card">
-            <div class="feature-icon">✏️</div>
-            <h3>Inline Editing</h3>
-            <p>Edit translations directly in the comparison view</p>
-          </div>
-
-          <div class="feature-card">
-            <div class="feature-icon">➕</div>
-            <h3>Add Missing Keys</h3>
-            <p>One-click to add missing keys to either file</p>
-          </div>
-
-          <div class="feature-card">
-            <div class="feature-icon">💾</div>
-            <h3>Save & Download</h3>
-            <p>Export modified files with all your changes</p>
-          </div>
-
-          <div class="feature-card">
-            <div class="feature-icon">🎨</div>
-            <h3>JSON Prettify</h3>
-            <p>Format with consistent 2-space indentation</p>
-          </div>
-
-          <div class="feature-card">
-            <div class="feature-icon">🔒</div>
-            <h3>Privacy-First</h3>
-            <p>100% client-side processing, no server uploads</p>
+          <div
+            v-for="feature in featureCards"
+            :key="feature.titleKey"
+            class="feature-card"
+          >
+            <div class="feature-icon">{{ feature.icon }}</div>
+            <h3>{{ t(feature.titleKey) }}</h3>
+            <p>{{ t(feature.descriptionKey) }}</p>
           </div>
         </div>
       </section>
 
       <!-- How It Works Section -->
       <section class="content-section">
-        <h2>💡 How It Works</h2>
+        <h2>💡 {{ t('about.sections.howItWorks') }}</h2>
         <div class="steps-container">
-          <div class="step">
-            <div class="step-number">1</div>
+          <div v-for="step in steps" :key="step.titleKey" class="step">
+            <div class="step-number">{{ step.number }}</div>
             <div class="step-content">
-              <h3>Upload</h3>
-              <p>Drag and drop or select your JSON localization files</p>
-            </div>
-          </div>
-
-          <div class="step">
-            <div class="step-number">2</div>
-            <div class="step-content">
-              <h3>Parse</h3>
-              <p>Files are validated and structured into a nested tree</p>
-            </div>
-          </div>
-
-          <div class="step">
-            <div class="step-number">3</div>
-            <div class="step-content">
-              <h3>Compare</h3>
-              <p>
-                Differences are calculated and highlighted with color coding
-              </p>
-            </div>
-          </div>
-
-          <div class="step">
-            <div class="step-number">4</div>
-            <div class="step-content">
-              <h3>Edit</h3>
-              <p>Make changes directly in the interface</p>
-            </div>
-          </div>
-
-          <div class="step">
-            <div class="step-number">5</div>
-            <div class="step-content">
-              <h3>Export</h3>
-              <p>Download your modified files</p>
+              <h3>{{ t(step.titleKey) }}</h3>
+              <p>{{ t(step.descriptionKey) }}</p>
             </div>
           </div>
         </div>
         <p class="highlight-box">
-          All processing happens in your browser—fast, secure, and private.
+          {{ t('about.steps.highlight') }}
         </p>
       </section>
 
       <!-- Technical Details Section -->
       <section class="content-section">
-        <h2>🛠️ Technical Details</h2>
+        <h2>🛠️ {{ t('about.sections.technicalDetails') }}</h2>
         <div class="tech-grid">
-          <div class="tech-item">
-            <h4>Framework</h4>
-            <p>Vue 3.5.22 with Composition API</p>
-          </div>
-
-          <div class="tech-item">
-            <h4>Build Tool</h4>
-            <p>Vite 7.1.14 (Rolldown variant)</p>
-          </div>
-
-          <div class="tech-item">
-            <h4>State Management</h4>
-            <p>Pinia 2.2.8</p>
-          </div>
-
-          <div class="tech-item">
-            <h4>Language</h4>
-            <p>JavaScript ES6+</p>
-          </div>
-
-          <div class="tech-item">
-            <h4>File Size Limit</h4>
-            <p>10 MB per file</p>
-          </div>
-
-          <div class="tech-item">
-            <h4>Supported Format</h4>
-            <p>Valid JSON files only</p>
+          <div v-for="item in techItems" :key="item.labelKey" class="tech-item">
+            <h4>{{ t(item.labelKey) }}</h4>
+            <p>{{ t(item.valueKey) }}</p>
           </div>
         </div>
       </section>
 
       <!-- Privacy & Security Section -->
       <section class="content-section">
-        <h2>🔒 Privacy & Security</h2>
+        <h2>🔒 {{ t('about.sections.privacySecurity') }}</h2>
         <div class="privacy-list">
-          <div class="privacy-item">
+          <div
+            v-for="item in privacyItems"
+            :key="item.titleKey"
+            class="privacy-item"
+          >
             <span class="check-icon">✓</span>
             <div>
-              <h4>100% Client-Side Processing</h4>
-              <p>All file processing happens entirely in your browser</p>
+              <h4>{{ t(item.titleKey) }}</h4>
+              <p>{{ t(item.descriptionKey) }}</p>
             </div>
           </div>
 
           <div class="privacy-item">
             <span class="check-icon">✓</span>
             <div>
-              <h4>No Server Uploads</h4>
-              <p>Your files never leave your computer</p>
-            </div>
-          </div>
-
-          <div class="privacy-item">
-            <span class="check-icon">✓</span>
-            <div>
-              <h4>No Tracking</h4>
-              <p>We don't collect or store your data</p>
-            </div>
-          </div>
-
-          <div class="privacy-item">
-            <span class="check-icon">✓</span>
-            <div>
-              <h4>Open Source</h4>
+              <h4>{{ t('about.privacy.openSource.title') }}</h4>
               <p>
-                Inspect the code yourself on
+                {{ t('about.privacy.openSource.descriptionPrefix') }}
                 <a
                   href="https://github.com/iirving/json-l10n-diff"
                   target="_blank"
                   rel="noopener noreferrer"
-                  >GitHub</a
+                  >{{ t('about.privacy.openSource.linkLabel') }}</a
                 >
               </p>
             </div>
@@ -214,50 +234,16 @@
 
       <!-- Use Cases Section -->
       <section class="content-section">
-        <h2>📝 Use Cases</h2>
-        <div class="use-case">
-          <h3>Finding Missing Translations</h3>
-          <p>
-            You've added new features to your app and need to ensure all
-            languages are up to date.
-          </p>
+        <h2>📝 {{ t('about.sections.useCases') }}</h2>
+        <div
+          v-for="useCase in useCases"
+          :key="useCase.titleKey"
+          class="use-case"
+        >
+          <h3>{{ t(useCase.titleKey) }}</h3>
+          <p>{{ t(useCase.descriptionKey) }}</p>
           <div class="example-box">
-            <code
-              >✅ Upload en.json (your main language file)<br />
-              ✅ Upload fr.json (French translations)<br />
-              🔴 Missing keys highlighted instantly<br />
-              ➕ Add missing keys with one click<br />
-              💾 Save updated fr.json</code
-            >
-          </div>
-        </div>
-
-        <div class="use-case">
-          <h3>Catching Untranslated Placeholders</h3>
-          <p>Sometimes placeholder text gets copied instead of translated.</p>
-          <div class="example-box">
-            <code
-              >✅ Upload en.json: { "welcome": "Welcome" }<br />
-              ✅ Upload fr.json: { "welcome": "Welcome" }<br />
-              🟡 Identical values highlighted in yellow<br />
-              ✏️ Edit "Welcome" → "Bienvenue"<br />
-              💾 Save corrected fr.json</code
-            >
-          </div>
-        </div>
-
-        <div class="use-case">
-          <h3>Team Synchronization</h3>
-          <p>
-            Multiple team members working on translations? Keep files in sync.
-          </p>
-          <div class="example-box">
-            <code
-              >✅ Compare your local changes against the main branch<br />
-              🔴 See what others added that you're missing<br />
-              ➕ Add new keys to your file<br />
-              💾 Export and commit synchronized files</code
-            >
+            <code>{{ t(useCase.exampleLinesKey) }}</code>
           </div>
         </div>
       </section>
@@ -508,6 +494,7 @@
   font-size: 0.9rem;
   line-height: 1.8;
   color: rgba(255, 255, 255, 0.9);
+  white-space: pre-line;
 }
 
 /* Responsive Design */

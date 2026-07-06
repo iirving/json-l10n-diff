@@ -9,6 +9,10 @@
  * - Upgrade prompts with pricing
  */
 
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
+
 defineProps({
   currentTier: {
     type: String,
@@ -34,10 +38,16 @@ defineEmits(['upgrade-requested', 'dismissed']);
 <template>
   <div class="tier-gate">
     <p class="placeholder-note">
-      TierGate placeholder - to be implemented in Phase 6
+      {{ t('tierGate.placeholder') }}
     </p>
     <p>
-      Current tier: {{ currentTier }} ({{ keyCount }} / {{ keyLimit }} keys)
+      {{
+        t('tierGate.currentTier', {
+          tier: currentTier,
+          count: keyCount,
+          limit: keyLimit,
+        })
+      }}
     </p>
   </div>
 </template>

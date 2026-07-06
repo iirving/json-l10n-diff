@@ -55,7 +55,7 @@ const isActive = (path) => {
     <nav class="main-nav">
       <div class="nav-brand">
         <a href="#/" @click.prevent="navigate('/')">
-          <img :src="logo" alt="JSON l10n Diff logo" class="nav-logo" />
+          <img :src="logo" :alt="t('app.logoAlt')" class="nav-logo" />
           <h1>{{ t('app.title') }}</h1>
         </a>
       </div>

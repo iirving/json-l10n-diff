@@ -10,11 +10,11 @@
  * - Internationalization support
  */
 
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import DualFileViewer from '@/components/DualFileViewer.vue';
 
 // Props
-// eslint-disable-next-line no-unused-vars
 const props = defineProps({
   file1: {
     type: Object,
@@ -26,11 +26,11 @@ const props = defineProps({
   },
   file1Name: {
     type: String,
-    default: 'File 1',
+    default: null,
   },
   file2Name: {
     type: String,
-    default: 'File 2',
+    default: null,
   },
 });
 
@@ -44,6 +44,12 @@ const emit = defineEmits([
 
 // Composables
 const { t } = useI18n();
+const resolvedFile1Name = computed(
+  () => props.file1Name || t('defaults.file1')
+);
+const resolvedFile2Name = computed(
+  () => props.file2Name || t('defaults.file2')
+);
 
 // Methods
 
@@ -85,7 +91,7 @@ function handleNodeToggled(toggleDetails) {
   <section
     class="comparison-view"
     data-testid="comparison-view"
-    aria-label="JSON file comparison"
+    :aria-label="t('comparison.ariaLabel')"
   >
     <p
       v-if="!file1 && !file2"
@@ -100,8 +106,8 @@ function handleNodeToggled(toggleDetails) {
       <DualFileViewer
         :file1="file1"
         :file2="file2"
-        :file1-name="file1Name"
-        :file2-name="file2Name"
+        :file1-name="resolvedFile1Name"
+        :file2-name="resolvedFile2Name"
         @add-key-to-file1="handleAddKeyToFile1"
         @add-key-to-file2="handleAddKeyToFile2"
         @value-edited="handleValueEdited"
